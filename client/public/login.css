@@ -1,0 +1,24 @@
+body {
+    background: linear-gradient(to right, #ff7e5f, #feb47b);
+    color: white;
+}
+
+
+
+#loginHeader {
+    background: aqua;
+
+}
+
+.user {
+    color: brown;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.pass {
+    color: brown;
+    font-weight: bold;
+    cursor: pointer;
+}
+
