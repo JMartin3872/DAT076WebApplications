@@ -1,21 +1,13 @@
+// Interface representing a diary
 export interface Diary {
-    id: number;
+    //Variables for diary title and a list of entries
     title: string;
     entries: Entry[];
 }
 
+// Interface representing one entry in a diary
 export interface Entry {
     id: number;
-    title: string;
     date: number;
     text: string;
 }
-
-
-const minDagbok : Diary = {
-    id: 1,
-    title: "Midsommar 2021",
-    entries: []
-}
-
-console.log(minDagbok);
