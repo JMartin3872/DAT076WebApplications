@@ -22,8 +22,22 @@ export class LoginService{
         return user ? getListOfDairies(user) : undefined;
     }
 
-
-
+    async changePassword(username : string,oldPassword : string,newPassword : string) : Promise<Login | undefined>{
+        let user : Login | undefined = this.loginIds.find(
+            login => login.username === username && login.password === oldPassword)
+        if (user === undefined){
+            return undefined;
+        }
+        else {
+            let updatedUser : Login = {
+                username : username,
+                password : newPassword
+            }
+            this.loginIds = this.loginIds.filter(login => login.username != username);
+            this.loginIds.push(updatedUser);
+            return updatedUser;
+        }
+    }
 
 
 

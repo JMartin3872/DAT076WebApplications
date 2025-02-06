@@ -5,7 +5,7 @@ import {Login} from "../model/login";
 const loginService : LoginService = new LoginService();
 
 const loginRouter : Router = express.Router();
-
+//Router for registering a new user
 loginRouter.post("/register", async (
     req : Request<{},string,{username : string; password : string}>, res: Response<string>
     ) => {
@@ -17,16 +17,28 @@ loginRouter.post("/register", async (
        await loginService.registerUser(req.body.username,req.body.password);
        res.status(201).send("Created!");
     }})
-
+//Router for a user trying to login
 loginRouter.post("/login", async (
     req : Request<{},listOfDiaries,{username : string; password : string}>, res: Response<listOfDiaries>
     )=> {
     const loginResult : listOfDiaries | undefined = await loginService.tryLogin(req.body.username,req.body.password)
     if (loginResult === undefined) {
-        res.status(401).send("wrong credentials");
+        res.status(401).send("Wrong credentials");
     }
     else {
         res.status(201).send(loginResult);
+    }})
+//To change password of a user
+loginRouter.patch("/changepassword", async (
+    req : Request<{}, string, {username : string; oldPassword : string; newPassword : string}>,
+    res : Response<string>) => {
+    const changePassword : Promise<Login | undefined>
+        = loginService.changePassword(req.body.username,req.body.oldPassword,req.body.newPassword);
+    if (changePassword === undefined){
+        res.status(401).send("Wrong credentials");
+    }
+    else {
+        res.status(201).send("success!")
     }})
 
 
