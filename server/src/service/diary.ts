@@ -23,3 +23,15 @@ export class DiaryService {
         this.diary.entries.push(newEntry);
     }
 }
+
+let d : Diary = {
+    id : 7,
+    title : "Testdagbok",
+    entries : []
+};
+
+let s = new DiaryService(d);
+
+console.log(d);
+
+s.newEntry("Inlägg 1", "Hej på dig, idag var en bra dag");
