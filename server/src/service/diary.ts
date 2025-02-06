@@ -5,33 +5,34 @@ export class DiaryService {
     private diary : Diary;
     private nextEntryId : number = 0;
 
-    constructor(diary: Diary) {
-        this.diary = diary;
+    constructor(diaryTitle : string) {
+        let newDiary : Diary = {
+            title : diaryTitle,
+            entries : []
+        }
+        this.diary = newDiary;
     }
 
     async getDiaryContent() : Promise<Diary> {
         return JSON.parse(JSON.stringify(this.diary));
     }
 
-    async newEntry (entryTitle: string, entryText : string) : Promise<void> {
-        const newEntry : Entry = {
+    async addEntry (entryText : string) : Promise<Entry> {
+        let newEntry : Entry = {
             id: this.nextEntryId++,
-            title : entryTitle,
             date : Date.now(),
             text : entryText
         }
         this.diary.entries.push(newEntry);
+
+        return newEntry;
+    }
+
+    async deleteEntry(entryId : number) : Promise<void>{
+        let entryList = this.diary.entries
+        let newList = entryList.filter((entry) => entry.id !== entryId)
+        this.diary.entries = newList
     }
 }
 
-let d : Diary = {
-    id : 7,
-    title : "Testdagbok",
-    entries : []
-};
 
-let s = new DiaryService(d);
-
-console.log(d);
-
-s.newEntry("Inlägg 1", "Hej på dig, idag var en bra dag");
