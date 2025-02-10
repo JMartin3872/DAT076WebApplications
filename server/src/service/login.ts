@@ -29,7 +29,7 @@ export class LoginService{
     }
 
  */
-//Test
+
     async changePassword(username : string,oldPassword : string,newPassword : string) : Promise<Login | undefined>{
         let user : Login | undefined = this.loginIds.find(
             login => login.username === username && login.password === oldPassword)
