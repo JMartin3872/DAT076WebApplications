@@ -33,6 +33,7 @@ loginRouter.post("/register", async (
 )
 
 //Router for a user trying to login
+/*
 loginRouter.post("/login", async (
     req : Request<{},listOfDiaries,{username : string; password : string}>, res: Response<listOfDiaries>
     )=> {
@@ -49,6 +50,8 @@ loginRouter.post("/login", async (
     }
     }
     )
+
+ */
 
 
 //To change password of a user

@@ -1,14 +1,13 @@
 import {Login} from "../model/login";
+
 export class LoginService{
 
-    private loginIds : Login[] = [
-        {username: "gorill", password :"123"},
-        {username: "moos", password: "456"}
-    ];
+    private loginIds : Login[] = [];
 
     async getLogin() : Promise<Login[]> {
         return this.loginIds;
     }
+
 
 
     async registerUser(username : string, password : string) : Promise<Login>{
