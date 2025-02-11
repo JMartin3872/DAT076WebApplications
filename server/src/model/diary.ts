@@ -1,7 +1,9 @@
 // Interface representing a diary
 export interface Diary {
-    //Variables for diary title and a list of entries
+    // Variables for diary title and a list of entries
+    id: number;
     title: string;
+    owner: string;
     entries: Entry[];
 }
 
