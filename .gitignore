@@ -132,3 +132,6 @@ dist
 # Idea files
 /.idea
 .idea/
+
+# Mac files
+.DS_Store
