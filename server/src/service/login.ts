@@ -1,10 +1,11 @@
 import {Login} from "../model/login";
 import { Diary } from "../model/diary";
+import {DiaryService} from "./diary";
 
 export class LoginService{
 
     private loginIds : Login[] = [];
-    diaryService: any;
+    diaryService: DiaryService = new DiaryService();
 
     async getLogin() : Promise<Login[]> {
         return this.loginIds;
@@ -23,10 +24,15 @@ export class LoginService{
 
 
     // A method to return list of diaries!
-    async tryLogin(username : string,password : string) : Promise<Diary | undefined>{
+    async tryLogin(username : string,password : string) : Promise<Diary[] | undefined>{
         let user : Login | undefined = this.loginIds.find(
             login => login.username === username && login.password === password)
-        return this.diaryService.getListOfDairies(username);
+       if (user === undefined){
+           return undefined;
+       }
+       else {
+           return this.diaryService.getListOfDiaries(username);
+       }
     }
 
     async changePassword(username : string,oldPassword : string,newPassword : string) : Promise<Login | undefined>{
