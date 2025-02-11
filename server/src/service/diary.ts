@@ -1,20 +1,32 @@
 import {Diary} from "../model/diary";
 import {Entry} from "../model/diary";
 
-// Diary service class for manipulating diaries and their entries
-export class DiaryService {
-    //TODO: Each diary service has one diary? Can be changed??
-    private diary : Diary;
-    private nextEntryId : number = 0;
 
-    //Constructor creating a new diary as of now
-    // TODO: Once again we are unsure about how we should do with this.
-    constructor(diaryTitle : string) {
-        let newDiary : Diary = {
-            title : diaryTitle,
-            entries : []
+// Diary service class for manipulating diary and their entries
+export class DiaryService {
+    private diary: Diary[] = [];
+    private nextDiaryId: number = 0;
+    private nextEntryId: number = 0;
+
+    // Create a new diary if the user doesn't already have one with the same title
+    async createDiary(username: string, diaryTitle: string): Promise<Diary | string> {
+        if (this.diary.some(d => d.owner === username && d.title === diaryTitle)) {
+            return "User already has a diary with this title.";
         }
-        this.diary = newDiary;
+
+        let newDiary: Diary = {
+            id: this.nextDiaryId++,
+            title: diaryTitle,
+            owner: username,
+            entries: []
+        };
+        this.diary.push(newDiary);
+        return newDiary;
+    }
+
+    // Get all diary of a specific user
+    async getListOfDiaries(username: string): Promise<Diary[]> {
+        return this.diary.filter(d => d.owner === username);
     }
 
     // Returns a deep copy of the diary
@@ -22,27 +34,38 @@ export class DiaryService {
         return JSON.parse(JSON.stringify(this.diary));
     }
 
-    // Creates and adds a new entry to the diary
-    // Return the new entry
-    async addEntry (entryText : string) : Promise<Entry> {
-        let newEntry : Entry = {
-            id: this.nextEntryId++,
-            date : Date.now(),
-            text : entryText
+    // Delete a diary only if the requesting user is the owner
+    async deleteDiary(username: string, diaryId: number): Promise<Diary[] | string> {
+        const diaryIndex = this.diary.findIndex(d => d.id === diaryId && d.owner === username);
+        if (diaryIndex === -1) {
+            return "Diary not found or unauthorized.";
         }
-        this.diary.entries.push(newEntry);
+        this.diary.splice(diaryIndex, 1);
+        return this.getListOfDiaries(username);
+    }
 
+    // Add a new entry to the diary
+    async addEntry(username: string, diaryId: number, entryText: string): Promise<Entry | string> {
+        const diary = this.diary.find(d => d.id === diaryId && d.owner === username);
+        if (!diary) {
+            return "Diary not found or unauthorized.";
+        }
+        let newEntry: Entry = {
+            id: this.nextEntryId++,
+            date: Date.now(),
+            text: entryText
+        };
+        diary.entries.push(newEntry);
         return newEntry;
     }
 
-    // Deletes an existing entry from diary based on id
-    // Returns the new list of entries
-    async deleteEntry(entryId : number) : Promise<Entry[]>{
-        let entryList = this.diary.entries
-        let newList = entryList.filter((entry) => entry.id !== entryId)
-        this.diary.entries = newList
-        return newList
+    // Delete an entry from a diary based on id
+    async deleteEntry(username: string, diaryId: number, entryId: number): Promise<Entry[] | string> {
+        const diary = this.diary.find(d => d.id === diaryId && d.owner === username);
+        if (!diary) {
+            return "Diary not found or unauthorized.";
+        }
+        diary.entries = diary.entries.filter(entry => entry.id !== entryId);
+        return diary.entries;
     }
 }
-
-

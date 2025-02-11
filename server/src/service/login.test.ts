@@ -4,7 +4,7 @@ import {Login} from "../model/login";
 let loginService: LoginService;
 
 beforeEach( () => {
-    loginService = new LoginService();
+    loginService = new LoginService()
 });
 
 test('Getting the initial list of login credentials mus be a empty list!', async () => {

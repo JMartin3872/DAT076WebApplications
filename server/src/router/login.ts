@@ -1,6 +1,7 @@
 import express, { Router, Request, Response } from "express";
 import {LoginService} from "../service/login";
 import {Login} from "../model/login";
+import {Diary} from "../model/diary";
 
 const loginService : LoginService = new LoginService();
 
@@ -33,12 +34,11 @@ loginRouter.post("/register", async (
 )
 
 //Router for a user trying to login
-/*
 loginRouter.post("/login", async (
-    req : Request<{},listOfDiaries,{username : string; password : string}>, res: Response<listOfDiaries>
+    req : Request<{},Diary[] | string,{username : string; password : string}>, res: Response<Diary[] | string>
     )=> {
     try {
-        const loginResult: listOfDiaries | undefined = await loginService.tryLogin(req.body.username, req.body.password)
+        const loginResult: Diary[] | undefined = await loginService.tryLogin(req.body.username, req.body.password)
         if (loginResult === undefined) {
             res.status(401).send("Wrong credentials");
         } else {
@@ -51,7 +51,7 @@ loginRouter.post("/login", async (
     }
     )
 
- */
+
 
 
 //To change password of a user
