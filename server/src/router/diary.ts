@@ -5,13 +5,13 @@ import { Diary } from "../model/diary";
 
 // TODO: What do we do here? Should a new diary be created for each diary service?
 // Should we have a new diaryservice for every diary or not?
-const diaryService = new DiaryService();
+export const diaryService = new DiaryService();
 export const diaryRouter = express.Router();
 
 // Handler of get requests
 // TODO: should the diary be passed here as an argument?
 // Returns the full diary content
-diaryRouter.get("/", async(req : Request, res : Response<Diary | string>) => {
+diaryRouter.get("/getalldiaries", async(req : Request, res : Response<Diary | string>) => {
     try{
         const diary : Diary = await diaryService.getDiaryContent();
         res.status(200).send(diary);
@@ -24,7 +24,7 @@ diaryRouter.get("/", async(req : Request, res : Response<Diary | string>) => {
 
 // Handles a post request
 // Creates a new entry with the text in the body
-diaryRouter.post("/create_entry", async (
+diaryRouter.post("/createentry", async (
     req: Request<{}, {}, { username: string; diaryId: number; text: string }>,
     res: Response<Entry | string>
 ) => {
@@ -45,7 +45,7 @@ diaryRouter.post("/create_entry", async (
 
 // Handle a delete request
 // Deletes the entry from diary based on matching id
-diaryRouter.delete("/delete_entry", async (
+diaryRouter.delete("/deleteentry", async (
     req: Request<{}, {}, { username: string; diaryId: number; entryId: number }>,
     res: Response<Entry[] | string>
 ) => {
@@ -60,7 +60,7 @@ diaryRouter.delete("/delete_entry", async (
 })
 
 // Create a new diary
-diaryRouter.post("/diary/create", async (
+diaryRouter.post("/creatediary", async (
     req: Request<{}, {}, { username: string; title: string }>,
     res: Response<Diary | string>
 ) => {
@@ -74,7 +74,7 @@ diaryRouter.post("/diary/create", async (
 });
 
 // Get all diaries of a specific user
-diaryRouter.get("/diary/user", async (
+diaryRouter.get("/userdiaries", async (
     req: Request<{}, {}, {}, { username: string }>,
     res: Response<Diary[]>
 ) => {
@@ -88,7 +88,7 @@ diaryRouter.get("/diary/user", async (
 });
 
 // Delete an entire diary
-diaryRouter.delete("/diary/delete", async (
+diaryRouter.delete("/deletediary", async (
     req: Request<{}, {}, { username: string; diaryId: number }>,
     res: Response<Diary[] | string>
 ) => {

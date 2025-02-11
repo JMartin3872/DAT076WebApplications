@@ -1,11 +1,10 @@
 import {Login} from "../model/login";
 import { Diary } from "../model/diary";
-import {DiaryService} from "./diary";
+import {diaryService} from "../router/diary";
 
 export class LoginService{
 
-    private loginIds : Login[] = [];
-    diaryService: DiaryService = new DiaryService();
+    private loginIds : Login[] = []
 
     async getLogin() : Promise<Login[]> {
         return this.loginIds;
@@ -31,7 +30,7 @@ export class LoginService{
            return undefined;
        }
        else {
-           return this.diaryService.getListOfDiaries(username);
+           return diaryService.getListOfDiaries(username);
        }
     }
 

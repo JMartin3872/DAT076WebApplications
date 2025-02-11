@@ -7,7 +7,7 @@ const loginService : LoginService = new LoginService();
 
 export const loginRouter : Router = express.Router();
 
-loginRouter.get("/getLogins", async (
+loginRouter.get("/getlogins", async (
     req : Request, res : Response) => {
     const list = await loginService.getLogin();
     res.status(201).send(list);
@@ -34,7 +34,7 @@ loginRouter.post("/register", async (
 )
 
 //Router for a user trying to login
-loginRouter.post("/login", async (
+loginRouter.post("/trylogin", async (
     req : Request<{},Diary[] | string,{username : string; password : string}>, res: Response<Diary[] | string>
     )=> {
     try {
