@@ -24,7 +24,7 @@ diaryRouter.get("/", async(req : Request, res : Response<Diary | string>) => {
 
 // Handles a post request
 // Creates a new entry with the text in the body
-diaryRouter.post("/diary", async (
+diaryRouter.post("/create_entry", async (
     req: Request<{}, {}, { username: string; diaryId: number; text: string }>,
     res: Response<Entry | string>
 ) => {
@@ -45,7 +45,7 @@ diaryRouter.post("/diary", async (
 
 // Handle a delete request
 // Deletes the entry from diary based on matching id
-diaryRouter.delete("/diary", async (
+diaryRouter.delete("/delete_entry", async (
     req: Request<{}, {}, { username: string; diaryId: number; entryId: number }>,
     res: Response<Entry[] | string>
 ) => {
