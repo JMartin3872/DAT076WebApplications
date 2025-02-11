@@ -12,7 +12,7 @@ export const diaryRouter = express.Router();
 // Handler of get requests
 // TODO: should the diary be passed here as an argument?
 // Returns the full diary content
-diaryRouter.get("/diary", async(req : Request, res : Response<Diary | string>) => {
+diaryRouter.get("/", async(req : Request, res : Response<Diary | string>) => {
     try{
         const diary : Diary = await diaryService.getDiaryContent();
         res.status(200).send(diary);
@@ -25,7 +25,7 @@ diaryRouter.get("/diary", async(req : Request, res : Response<Diary | string>) =
 
 // Handles a post request
 // Creates a new entry with the text in the body
-diaryRouter.post("/diary", async (
+diaryRouter.post("/", async (
     req: Request<{}, {}, { text : string }>,
     res: Response<Entry | string>
 ) => {
@@ -46,7 +46,7 @@ diaryRouter.post("/diary", async (
 
 // Handle a delete request
 // Deletes the entry from diary based on matching id
-diaryRouter.delete("/diary", async (
+diaryRouter.delete("/", async (
     req: Request<{}, {}, { id : number }>,
     res: Response<Entry[] | string>
 ) => {
