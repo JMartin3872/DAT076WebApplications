@@ -6,7 +6,6 @@ import {Entry} from "../model/diary";
 export class DiaryService {
     private diary: Diary[] = [];
     private nextDiaryId: number = 0;
-    private nextEntryId: number = 0;
 
     // Create a new diary if the user doesn't already have one with the same title
     async createDiary(username: string, diaryTitle: string): Promise<Diary | string> {
@@ -18,7 +17,9 @@ export class DiaryService {
             id: this.nextDiaryId++,
             title: diaryTitle,
             owner: username,
+            nextEntryId: 0,
             entries: []
+            
         };
         this.diary.push(newDiary);
         return newDiary;
@@ -51,7 +52,7 @@ export class DiaryService {
             return "Diary not found or unauthorized.";
         }
         let newEntry: Entry = {
-            id: this.nextEntryId++,
+            id: diary.nextEntryId++,
             date: Date.now(),
             text: entryText
         };

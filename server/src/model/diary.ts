@@ -4,7 +4,9 @@ export interface Diary {
     id: number;
     title: string;
     owner: string;
+    nextEntryId: number;
     entries: Entry[];
+    
 }
 
 // Interface representing one entry in a diary
