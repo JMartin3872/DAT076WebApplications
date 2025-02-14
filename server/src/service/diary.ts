@@ -6,44 +6,47 @@ import {Entry} from "../model/diary";
 export class DiaryService {
     private diary: Diary[] = [];
     private nextDiaryId: number = 0;
+    private nextEntryId: number = 0;
 
     // Create a new diary if the user doesn't already have one with the same title
     async createDiary(username: string, diaryTitle: string): Promise<Diary | string> {
-        if (this.diary.some(d => d.owner === username && d.title === diaryTitle)) {
-            return "User already has a diary with this title.";
+        try {
+            if (this.diary.some(d => d.owner === username && d.title === diaryTitle)) {
+                return "You already have a diary with this title.";
+            }
+            let newDiary: Diary = {
+                id: this.nextDiaryId++,
+                title: diaryTitle,
+                owner: username,
+                entries: [],
+                nextEntryId: 0,
+            };
+            this.diary.push(newDiary);
+            return newDiary;
         }
-
-        let newDiary: Diary = {
-            id: this.nextDiaryId++,
-            title: diaryTitle,
-            owner: username,
-            nextEntryId: 0,
-            entries: []
-            
-        };
-        this.diary.push(newDiary);
-        return newDiary;
-    }
-
-    // Get all diary of a specific user
-    async getListOfDiaries(username: string): Promise<Diary[]> {
-        return this.diary.filter(d => d.owner === username);
-    }
-
-    // Returns a deep copy of the diary
-    async getDiaryContent() : Promise<Diary> {
-        return JSON.parse(JSON.stringify(this.diary));
-    }
+       
+        catch (error) {
+            console.error("There was an error creating the diary:", error);
+            return "An error occurred while creating the diary.";
+        }
+    }    
 
     // Delete a diary only if the requesting user is the owner
     async deleteDiary(username: string, diaryId: number): Promise<Diary[] | string> {
-        const diaryIndex = this.diary.findIndex(d => d.id === diaryId && d.owner === username);
-        if (diaryIndex === -1) {
-            return "Diary not found or unauthorized.";
+        try {
+            const diaryIndex = this.diary.findIndex(d => d.id === diaryId && d.owner === username);
+            if (diaryIndex === -1) {
+                return "Diary not found or unauthorized.";
+            }
+            this.diary.splice(diaryIndex, 1);
+            return this.getListOfDiaries(username);
         }
-        this.diary.splice(diaryIndex, 1);
-        return this.getListOfDiaries(username);
-    }
+       
+        catch (error) {
+            console.error("Error deleting diary:", error);
+            return "An error occurred while deleting the diary.";
+        }
+    }    
 
     // Add a new entry to the diary
     async addEntry(username: string, diaryId: number, entryText: string): Promise<Entry | string> {
@@ -52,7 +55,7 @@ export class DiaryService {
             return "Diary not found or unauthorized.";
         }
         let newEntry: Entry = {
-            id: diary.nextEntryId++,
+            id: this.nextEntryId++,
             date: Date.now(),
             text: entryText
         };
@@ -60,7 +63,7 @@ export class DiaryService {
         return newEntry;
     }
 
-    // Delete an entry from a diary based on id
+    // Delete an entry from a diary
     async deleteEntry(username: string, diaryId: number, entryId: number): Promise<Entry[] | string> {
         const diary = this.diary.find(d => d.id === diaryId && d.owner === username);
         if (!diary) {
@@ -68,5 +71,22 @@ export class DiaryService {
         }
         diary.entries = diary.entries.filter(entry => entry.id !== entryId);
         return diary.entries;
+    }
+   
+    // Get all diaries of a specific user
+    async getListOfDiaries(username: string): Promise<Diary[]> {
+        try {
+            return this.diary.filter(d => d.owner === username);
+        }
+       
+        catch (error) {
+            console.error("Error fetching diaries for user:", error);
+            return [];
+        }
+    }    
+
+    // Returns a deep copy of the diary
+    async getDiaryContent() : Promise<Diary> {
+        return JSON.parse(JSON.stringify(this.diary));
     }
 }

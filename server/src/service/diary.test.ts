@@ -9,6 +9,26 @@ beforeEach(() => {
 
 });
 
+// TEST #1 FOR CREATING A DIARY -
+test('Creating a new diary should return a diary object', async () => {
+    const diary = await diaryService.createDiary("User1", "My Diary");
+
+    expect(typeof diary).toBe("object");
+    expect((diary as Diary).title).toBe("My Diary");
+    expect((diary as Diary).owner).toBe("User1");
+    expect((diary as Diary).entries.length).toBe(0);
+});
+
+// TEST #2 FOR CREATING A DIARY -
+test('User should not be able to create two diaries with the same title', async () => {
+    await diaryService.createDiary("User1", "Duplicate Diary");
+    const secondDiary = await diaryService.createDiary("User1", "Duplicate Diary");
+
+    expect(secondDiary).toBe("You already have a diary with this title.");
+});
+
+
+// TEST #1 FOR DELETING A DIARY 
 test('Should delete the diary and return a list of remaining diaries', async () => {
     await diaryService.createDiary("User1", "Diary1");
     await diaryService.createDiary("User1", "Diary2");
@@ -25,7 +45,7 @@ test('Should delete the diary and return a list of remaining diaries', async () 
     }
 )
 
-
+// TEST #2 FOR DELETING A DIARY 
 test('Only owner of a diary should be able to delete it', async () =>{
    await diaryService.createDiary("User1", "Diary1");
    await diaryService.createDiary("User2", "Diary1");
