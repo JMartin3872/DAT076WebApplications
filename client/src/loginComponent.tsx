@@ -24,7 +24,7 @@ export function LoginComponent() {
         const list = await signIn(username,password);
         if (typeof list !== "string") {
             setDiaryList(list);
-            navigate("/route to Tyra and Melissas page",{state:{diaryList}});
+            navigate("/List of Diaries",{state:{diaryList}});
         }
     }
     return (
