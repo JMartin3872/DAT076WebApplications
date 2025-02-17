@@ -22,18 +22,45 @@ export interface Entry {
 }
 
 const BASE_URL = "http://localhost:8080"
-
-export async function registerNewUser(username:string, password:string): Promise<string> {
-    const response = await axios.post<string>(`${BASE_URL}/login/register`,
-        {username,password})
-    return response.data;
+export async function registerNewUser(username:string, password:string): Promise<string | undefined> {
+   try {
+       const response = await axios.post<string>(`${BASE_URL}/login/register`,
+           {username, password})
+       return response.data;
+   }
+   catch (e) {
+       console.log(e);
+       return undefined;
+   }
 }
 
-export async function signIn(username:String,password:string):Promise<string | Diary[]> {
-    const response = await axios.post<string | Diary[]>(
-        `${BASE_URL}/login/trylogin`,{username,password})
-    return response.data;
+export async function signIn(username:String,password:string):Promise<Diary[] | undefined> {
+    try {
+        const response = await axios.post<Diary[]>(
+            `${BASE_URL}/login/trylogin`, {username, password})
+        return response.data;
+    }
+    catch (e) {
+        console.log(e);
+        return undefined;
+    }
 }
+
+
+export async function changePassword(username:String, oldPassword:string, newPassword:string)
+    : Promise<string | undefined> {
+    try {
+        const response = await axios.patch<string>(
+            `${BASE_URL}/login/changepassword`, {username, oldPassword,newPassword})
+        return response.data;
+    }
+    catch (e) {
+        console.log(e);
+        return undefined;
+    }
+}
+
+
 
 
 
