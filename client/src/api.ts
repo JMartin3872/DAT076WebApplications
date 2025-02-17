@@ -10,6 +10,7 @@ export interface Diary {
     id: number;
     title: string;
     owner: string;
+    nextEntryId: number;
     entries: Entry[];
 }
 
