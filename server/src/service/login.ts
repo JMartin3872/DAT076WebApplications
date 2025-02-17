@@ -4,7 +4,7 @@ import {diaryService} from "../router/diary";
 
 export class LoginService{
 
-    private loginIds : Login[] = [{username: "Goril", password : "12345"}]
+    private loginIds : Login[] = []
 
     async getLogin() : Promise<Login[]> {
         return this.loginIds;

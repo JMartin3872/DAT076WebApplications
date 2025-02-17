@@ -63,20 +63,16 @@ test('Only owner of a diary should be able to delete it', async () =>{
 
 
 test('Adding an entry to a diary should return an entry with the correct text', async () => {
-    const diary : Diary = {
-        id: 0,
-        title: "TestDiary",
-        owner: "TestUser",
-        nextEntryId: 0,
-        entries: []
-    };
+    
+    let user = "User";
+    let title = "Title";
+
+    diaryService.createDiary(user, title);
 
     
 
     const entry_text = "This is the entry's text";
-    const entry : Entry | String = await diaryService.addEntry(diary.owner, diary.id, entry_text);
+    const entry : Entry | undefined = await diaryService.addEntry(user, 0, entry_text);
     
-    //expect(typeof entry === "string");
-    //expect((entry as Entry).text).toStrictEqual(entry_text);
-    //expect(entry_text).toStrictEqual(entry_text)
+    expect((entry as Entry).text).toStrictEqual(entry_text);
 })
