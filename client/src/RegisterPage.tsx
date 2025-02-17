@@ -36,11 +36,11 @@ export function RegisterPage() {
                         onChange={(e) => setPassword(e.target.value)}
                     />
                 </Form.Group>
-                <Button variant="secondary" type="button" onClick={handleRegistration}>
+                <Button variant="primary" type="button" onClick={handleRegistration}>
                     Register!
                 </Button>
-                <NavLink to="/" end>Back to login screen</NavLink>
             </Form>
+            <NavLink to="/" end>Back to login screen</NavLink>
         </>
     )
 }
