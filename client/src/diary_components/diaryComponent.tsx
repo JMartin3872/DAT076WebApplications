@@ -42,6 +42,5 @@ export function DiaryComponent() {
             <DiaryInputComponent diary={diary}/>
             <EntryListComponent diary={diary}/>
         </>
-
     );
 }
