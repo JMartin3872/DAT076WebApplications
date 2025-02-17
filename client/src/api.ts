@@ -47,5 +47,21 @@ export async function signIn(username:String,password:string):Promise<Diary[] | 
 }
 
 
+export async function changePassword(username:String, oldPassword:string, newPassword:string)
+    : Promise<string | undefined> {
+    try {
+        const response = await axios.patch<string>(
+            `${BASE_URL}/login/changepassword`, {username, oldPassword,newPassword})
+        return response.data;
+    }
+    catch (e) {
+        console.log(e);
+        return undefined;
+    }
+}
+
+
+
+
 
 

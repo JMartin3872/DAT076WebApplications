@@ -31,7 +31,7 @@ export function LoginPage() {
             <h2>Welcome to this lovely diary book</h2>
             <Form>
                 <Form.Group controlId="username">
-                    <FormLabel>Username</FormLabel>
+                    <FormLabel>Username:</FormLabel>
                     <Form.Control
                         type="username"
                         placeholder="Write your username here"
@@ -41,7 +41,7 @@ export function LoginPage() {
                 </Form.Group>
 
                 <Form.Group controlId="password">
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel>Password:</FormLabel>
                     <Form.Control
                         type="password"
                         placeholder="write your password here"
@@ -53,15 +53,10 @@ export function LoginPage() {
                     Login!
                 </Button>
             </Form>
-            <NavLink to="/register" end>Register new user!</NavLink>
-
+            <NavLink to="/register" end style={{ display : "block"}}>Register new user!</NavLink>
+            <NavLink to="/changepassword" end>Change password!</NavLink>
         </>
-
     )
-
-
-
-
 
 }
 

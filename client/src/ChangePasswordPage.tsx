@@ -1,21 +1,22 @@
 import {useState} from "react";
 import {Button, Form, FormLabel} from "react-bootstrap";
-import {registerNewUser} from "./api.ts";
+import {changePassword} from "./api.ts";
 import {NavLink, useNavigate} from "react-router-dom";
 
 
-export function RegisterPage() {
+export function ChangePasswordPage() {
     const [username, setUsername]  = useState<string>("");
-    const [password, setPassword]  = useState<string>("");
+    const [oldPassword, setOldPassword]  = useState<string>("");
+    const [newPassword, setNewPassword]  = useState<string>("");
     const navigate = useNavigate();
 
-    const handleRegistration = async () => {
-        await registerNewUser(username,password);
+    const handleChangePassword = async () => {
+        await changePassword(username,oldPassword,newPassword);
         navigate("/");
     }
     return (
         <>
-            <h2>Registration page!</h2>
+            <h2>Change your account password!</h2>
             <Form>
                 <Form.Group controlId="username">
                     <FormLabel>Username:</FormLabel>
@@ -28,16 +29,25 @@ export function RegisterPage() {
                     />
                 </Form.Group>
                 <Form.Group controlId="password">
-                    <FormLabel>Password:</FormLabel>
+                    <FormLabel>Old password:</FormLabel>
                     <Form.Control
                         type="password"
                         placeholder="write your password here"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
+                        value={oldPassword}
+                        onChange={(e) => setOldPassword(e.target.value)}
                     />
                 </Form.Group>
-                <Button variant="primary" type="button" onClick={handleRegistration}>
-                    Register!
+                <Form.Group controlId="password">
+                    <FormLabel>New password:</FormLabel>
+                    <Form.Control
+                        type="password"
+                        placeholder="write your password here"
+                        value={newPassword}
+                        onChange={(e) => setNewPassword(e.target.value)}
+                    />
+                </Form.Group>
+                <Button variant="primary" type="button" onClick={handleChangePassword}>
+                    Change password!
                 </Button>
             </Form>
             <NavLink to="/" end>Back to login screen</NavLink>
