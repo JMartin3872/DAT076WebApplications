@@ -14,7 +14,6 @@ createRoot(document.getElementById('root')!).render(
     <BrowserRouter>
     <Routes>
         <Route path="/" element={<LoginPage />} />
-        //TODO:FIX
         <Route path="/changepassword" element={<ChangePasswordPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/List of Diaries" element={<DiaryListComponent />} />
