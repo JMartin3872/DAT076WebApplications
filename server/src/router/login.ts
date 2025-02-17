@@ -24,6 +24,7 @@ loginRouter.post("/register", async (
         username type: ${typeof (req.body.username)}`);
         } else {
             await loginService.registerUser(req.body.username, req.body.password);
+
             res.status(201).send("Created!");
         }
     }
@@ -33,16 +34,20 @@ loginRouter.post("/register", async (
     }
 )
 
+//TODO: Fix request session as well!
 //Router for a user trying to login
 loginRouter.post("/trylogin", async (
-    req : Request<{},Diary[] | string,{username : string; password : string}>, res: Response<Diary[] | string>
+    req : Request<{},Diary[] | string,{username : string; password : string}>,
+    res: Response<Diary[] | string>
     )=> {
     try {
         const loginResult: Diary[] | undefined = await loginService.tryLogin(req.body.username, req.body.password)
         if (loginResult === undefined) {
             res.status(401).send("Wrong credentials");
         } else {
-            res.status(201).send(loginResult);
+            (req as any).session.username = req.body.username;
+            res.status(200).send(loginResult);
+
         }
     }
     catch(e:any){

@@ -1,30 +1,29 @@
 
-import {registerNewUser, signIn} from "./api.ts";
+import {signIn} from "./api.ts";
 import {useState} from "react";
 import {Button, Form, FormLabel} from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Diary} from "./api.ts";
 import { useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 
-export function LoginComponent() {
 
-    const navigate = useNavigate();
+export function LoginPage() {
 
     const [username, setUsername]  = useState<string>("");
     const [password, setPassword]  = useState<string>("");
     const [diaryList,setDiaryList] = useState<Diary[]>([]);
+    const navigate = useNavigate();
 
-    const handleRegister = async () => {
-        await registerNewUser(username, password);
-        setPassword("");
-        setUsername("");
-    }
+
     const handleLogin = async () => {
-        const list = await signIn(username,password);
-        if (typeof list !== "string") {
-            setDiaryList(list);
+        const dList = await signIn(username,password);
+        if (dList !== undefined) {
+            setDiaryList(dList);
             navigate("/List of Diaries",{state:{diaryList}});
+        } else {
+            console.log("Something went wrong in handleLogin(), returning undefined")
         }
     }
     return (
@@ -34,7 +33,6 @@ export function LoginComponent() {
                 <Form.Group controlId="username">
                     <FormLabel>Username</FormLabel>
                     <Form.Control
-
                         type="username"
                         placeholder="Write your username here"
                         value={username}
@@ -51,9 +49,7 @@ export function LoginComponent() {
                         onChange={(e) => setPassword(e.target.value)}
                     />
                 </Form.Group>
-                <Button  variant="primary" type="button" onClick={handleRegister}>
-                    Register
-                </Button>
+               <NavLink to="/register" end>Register new user!</NavLink>
                 <Button variant="secondary" type="button" onClick={handleLogin}>
                     Login
                 </Button>
