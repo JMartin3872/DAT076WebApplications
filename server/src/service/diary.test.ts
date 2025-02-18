@@ -78,7 +78,6 @@ test('Adding an entry to a diary should return an entry with the correct text', 
 
 // TEST #1 FOR Deleting AN ENTRY
 test('Adding and deleting an entry from an empty diary should return the empty list.', async () => {
-    
     const user = "User";
     const title = "Title";
     const entry_text = "This is the entry's text";
@@ -86,17 +85,15 @@ test('Adding and deleting an entry from an empty diary should return the empty l
     diaryService.createDiary(user, title);
     
     await diaryService.addEntry(user, 0, entry_text);
-
     const entries = await diaryService.deleteEntry(user, 0, 0); 
+
     expect(entries.length).toStrictEqual(0);
 });
 
 // TEST #2 FOR Deleting AN ENTRY
-test('Deleting an entry from an non-existing diary should generate an exception.', async () => {
+test('Deleting an entry from an non-existing diary should return an error message.', async () => {
     
-    // const user = "User";
-
-    // await expect(() => {
-    //     diaryService.deleteEntry(user, 0, 0);
-    // }).toThrow(Error);
+    const user = "User";
+    const remainingentries = await diaryService.deleteEntry(user,0,0);
+    expect(remainingentries as string).toStrictEqual("No such diary was found");
 });

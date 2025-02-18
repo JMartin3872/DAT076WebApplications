@@ -71,20 +71,16 @@ export class DiaryService {
     }
 
     // Delete an entry from a diary
-    async deleteEntry(username: string, diaryId: number, entryId: number): Promise<Entry[]> {
+    async deleteEntry(username: string, diaryId: number, entryId: number): Promise<Entry[] | string> {
         const diary = this.diary.find(d => d.id === diaryId && d.owner === username);
-        try{
+        
             if(!diary){
-                throw new Error("Diary wasn't found");
+                return "No such diary was found"
             }
 
             diary.entries = diary.entries.filter(entry => entry.id !== entryId);
             return diary.entries;
-        }
-
-        catch(error){
-            throw new Error("Diary wasn't found");
-        }
+               
     }
    
     // Get all diaries of a specific user

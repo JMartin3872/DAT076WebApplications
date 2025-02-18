@@ -1,7 +1,8 @@
 
 import {useState} from "react";
-import {Button} from "react-bootstrap";
+import {Container,Row,Col,Button} from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import "./diary.css"
 import {Diary, Entry} from "../api.ts";
 import { useNavigate } from "react-router-dom";
 import { DiaryInputComponent } from "./diaryInputComponent.tsx";
@@ -33,14 +34,30 @@ let testDiary: Diary = {
 
 export function DiaryComponent() {
 
-    const [diary, setDiary] = useState<Diary>(testDiary) // hook
+    const [diary, setDiary] = useState<Diary>(testDiary)
 
     return(
         <>
-            <h2>{"Title: " + diary.title}</h2>
-            <Button  variant="primary" type="button">Back</Button>
-            <DiaryInputComponent diary={diary}/>
-            <EntryListComponent diary={diary}/>
+            <Container fluid className="text-center">
+                <Row>
+                    <Col className="text-start">
+                        <h1>{"Title: " + diary.title}</h1>
+                    </Col>
+
+                    <Col className="text-end">
+                        <Button className="diarybutton" variant="primary" type="button">Back</Button>
+                    </Col>
+                </Row>
+                <Row>
+                    <DiaryInputComponent diary={diary}/>
+                </Row>
+
+                <Row>
+                    <EntryListComponent diary={diary}/>
+                </Row>    
+            </Container>
+
+            
         </>
     );
 }
