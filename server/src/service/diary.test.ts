@@ -67,16 +67,37 @@ test('Adding an entry to a diary should return an entry with the correct text', 
     let user = "User";
     let title = "Title";
 
-    diaryService.createDiary(user, title);
+    await diaryService.createDiary(user, title);
     
-
     const entry_text = "This is the entry's text";
     const entry : Entry | undefined = await diaryService.addEntry(user, 0, entry_text);
     
     expect((entry as Entry).text).toStrictEqual(entry_text);
 });
 
-// TEST #1 FOR Deleting AN ENTRY
+// TEST #2 FOR ADDING AN ENTRY
+test('Should not be able to add an entry to a non-existing diary', async () => {
+    const user = "User";
+    const text = "This is the text for a non-existing diary";
+    const nonExistingDiaryId = 1;
+
+    const testEntry = await diaryService.addEntry(user, nonExistingDiaryId, text);
+    
+    expect(testEntry).toBeUndefined();
+});
+
+// TEST #3 FOR ADDING AN ENTRY
+test('User should not be able to add an entry to a diary owned by another user', async () => {
+    const user1 = "User1";
+    const user2 = "User2";
+
+    const diaryUser1 = await diaryService.createDiary(user1, "My diary");
+    const illegalEntry = await diaryService.addEntry(user2, (diaryUser1 as Diary).id, "Entry of hacked diary by User2");
+    
+    expect(illegalEntry).toBeUndefined();
+});
+
+// TEST #1 FOR DELETING AN ENTRY
 test('Adding and deleting an entry from an empty diary should return the empty list.', async () => {
     const user = "User";
     const title = "Title";
@@ -90,7 +111,7 @@ test('Adding and deleting an entry from an empty diary should return the empty l
     expect(entries.length).toStrictEqual(0);
 });
 
-// TEST #2 FOR Deleting AN ENTRY
+// TEST #2 FOR DELETING AN ENTRY
 test('Deleting an entry from an non-existing diary should return an error message.', async () => {
     
     const user = "User";
