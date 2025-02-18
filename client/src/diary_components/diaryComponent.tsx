@@ -34,7 +34,7 @@ let testDiary: Diary = {
 
 export function DiaryComponent() {
 
-    const [diary, setDiary] = useState<Diary>(testDiary) // hook
+    const [diary, setDiary] = useState<Diary>(testDiary)
 
     return(
         <>
@@ -50,7 +50,6 @@ export function DiaryComponent() {
                 </Row>
                 <Row>
                     <DiaryInputComponent diary={diary}/>
-                    
                 </Row>
 
                 <Row>
