@@ -11,12 +11,12 @@ import {ChangePasswordPage} from "./ChangePasswordPage.tsx";
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <BrowserRouter>
+    <BrowserRouter> 
     <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/changepassword" element={<ChangePasswordPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/List of Diaries" element={<DiaryListComponent />} />
+        <Route path="/List-of-Diaries" element={<DiaryListComponent />} />
         <Route path="/diary" element={<DiaryComponent/>} />
     </Routes>
     </BrowserRouter>
