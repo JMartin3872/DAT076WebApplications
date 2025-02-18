@@ -39,7 +39,6 @@ export function DiaryComponent() {
     return(
         <>
             <Container fluid className="text-center">
-                
                 <Row>
                     <Col className="text-start">
                         <h1>{"Title: " + diary.title}</h1>
@@ -49,9 +48,6 @@ export function DiaryComponent() {
                         <Button className="diarybutton" variant="primary" type="button">Back</Button>
                     </Col>
                 </Row>
-               
-                
-                   
                 <Row>
                     <DiaryInputComponent diary={diary}/>
                     

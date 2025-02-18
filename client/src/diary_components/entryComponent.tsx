@@ -21,7 +21,6 @@ export function EntryComponent(prop: {myEntry : Entry}) {
                                     <p className="datetext">
                                         {entry.date}
                                     </p>
-                                    
                                 </Col>
 
                                 <Col className="text-end">
@@ -29,17 +28,14 @@ export function EntryComponent(prop: {myEntry : Entry}) {
                                         Delete
                                     </Button>
                                 </Col>
-                                
-                                
                             </Row>
-                            
-
                         </Card.Header>
-                        <Container >
-                            <Card.Body className="text-start">
-                                {entry.text + long_text}
-                            </Card.Body>
-                        </Container>
+
+                        
+                        <Card.Body className="text-start">
+                            {entry.text + long_text}
+                        </Card.Body>
+                        
                 </Card>
             </div>
         </>

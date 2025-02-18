@@ -17,7 +17,6 @@ export function EntryListComponent(prop: {diary : Diary}) {
     return(
         <>
             <div>
-                
                     <Row className="text-center">
                         <h2>Entries</h2>
                         
@@ -25,10 +24,7 @@ export function EntryListComponent(prop: {diary : Diary}) {
                     <Row>
                         <ul>{myEntryComponents}</ul>
                     </Row>      
-               
-
             </div>
-            
         </>
     );
 }
