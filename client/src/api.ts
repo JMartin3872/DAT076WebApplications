@@ -35,20 +35,46 @@ export async function registerNewUser(username:string, password:string): Promise
    }
 }
 
-export async function signIn(username:String,password:string):Promise<Diary[] | undefined> {
+export async function signIn(username: string, password: string): Promise<Diary[] | undefined> {
     try {
-        const response = await axios.post<Diary[]>(
-            `${BASE_URL}/login/trylogin`, {username, password})
-        return response.data;
-    }
-    catch (e) {
+        //Commented out the return so moch gets returned!
+        await axios.post<Diary[]>(
+            `${BASE_URL}/login`,{ username, password });
+           // return response.data;
+
+
+        // Created mock diaries to be able to see the List of Diaries page (Tyra & Melissa) without having to log in.
+        const mockDiaries: Diary[] = [
+            {
+                id: 1,
+                title: "My First Diary",
+                owner: "testUser",
+                nextEntryId: 1,
+                entries: [
+                    { id: 1, date: 1618315200, text: "Today was a good day!" },
+                    { id: 2, date: 1618401600, text: "I went for a walk." }
+                ]
+            },
+            {
+                id: 2,
+                title: "Second Diary",
+                owner: "testUser",
+                nextEntryId: 1,
+                entries: [
+                    { id: 1, date: 1618498000, text: "Had a great meal!" }
+                ]
+            }
+        ];
+        // Simulate a backend API call
+        return mockDiaries;
+    } catch (e) {
         console.log(e);
         return undefined;
     }
 }
 
 
-export async function changePassword(username:String, oldPassword:string, newPassword:string)
+export async function changePassword(username:string, oldPassword:string, newPassword:string)
     : Promise<string | undefined> {
     try {
         const response = await axios.patch<string>(
@@ -74,7 +100,15 @@ export async function deleteEntryRequest(owner:string, diaryId:number, entryId:n
 }
 
 
-
-
-
-
+export async function createDiary(username: string, title: string): Promise<Diary | string> {
+    try {
+      const response = await axios.post<Diary | string>(`${BASE_URL}/diary/creatediary`, {
+        username,
+        title,
+      });
+      return response.data;
+    } catch (e: any) {
+      console.error(e);
+      return "Request failed"; 
+    }
+  }

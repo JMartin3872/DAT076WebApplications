@@ -66,8 +66,6 @@ export class DiaryService {
         catch(error){
             return undefined;
         }
-
-        
     }
 
     // Delete an entry from a diary
