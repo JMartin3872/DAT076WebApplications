@@ -73,12 +73,24 @@ export async function signIn(username: string, password: string): Promise<Diary[
     }
 }
 
-
 export async function changePassword(username:string, oldPassword:string, newPassword:string)
     : Promise<string | undefined> {
     try {
         const response = await axios.patch<string>(
             `${BASE_URL}/login/changepassword`, {username, oldPassword,newPassword})
+        return response.data;
+    }
+    catch (e) {
+        console.log(e);
+        return undefined;
+    }
+}
+
+export async function addEntryRequest(username: string, diaryId: number, text: string)
+    : Promise<Entry[] | undefined> {
+    try {
+        const response = await axios.post<Entry[]>(`${BASE_URL}/diary/createentry`,
+            {data:{username: username, diaryId: diaryId, text: text}});
         return response.data;
     }
     catch (e) {

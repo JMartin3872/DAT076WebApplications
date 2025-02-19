@@ -1,6 +1,6 @@
 
 import {useState} from "react";
-import {Container,Row,Col,Button} from "react-bootstrap";
+import {Container, Row, Col, Button} from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./diary.css"
 import {Diary, Entry, signIn} from "../api.ts";
@@ -38,7 +38,7 @@ let testDiary: Diary = {
 
 export function DiaryComponent() {
     
-
+    const navigate = useNavigate();
     const [diary, setDiary] = useState<Diary>(testDiary);
 
     return(
@@ -50,7 +50,8 @@ export function DiaryComponent() {
                     </Col>
 
                     <Col className="text-end">
-                        <Button className="diarybutton" variant="primary" type="button">Back</Button>
+                        <Button className="diarybutton" variant="primary" type="button" onClick={() => navigate("/List-of-diaries")}>
+                            Back</Button>
                     </Col>
                 </Row>
                 <Row>
