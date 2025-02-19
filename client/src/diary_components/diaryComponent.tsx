@@ -33,22 +33,13 @@ let testDiary: Diary = {
     nextEntryId: 0,
 };
 
-const a_diary_list = await signIn("test","123");
+// code for testing stops here
 
-console.log(a_diary_list)
 
 export function DiaryComponent() {
     
 
     const [diary, setDiary] = useState<Diary>(testDiary);
-
-    if(a_diary_list){
-        setDiary(a_diary_list[0]);
-    }
-    
-// code for testing stops here
-
-    //const testDiary = await signIn()
 
     return(
         <>
