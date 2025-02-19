@@ -36,7 +36,13 @@ export async function registerNewUser(username:string, password:string): Promise
 
 export async function signIn(username: string, password: string): Promise<Diary[] | undefined> {
     try {
-        // Created mock diaries to be able to see the List of Diaries page (Tyra & Melissa) without having to log in. 
+        //Commented out the return so moch gets returned!
+        await axios.post<Diary[]>(
+            `${BASE_URL}/login`,{ username, password });
+           // return response.data;
+
+
+        // Created mock diaries to be able to see the List of Diaries page (Tyra & Melissa) without having to log in.
         const mockDiaries: Diary[] = [
             {
                 id: 1,

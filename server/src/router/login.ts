@@ -7,7 +7,7 @@ const loginService : LoginService = new LoginService();
 
 export const loginRouter : Router = express.Router();
 
-loginRouter.get("/getlogins", async (
+loginRouter.get("/", async (
     req : Request, res : Response) => {
     const list = await loginService.getLogin();
     res.status(201).send(list);
@@ -36,7 +36,7 @@ loginRouter.post("/register", async (
 
 //TODO: Fix request session as well!
 //Router for a user trying to login
-loginRouter.post("/trylogin", async (
+loginRouter.post("/", async (
     req : Request<{},Diary[] | string,{username : string; password : string}>,
     res: Response<Diary[] | string>
     )=> {
@@ -45,7 +45,7 @@ loginRouter.post("/trylogin", async (
         if (loginResult === undefined) {
             res.status(401).send("Wrong credentials");
         } else {
-            (req as any).session.username = req.body.username;
+          //  (req as any).session.username = req.body.username;
             res.status(200).send(loginResult);
 
         }
