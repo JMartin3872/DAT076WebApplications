@@ -3,11 +3,12 @@ import {useState} from "react";
 import {Container,Row,Col,Button} from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./diary.css"
-import {Diary, Entry} from "../api.ts";
+import {Diary, Entry, signIn} from "../api.ts";
 import { useNavigate } from "react-router-dom";
 import { DiaryInputComponent } from "./diaryInputComponent.tsx";
 import { EntryListComponent } from "./entryListComponent.tsx";
 
+//Code for testing starts here
 let entry1: Entry = {
     id: 0,
     date: 1,
@@ -32,9 +33,22 @@ let testDiary: Diary = {
     nextEntryId: 0,
 };
 
-export function DiaryComponent() {
+const a_diary_list = await signIn("test","123");
 
-    const [diary, setDiary] = useState<Diary>(testDiary)
+console.log(a_diary_list)
+
+export function DiaryComponent() {
+    
+
+    const [diary, setDiary] = useState<Diary>(testDiary);
+
+    if(a_diary_list){
+        setDiary(a_diary_list[0]);
+    }
+    
+// code for testing stops here
+
+    //const testDiary = await signIn()
 
     return(
         <>
@@ -56,8 +70,6 @@ export function DiaryComponent() {
                     <EntryListComponent diary={diary}/>
                 </Row>    
             </Container>
-
-            
         </>
     );
 }

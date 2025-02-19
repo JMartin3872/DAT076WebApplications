@@ -22,6 +22,7 @@ export interface Entry {
 }
 
 const BASE_URL = "http://localhost:8080"
+
 export async function registerNewUser(username:string, password:string): Promise<string | undefined> {
    try {
        const response = await axios.post<string>(`${BASE_URL}/login/register`,
@@ -52,6 +53,18 @@ export async function changePassword(username:String, oldPassword:string, newPas
     try {
         const response = await axios.patch<string>(
             `${BASE_URL}/login/changepassword`, {username, oldPassword,newPassword})
+        return response.data;
+    }
+    catch (e) {
+        console.log(e);
+        return undefined;
+    }
+}
+
+export async function deleteEntryRequest(owner:string, diaryId:number, entryId:number)
+    : Promise<Entry[] | undefined> {
+    try {
+        const response = await axios.delete<Entry[]>(`${BASE_URL}/diary/deleteentry`, {data:{owner : owner, diaryId : diaryId, entryId : entryId}});
         return response.data;
     }
     catch (e) {
