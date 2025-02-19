@@ -86,8 +86,15 @@ export async function changePassword(username:string, oldPassword:string, newPas
     }
 }
 
-
-
-
-
-
+export async function createDiary(username: string, title: string): Promise<Diary | string> {
+    try {
+      const response = await axios.post<Diary | string>(`${BASE_URL}/diary/creatediary`, {
+        username,
+        title,
+      });
+      return response.data;
+    } catch (e: any) {
+      console.error(e);
+      return "Request failed"; 
+    }
+  }
