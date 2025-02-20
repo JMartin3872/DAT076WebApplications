@@ -47,7 +47,7 @@ export function DiaryListComponent() {
             <ul className="diary-list">
                 {diaryList.map((diary) => (
                     <li key={diary.id}>
-                        <NavLink to={`/diary/${diary.id}`} className="diary-link">
+                        <NavLink to={`/diary/`} state={{diary: diary}} className="diary-link">
                             {diary.title}
                         </NavLink>
                     </li>

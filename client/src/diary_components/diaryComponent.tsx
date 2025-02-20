@@ -4,7 +4,7 @@ import {Container, Row, Col, Button} from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./diary.css"
 import {Diary, Entry, signIn} from "../api.ts";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { DiaryInputComponent } from "./diaryInputComponent.tsx";
 import { EntryListComponent } from "./entryListComponent.tsx";
 
@@ -39,7 +39,8 @@ let testDiary: Diary = {
 export function DiaryComponent() {
     
     const navigate = useNavigate();
-    const [diary, setDiary] = useState<Diary>(testDiary);
+    const location = useLocation();
+    const [diary, setDiary] = useState<Diary>(location.state.diary);
 
     return(
         <>
