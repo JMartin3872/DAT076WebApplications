@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {Button, Form, FormLabel} from "react-bootstrap";
+import {Button, Container, Form, FormLabel, Row} from "react-bootstrap";
 import {registerNewUser} from "./api.ts";
 import {NavLink, useNavigate} from "react-router-dom";
 
@@ -14,13 +14,15 @@ export function RegisterPage() {
         navigate("/");
     }
     return (
-        <>
-            <h2>Registration page!</h2>
-            <Form>
+
+            <Container fluid>
+                <Row>
+            <h2 className="d-flex justify-content-center align-items-center " >Registration page!</h2>
+            <Form className="d-flex justify-content-center align-items-center mt-5">
                 <Form.Group controlId="username">
                     <FormLabel>Username:</FormLabel>
                     <Form.Control
-
+                        className="mx-2"
                         type="username"
                         placeholder="Write your username here"
                         value={username}
@@ -30,17 +32,21 @@ export function RegisterPage() {
                 <Form.Group controlId="password">
                     <FormLabel>Password:</FormLabel>
                     <Form.Control
+                        className="mx-2"
                         type="password"
                         placeholder="write your password here"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
                 </Form.Group>
-                <Button variant="primary" type="button" onClick={handleRegistration}>
+                <Button className="mx-3 mt-4" variant="primary" type="button" onClick={handleRegistration}>
                     Register!
                 </Button>
             </Form>
-            <NavLink to="/" end>Back to login screen</NavLink>
-        </>
+            <NavLink  className="d-flex justify-content-center align-items-center" to="/" end>Back to login screen</NavLink>
+                </Row>
+            </Container>
+
+
     )
 }

@@ -1,7 +1,7 @@
 
 import {signIn} from "./api.ts";
 import {useState} from "react";
-import {Button, Form, FormLabel} from "react-bootstrap";
+import {Button, Col, Container, Form, FormLabel, Row} from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Diary} from "./api.ts";
 import { useNavigate } from "react-router-dom";
@@ -28,35 +28,43 @@ const handleLogin = async () => {
 }
 
     return (
-        <>
-            <h2>Welcome to this lovely diary book</h2>
-            <Form>
-                <Form.Group controlId="username">
-                    <FormLabel>Username:</FormLabel>
-                    <Form.Control
-                        type="username"
-                        placeholder="Write your username here"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                    />
-                </Form.Group>
 
-                <Form.Group controlId="password">
-                    <FormLabel>Password:</FormLabel>
-                    <Form.Control
-                        type="password"
-                        placeholder="write your password here"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                </Form.Group>
-                <Button variant="primary" type="button" onClick={handleLogin}>
-                    Login!
-                </Button>
-            </Form>
-            <NavLink to="/register" end style={{ display : "block"}}>Register new user!</NavLink>
-            <NavLink to="/changepassword" end>Change password!</NavLink>
-        </>
+            <Container  fluid>
+                    <Row>
+                    <h2  className="d-flex justify-content-center align-items-center ">Welcome to this lovely diary book</h2>
+                    <Form className="d-flex justify-content-center align-items-center mt-5">
+                        <Form.Group controlId="username">
+                            <FormLabel>Username:</FormLabel>
+                            <Form.Control
+                                className="mx-2"
+                                type="username"
+                                placeholder="Write your username here"
+                                value={username}
+                                onChange={(e) => setUsername(e.target.value)}
+                            />
+                        </Form.Group>
+
+                        <Form.Group controlId="password">
+                            <FormLabel>Password:</FormLabel>
+                            <Form.Control
+                                className="mx-2"
+                                type="password"
+                                placeholder="write your password here"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                            />
+                        </Form.Group>
+
+                        <Button className="mx-3 mt-4" variant="primary" type="button" onClick={handleLogin}>
+                            Login!
+                        </Button>
+
+                    </Form>
+                    <NavLink  className="d-flex justify-content-center align-items-center" to="/register" end style={{ display : "block"} }>Register new user!</NavLink>
+                    <NavLink className="d-flex justify-content-center align-items-center" to="/changepassword" end>Change password!</NavLink>
+                    </Row>
+            </Container>
+
     )
 
 }
