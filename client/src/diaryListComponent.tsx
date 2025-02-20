@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, Modal, Form } from "react-bootstrap";
+import { Button, Modal, Form, Dropdown } from "react-bootstrap";
 import { useNavigate, NavLink } from "react-router-dom";
 import { Diary } from "./api";
 import "./diaryListComponent.css";
@@ -9,6 +9,8 @@ export function DiaryListComponent() {
     const [diaryList,setDiaryList] = useState<Diary[]>([]);
     const [showModal, setShowModal] = useState(false);
     const [diaryTitle, setDiaryTitle] = useState("");
+    const [selectedDiary, setSelectedDiary] = useState<Diary | null>(null);
+    const [editMode, setEditMode] = useState(false);
 
     const logOutButton = () => {
         navigate("/"); // Currently only navigates back to Login page. 
@@ -16,23 +18,45 @@ export function DiaryListComponent() {
 
     const handleCreateDiary = () => {
         setShowModal(true);
+        setEditMode(false);
     };
 
     const handleSaveDiary = () => {
         if (diaryTitle.trim() !== "") {
-            const newDiary: Diary = {
-                id: diaryList.length + 1,
-                title: diaryTitle,
-                owner: "Current User", // Currently not user specific, will be soon
-                nextEntryId: 0,
-                entries: []
-            };
-
-            setDiaryList([...diaryList, newDiary]);
+            if (editMode && selectedDiary) {
+                // RENAME DIARY
+                setDiaryList(
+                    diaryList.map(d => d.id === selectedDiary.id ? { ...d, title: diaryTitle } : d)
+                );
+            } 
+            else {
+                // CREATE DIARY
+                const newDiary: Diary = {
+                    id: diaryList.length + 1,
+                    title: diaryTitle,
+                    owner: "Current User",
+                    nextEntryId: 0,
+                    entries: [],
+                };
+                setDiaryList([...diaryList, newDiary]);
+            }
             setDiaryTitle("");
             setShowModal(false);
+            setSelectedDiary(null);
         }
     };
+
+    const handleDeleteDiary = async(diaryId: number) => {
+        setDiaryList(diaryList.filter(d => d.id !== diaryId));
+    };
+
+    const handleRenameDiary = (diary: Diary) => {
+        setSelectedDiary(diary);
+        setDiaryTitle(diary.title);
+        setEditMode(true);
+        setShowModal(true);
+    };
+
 
     return (
         <>
@@ -48,19 +72,37 @@ export function DiaryListComponent() {
                 {diaryList.map((diary) => (
                     <li key={diary.id}>
                         <NavLink to={`/diary/`} state={{diary: diary}} className="diary-link">
-                            {diary.title}
+                        {diary.title}                         
                         </NavLink>
+                        <Dropdown> 
+                            <Dropdown.Toggle variant="link" className="dots-button">
+                                ⋮
+                            </Dropdown.Toggle>
+                            <Dropdown.Menu>
+                                <Dropdown.Item onClick={() => handleRenameDiary(diary)}>
+                                    Rename
+                                </Dropdown.Item>
+                                <Dropdown.Item onClick={() => handleDeleteDiary(diary.id)}>
+                                    Delete
+                                </Dropdown.Item>
+                                <Dropdown.Item onClick={() => console.log("Cancelled")}>
+                                    Cancel
+                                </Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown>
                     </li>
                 ))}
             </ul>
 
-            <Button variant="primary" type="button" onClick={logOutButton}>
+
+            <Button variant="danger" type="button" onClick={logOutButton}>
                 Log out
             </Button> 
 
+
             <Modal show={showModal} onHide={() => setShowModal(false)}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Create New Diary</Modal.Title>
+                    <Modal.Title>{editMode ? "Rename Diary" : "Create New Diary"}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form.Group controlId="diaryTitle">
@@ -78,10 +120,10 @@ export function DiaryListComponent() {
                         Cancel
                     </Button>
                     <Button variant="primary" onClick={handleSaveDiary}>
-                        Create
+                       {editMode ? "Rename" : "Create" }
                     </Button>
                 </Modal.Footer>
             </Modal>
         </>
     );
-}
+} 
