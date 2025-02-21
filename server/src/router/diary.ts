@@ -26,15 +26,14 @@ diaryRouter.get("/getalldiaries", async(req : Request, res : Response<Diary | st
 // Creates a new entry with the text in the body
 diaryRouter.post("/createentry", async (
     req: Request<{}, {}, { username: string; diaryId: number; text: string }>,
-    res: Response<Entry | string>
+    res: Response<Entry[] | string>
 ) => {
     try {
-        const description = req.body.text;
-        if (typeof(description) !== "string") {
-            res.status(400).send(`Bad POST call to ${req.originalUrl} --- description has type ${typeof(description)}`);
+        const { username, diaryId, text } = req.body;
+        if (typeof text !== "string") {
+            res.status(400).send("Invalid type of text");
             return;
         }
-        const { username, diaryId, text } = req.body;
         const newEntry = await diaryService.addEntry(username, diaryId, text);
         res.status(typeof newEntry === "string" ? 400 : 201).send(newEntry);
 

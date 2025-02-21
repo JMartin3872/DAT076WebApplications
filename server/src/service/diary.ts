@@ -48,24 +48,22 @@ export class DiaryService {
     }    
 
     // Add a new entry to the diary
-    async addEntry(username: string, diaryId: number, entryText: string): Promise<Entry | undefined> {
+    async addEntry(username: string, diaryId: number, entryText: string)
+    : Promise<Entry[] | string> {
+        
         const diary = this.diary.find(d => d.id === diaryId && d.owner === username);
         
-        try{
-            if(diary){
-                let newEntry: Entry = {
-                    id: diary.nextEntryId++,
-                    date: Date.now(),
-                    text: entryText
-                };
-                diary.entries.push(newEntry);
-                return newEntry;
+        if(!diary){
+                return "Could not add entry to diary as diary was not found"
             }
-        }
 
-        catch(error){
-            return undefined;
-        }
+        const newEntry: Entry = {
+            id: diary.nextEntryId++,
+            date: Date.now(),
+            text: entryText
+        };
+        diary.entries.push(newEntry);
+        return diary.entries;
     }
 
     // Delete an entry from a diary

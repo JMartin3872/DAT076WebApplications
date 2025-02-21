@@ -35,12 +35,15 @@ let testDiary: Diary = {
 
 // code for testing stops here
 
-
 export function DiaryComponent() {
     
     const navigate = useNavigate();
     const location = useLocation();
-    const [diary, setDiary] = useState<Diary>(location.state.diary);
+    const [diary, setDiary] = useState<Diary>(testDiary)   //(location.state.diary);  //TODO change back!
+
+    const handleAddEntry = (newDiary: Diary) => {
+        setDiary(newDiary);
+    };
 
     return(
         <>
@@ -56,7 +59,7 @@ export function DiaryComponent() {
                     </Col>
                 </Row>
                 <Row>
-                    <DiaryInputComponent diary={diary}/>
+                    <DiaryInputComponent diary={diary} onAdd={handleAddEntry}/>
                 </Row>
 
                 <Row>

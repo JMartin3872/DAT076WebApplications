@@ -88,9 +88,11 @@ export async function changePassword(username:string, oldPassword:string, newPas
 
 export async function addEntryRequest(username: string, diaryId: number, text: string)
     : Promise<Entry[] | undefined> {
+        
     try {
         const response = await axios.post<Entry[]>(`${BASE_URL}/diary/createentry`,
-            {data:{username: username, diaryId: diaryId, text: text}});
+            {username, diaryId, text}
+        );
         return response.data;
     }
     catch (e) {
