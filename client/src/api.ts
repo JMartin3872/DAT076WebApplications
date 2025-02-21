@@ -101,10 +101,10 @@ export async function addEntryRequest(username: string, diaryId: number, text: s
     }
 }
 
-export async function deleteEntryRequest(owner:string, diaryId:number, entryId:number)
+export async function deleteEntryRequest(username:string, diaryId:number, entryId:number)
     : Promise<Entry[] | undefined> {
     try {
-        const response = await axios.delete<Entry[]>(`${BASE_URL}/diary/deleteentry`, {data:{owner : owner, diaryId : diaryId, entryId : entryId}});
+        const response = await axios.delete<Entry[]>(`${BASE_URL}/diary/deleteentry`, {data:{username : username, diaryId : diaryId, entryId : entryId}});
         return response.data;
     }
     catch (e) {

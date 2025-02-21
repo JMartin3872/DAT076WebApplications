@@ -5,97 +5,40 @@ import { Diary, Entry, addEntryRequest } from "../api.ts";
 import { NavLink, useNavigate } from "react-router-dom";
 
 type DiaryInputProps = {
-    diary: Diary;
-    onAdd: (diary: Diary) => void;
+    onAdd: (newEntryText : string) => void;
 };
 
-export function DiaryInputComponent({ diary, onAdd }: DiaryInputProps) {
+export function DiaryInputComponent({ onAdd }: DiaryInputProps) {
     const [entryText, setEntryText] = useState<string>("");
 
-    // Mock entry
-    const addEntry = async () => {
-        // Create mock entry
-        const newEntry: Entry = {
-            id: diary.entries.length,
-            text: entryText,
-            date: Date.now(),
-        };
-
-        // Update diary locally
-        const newDiary: Diary = {
-            ...diary,
-            entries: [...diary.entries, newEntry],
-        };
-
-        onAdd(newDiary); // Update parent state
+    const doOnClick = () => {
         setEntryText("");
-    };
-  
-    return (
-        <div className="mb-4">
-            <h2 className="text-center mb-3">What's on your mind?</h2>
-            <textarea
-                className="form-control mb-3"
-                value={entryText}
-                onChange={(e) => setEntryText(e.target.value)}
-                rows={4}
-            />
-            <Button
-                variant="primary"
-                onClick={addEntry}
-                disabled={!entryText.trim()}
-            >
-                Post!
-            </Button>
-        </div>
+        onAdd(entryText);
+    }
+
+    //TODO uncomment this when working with backend.
+
+return (
+    <div className="mb-4">
+        <h2 className="text-center mb-3">What's on your mind?</h2>
+        <textarea
+        className="form-control mb-3"
+        value={entryText}
+        onChange={(e) => setEntryText(e.target.value)}
+        rows={4}
+        />
+        <Button 
+        variant="primary" 
+        onClick={() => 
+            onAdd(entryText)
+        }
+        disabled={!entryText.trim()}
+        >
+            Post!
+        </Button>
+    </div>
     );
 }
-  
-    // TODO uncomment this when working with backend.
-
-    //     try {
-    //         const newEntryList = await addEntryRequest(diary.owner, diary.id, entryText);
-
-    //         if(!newEntryList) {
-    //             console.log("Error! Could not post new entry!");
-    //             return;
-    //         }
- 
-    //         const newDiary : Diary = {
-    //             id : diary.id,
-    //             owner : diary.owner,
-    //             title : diary.title,
-    //             nextEntryId : diary.nextEntryId,
-    //             entries : newEntryList
-    //         };
-
-    //         onAdd(newDiary);
-    //         setEntryText("");
-    //     }
-    //     catch (error) {
-    //         console.log("Error! Something went wrong!");
-    //     }
-    // };
-
-    // return (
-    //     <div className="mb-4">
-    //       <h2 className="text-center mb-3">What's on your mind?</h2>
-    //       <textarea
-    //         className="form-control mb-3"
-    //         value={entryText}
-    //         onChange={(e) => setEntryText(e.target.value)}
-    //         rows={4}
-    //       />
-    //       <Button 
-    //         variant="primary" 
-    //         onClick={addEntry}
-    //         disabled={!entryText.trim()}
-    //       >
-    //         Post!
-    //       </Button>
-    //     </div>
-    //   );
-    // }
 
 
 
