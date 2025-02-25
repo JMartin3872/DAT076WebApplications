@@ -49,21 +49,31 @@ export class DiaryService {
 
     // Add a new entry to the diary
     async addEntry(username: string, diaryId: number, entryText: string)
-    : Promise<Entry[] | string> {
-        
-        const diary = this.diary.find(d => d.id === diaryId && d.owner === username);
-        
-        if(!diary){
-                return "Could not add entry to diary as diary was not found"
-            }
+        : Promise<Entry[] | string> {
+        try {
+            const diary = this.diary.find(d => d.id === diaryId);
 
-        const newEntry: Entry = {
-            id: diary.nextEntryId++,
-            date: Date.now(),
-            text: entryText
-        };
-        diary.entries.push(newEntry);
-        return diary.entries;
+            if (!diary) {
+                return "Could not add entry as the specified diary does not exist";
+            }
+            else if (diary.owner !== username) {
+                return "You cannot add an entry to a diary that you do not own";
+            }
+            else {
+            const newEntry: Entry = {
+                id: diary.nextEntryId++,
+                date: Date.now(),
+                text: entryText
+            };
+            diary.entries.push(newEntry);
+            return diary.entries;
+        }
+    }
+
+        catch (error) {
+            console.error("Error adding entry to diary:", error);
+            return "An error occurred while adding the entry.";
+        }
     }
 
     // Delete an entry from a diary
@@ -97,3 +107,4 @@ export class DiaryService {
         return JSON.parse(JSON.stringify(this.diary));
     }
 }
+
