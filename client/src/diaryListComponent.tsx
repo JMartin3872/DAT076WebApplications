@@ -10,7 +10,7 @@ export function DiaryListComponent() {
     const navigate = useNavigate();
     const location = useLocation();
 
-    const [diaryList, setDiaryList] = useState<Diary[]>(location.state.dlist || []);
+    const [diaryList, setDiaryList] = useState<Diary[]>(location.state.dList || []);
     const [username] = useState<string>(location.state?.username || ""); 
     const [showModal, setShowModal] = useState(false);
     const [diaryTitle, setDiaryTitle] = useState("");

@@ -32,8 +32,7 @@ export function DiaryComponent() {
                 nextEntryId : diary.nextEntryId++,
                 entries : newEntryList
             };
-    
-            console.log(newEntryList);
+            
             setDiary(newDiary);
         }
         catch (error) {
