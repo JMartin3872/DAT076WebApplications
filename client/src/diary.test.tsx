@@ -1,4 +1,3 @@
-// Polyfill for TextEncoder/TextDecoder if they are undefined
 if (typeof global.TextEncoder === "undefined") {
     const { TextEncoder, TextDecoder } = require("util");
     global.TextEncoder = TextEncoder;
@@ -6,7 +5,6 @@ if (typeof global.TextEncoder === "undefined") {
   }
   
   import { render, screen, fireEvent } from '@testing-library/react';
-  import { BrowserRouter } from 'react-router-dom';
   import { DiaryListComponent } from './diaryListComponent';
   
   describe('DiaryListComponent', () => {
