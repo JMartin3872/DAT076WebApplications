@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { Button, Modal, Form, Dropdown } from "react-bootstrap";
-import { useNavigate, NavLink } from "react-router-dom";
+import { useNavigate, NavLink, useLocation } from "react-router-dom";
 import { Diary } from "./api";
 import "./diaryListComponent.css";
 
 export function DiaryListComponent() {
+
     const navigate = useNavigate();
-    const [diaryList,setDiaryList] = useState<Diary[]>([]);
+    const location = useLocation();
+    const [diaryList, setDiaryList] = useState<Diary[]>(location.state?.diaryList || []);
+    const [username] = useState<string>(location.state?.username || ""); 
     const [showModal, setShowModal] = useState(false);
     const [diaryTitle, setDiaryTitle] = useState("");
     const [selectedDiary, setSelectedDiary] = useState<Diary | null>(null);
@@ -35,7 +38,7 @@ export function DiaryListComponent() {
                 const newDiary: Diary = {
                     id: diaryList.length + 1,
                     title: diaryTitle,
-                    owner: "Current User",
+                    owner: username,
                     nextEntryId: 0,
                     entries: [],
                 };

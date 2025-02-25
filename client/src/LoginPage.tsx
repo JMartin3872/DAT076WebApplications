@@ -1,4 +1,3 @@
-
 import {signIn} from "./api.ts";
 import {useState} from "react";
 import {Button, Col, Container, Form, FormLabel, Row} from "react-bootstrap";
@@ -21,7 +20,7 @@ const handleLogin = async () => {
     console.log(dList);
     if (dList !== undefined) {
         setDiaryList(dList);
-        navigate("/List-of-Diaries", { state: { diaryList} }); // Sending the diaryList state as to Tyra/Melissas page
+        navigate("/List-of-Diaries", { state: { diaryList, username: username } }); // Sending the diaryList state as to Tyra/Melissas page
     } else {
         console.log("Something went wrong in handleLogin(), returning undefined")
     }
@@ -68,4 +67,3 @@ const handleLogin = async () => {
     )
 
 }
-
