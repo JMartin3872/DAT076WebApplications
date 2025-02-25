@@ -7,6 +7,11 @@ const loginService : LoginService = new LoginService();
 
 export const loginRouter : Router = express.Router();
 
+interface UserRequest extends Request {
+    body: { username: string, password: string },
+    session: any
+}
+
 loginRouter.get("/", async (
     req : Request, res : Response) => {
     const list = await loginService.getLogin();
@@ -34,20 +39,22 @@ loginRouter.post("/register", async (
     }
 )
 
-//TODO: Fix request session as well!
+
 //Router for a user trying to login
 loginRouter.post("/", async (
-    req : Request<{},Diary[] | string,{username : string; password : string}>,
+    req : UserRequest,
     res: Response<Diary[] | string>
     )=> {
     try {
+        if (req.session.username === req.body.username){
+            delete req.session.username   //If the user is already logged in, log out and log in as this user
+        }
         const loginResult: Diary[] | undefined = await loginService.tryLogin(req.body.username, req.body.password)
         if (loginResult === undefined) {
             res.status(401).send("Wrong credentials");
         } else {
-          //  (req as any).session.username = req.body.username;
+            req.session.username = req.body.username //Giving a token to the user just logged in
             res.status(200).send(loginResult);
-
         }
     }
     catch(e:any){

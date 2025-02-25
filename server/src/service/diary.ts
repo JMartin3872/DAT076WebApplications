@@ -80,6 +80,7 @@ export class DiaryService {
     }
    
     // Get all diaries of a specific user
+    //TODO: I think here you ladies should control the session and see if its the correct user! :)
     async getListOfDiaries(username: string): Promise<Diary[]> {
         try {
             return this.diary.filter(d => d.owner === username);
