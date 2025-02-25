@@ -47,7 +47,7 @@ export class DiaryService {
         }
     }    
 
-    // Add a new entry to the diary
+    // Add a new entry to a diary if it exists and the user is the owner
     async addEntry(username: string, diaryId: number, entryText: string)
         : Promise<Entry[] | string> {
         try {
@@ -60,15 +60,15 @@ export class DiaryService {
                 return "You cannot add an entry to a diary that you do not own";
             }
             else {
-            const newEntry: Entry = {
-                id: diary.nextEntryId++,
-                date: Date.now(),
-                text: entryText
-            };
-            diary.entries.push(newEntry);
-            return diary.entries;
+                const newEntry: Entry = {
+                    id: diary.nextEntryId++,
+                    date: Date.now(),
+                    text: entryText
+                };
+                diary.entries.push(newEntry);
+                return diary.entries;
+            }
         }
-    }
 
         catch (error) {
             console.error("Error adding entry to diary:", error);

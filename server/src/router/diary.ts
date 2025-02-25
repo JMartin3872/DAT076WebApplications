@@ -34,8 +34,8 @@ diaryRouter.post("/createentry", async (
             res.status(400).send("Invalid type of text");
             return;
         }
-        const newEntry = await diaryService.addEntry(username, diaryId, text);
-        res.status(typeof newEntry === "string" ? 400 : 201).send(newEntry);
+        const newEntryList = await diaryService.addEntry(username, diaryId, text);
+        res.status(typeof newEntryList === "string" ? 400 : 201).send(newEntryList);
 
     } catch (e: any) {
         res.status(500).send(e.message);

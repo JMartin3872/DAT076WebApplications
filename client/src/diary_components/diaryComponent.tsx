@@ -8,6 +8,10 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { DiaryInputComponent } from "./diaryInputComponent.tsx";
 import { EntryListComponent } from "./entryListComponent.tsx";
 
+// Parent component to DiaryInputComponent and EntryListComponent.
+// This component displays the diary title, a text area to add new entries, and a list of existing entries.
+// The user can add new entries to the diary and delete existing entries.
+// The user can also navigate back to the list of diaries.
 export function DiaryComponent() {
     
     const navigate = useNavigate();
@@ -15,7 +19,7 @@ export function DiaryComponent() {
     const [diary, setDiary] = useState<Diary>(location.state.diary);
     const [username] = useState<string>(location.state.username);
 
-
+    // Function to handle adding a new entry to the diary.
     const handleAddEntry = async (newEntryText : string) => {
         try {
             const newEntryList = await addEntryRequest(diary.owner, diary.id, newEntryText);
@@ -62,6 +66,7 @@ export function DiaryComponent() {
         }
     }
 
+    // Function to navigate back to the list of diaries.
     const backToDiaries = async () : Promise<void> => {
         const dList = await getUserDiariesRequest(username);
 

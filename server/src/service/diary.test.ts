@@ -63,7 +63,7 @@ test('Only owner of a diary should be able to delete it', async () =>{
 
 // TEST #1 FOR ADDING AN ENTRY TO A DIARY
 test('Adding an entry to a diary should return an entry list containing an entry with the correct text. The list length should be one longer.', async () => {
-    
+
     let user = "User";
     let title = "Title";
     const entryText = "This is the entry's text";
@@ -71,9 +71,9 @@ test('Adding an entry to a diary should return an entry list containing an entry
     const diary = await diaryService.createDiary(user, title);
     let diaryId = (diary as Diary).id;
     const lengthBeforeAdd = (diary as Diary).entries.length;
-    
+
     const updatedEntryList = await diaryService.addEntry(user, diaryId, entryText);
-    
+
     expect((updatedEntryList as Entry[]).some(entry => entry.text === entryText)).toBe(true);
     expect((updatedEntryList as Entry[]).length).toBe(lengthBeforeAdd + 1);
 });
@@ -85,18 +85,18 @@ test('Should not be able to add an entry to a non-existing diary', async () => {
     const nonExistingDiaryId = 1;
 
     const missingDiaryEntry = await diaryService.addEntry(user, nonExistingDiaryId, text);
-    
+
     expect(missingDiaryEntry as string).toStrictEqual("Could not add entry as the specified diary does not exist");
 });
 
-// // TEST #3 FOR ADDING AN ENTRY TO A DIARY
+// TEST #3 FOR ADDING AN ENTRY TO A DIARY
 test('User should not be able to add an entry to a diary owned by another user', async () => {
     const user1 = "User1";
     const user2 = "User2";
 
     const diaryUser1 = await diaryService.createDiary(user1, "My diary");
     const illegalEntry = await diaryService.addEntry(user2, (diaryUser1 as Diary).id, "Entry of hacked diary by User2");
-    
+
     expect(illegalEntry as string).toStrictEqual("You cannot add an entry to a diary that you do not own");
 });
 

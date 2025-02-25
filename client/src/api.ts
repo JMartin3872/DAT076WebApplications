@@ -59,6 +59,7 @@ export async function changePassword(username:string, oldPassword:string, newPas
     }
 }
 
+// Adds an entry to a specified diary
 export async function addEntryRequest(username: string, diaryId: number, text: string)
     : Promise<Entry[] | undefined> {
         
@@ -100,6 +101,7 @@ export async function createDiary(username: string, title: string): Promise<Diar
     }
   }
 
+// Fetches all diaries for a specific user
 export async function getUserDiariesRequest(username: string): Promise<Diary[] | undefined> {
     try {
         const response = await axios.get<Diary[]>(`${BASE_URL}/diary/userdiaries`, {params : {username}});
