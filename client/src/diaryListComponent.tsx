@@ -17,6 +17,7 @@ export function DiaryListComponent() {
     };
 
     const handleCreateDiary = () => {
+        console.log("Create Diary button pressed!");  // for testing the button
         setShowModal(true);
         setEditMode(false);
     };
