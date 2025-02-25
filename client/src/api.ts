@@ -39,9 +39,6 @@ export async function signIn(username: string, password: string): Promise<Diary[
     try {
         const response = await axios.post<Diary[]>(`${BASE_URL}/login`, { username, password });
         return response.data; 
-    //    await axios.post<Diary[]>(
-      //      `${BASE_URL}/login`,{ username, password });
-           // return response.data;
 
     } catch (e) {
         console.log(e);
@@ -102,3 +99,13 @@ export async function createDiary(username: string, title: string): Promise<Diar
       return "Request failed"; 
     }
   }
+
+export async function getUserDiariesRequest(username: string): Promise<Diary[] | undefined> {
+    try {
+        const response = await axios.get<Diary[]>(`${BASE_URL}/diary/userdiaries`, {params : {username}});
+        return response.data;
+    } catch (e: any) {
+        console.error(e);
+        return undefined; 
+    }
+}

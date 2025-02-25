@@ -3,7 +3,7 @@ import {useState} from "react";
 import {Container, Row, Col, Button} from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./diary.css"
-import {Diary, addEntryRequest, deleteEntryRequest} from "../api.ts";
+import {Diary, addEntryRequest, deleteEntryRequest, getUserDiariesRequest} from "../api.ts";
 import { useNavigate, useLocation } from "react-router-dom";
 import { DiaryInputComponent } from "./diaryInputComponent.tsx";
 import { EntryListComponent } from "./entryListComponent.tsx";
@@ -13,11 +13,10 @@ export function DiaryComponent() {
     const navigate = useNavigate();
     const location = useLocation();
     const [diary, setDiary] = useState<Diary>(location.state.diary);
+    const [username] = useState<string>(location.state.username);
 
 
     const handleAddEntry = async (newEntryText : string) => {
-        console.log(newEntryText);
-
         try {
             const newEntryList = await addEntryRequest(diary.owner, diary.id, newEntryText);
     
@@ -64,6 +63,17 @@ export function DiaryComponent() {
         }
     }
 
+    const backToDiaries = async () : Promise<void> => {
+        const dList = await getUserDiariesRequest(username);
+
+        if(!dList){
+            console.log("Something bad happened");
+        }
+        else{
+            navigate("/List-of-diaries", { state: {dList, username : username} });
+        }  
+    }
+
     return(
         <>
             <Container fluid className="text-center">
@@ -73,8 +83,9 @@ export function DiaryComponent() {
                     </Col>
 
                     <Col className="text-end">
-                        <Button className="diarybutton" variant="primary" type="button" onClick={() => navigate("/List-of-diaries")}>
-                            Back</Button>
+                        <Button className="diarybutton" variant="primary" type="button" onClick={() => {backToDiaries()}}>
+                            Back
+                        </Button>
                     </Col>
                 </Row>
                 <Row >

@@ -82,7 +82,7 @@ diaryRouter.get("/userdiaries", async (
         const diaries = await diaryService.getListOfDiaries(username);
         res.status(200).send(diaries);
     } catch (e: any) {
-        res.status(500).send([]);
+        res.status(500).send(e.message);
     }
 });
 

@@ -18,7 +18,7 @@ export function EntryComponent({ myEntry, onDelete }: EntryComponentProps) {
     return(
         <>
             <div>
-                <p>
+                
                     <Card border="dark" style={{minWidth: '45rem'}} bg='light'>
                             <Card.Header>
                                 <Row>
@@ -43,7 +43,7 @@ export function EntryComponent({ myEntry, onDelete }: EntryComponentProps) {
                                 {entry.text}
                             </Card.Body>
                     </Card>
-                </p>
+           
             </div>
         </>
     );

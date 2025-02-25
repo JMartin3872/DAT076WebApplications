@@ -1,14 +1,16 @@
 import { useState } from "react";
 import { Button, Modal, Form, Dropdown } from "react-bootstrap";
 import { useNavigate, NavLink, useLocation } from "react-router-dom";
-import { Diary } from "./api";
+import { Diary, createDiary } from "./api";
 import "./diaryListComponent.css";
 
 export function DiaryListComponent() {
 
+
     const navigate = useNavigate();
     const location = useLocation();
-    const [diaryList, setDiaryList] = useState<Diary[]>(location.state?.diaryList || []);
+
+    const [diaryList, setDiaryList] = useState<Diary[]>(location.state.dlist || []);
     const [username] = useState<string>(location.state?.username || ""); 
     const [showModal, setShowModal] = useState(false);
     const [diaryTitle, setDiaryTitle] = useState("");
@@ -25,7 +27,7 @@ export function DiaryListComponent() {
         setEditMode(false);
     };
 
-    const handleSaveDiary = () => {
+    const handleSaveDiary = async () => {
         if (diaryTitle.trim() !== "") {
             if (editMode && selectedDiary) {
                 // RENAME DIARY
@@ -34,15 +36,16 @@ export function DiaryListComponent() {
                 );
             } 
             else {
-                // CREATE DIARY
-                const newDiary: Diary = {
-                    id: diaryList.length + 1,
-                    title: diaryTitle,
-                    owner: username,
-                    nextEntryId: 0,
-                    entries: [],
-                };
-                setDiaryList([...diaryList, newDiary]);
+                // Make a request to fetch a diary
+                const response = await createDiary(username,diaryTitle);
+                if(typeof response === "string"){
+                    console.log(response);
+                }
+
+                else{
+                    setDiaryList([...diaryList, (response as Diary)]);
+                }
+                
             }
             setDiaryTitle("");
             setShowModal(false);
@@ -75,7 +78,7 @@ export function DiaryListComponent() {
             <ul className="diary-list">
                 {diaryList.map((diary) => (
                     <li key={diary.id}>
-                        <NavLink to={`/diary/`} state={{diary: diary}} className="diary-link">
+                        <NavLink to={`/diary/`} state={{diary: diary, username : username}} className="diary-link">
                         {diary.title}                         
                         </NavLink>
                         <Dropdown> 

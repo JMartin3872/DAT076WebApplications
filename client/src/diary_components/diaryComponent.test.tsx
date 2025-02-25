@@ -20,7 +20,7 @@ jest.mock("react-router-dom", () => ({
   describe('DiaryComponent', () => {
 
     test('Checks if backbutton has been rendered', () => {
-        // Crate a mock diary
+        // Create a mock diary
         const newDiary: Diary = {
             id: 0,
             title: "A diary",
