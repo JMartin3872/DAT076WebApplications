@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { Button } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Diary, Entry, addEntryRequest } from "../api.ts";
-import { NavLink, useNavigate } from "react-router-dom";
 
 type DiaryInputProps = {
     onAdd: (newEntryText : string) => void;
@@ -11,10 +9,10 @@ type DiaryInputProps = {
 export function DiaryInputComponent({ onAdd }: DiaryInputProps) {
     const [entryText, setEntryText] = useState<string>("");
 
-    const doOnClick = () => {
-        setEntryText("");
-        onAdd(entryText);
-    }
+    // const doOnClick = () => {
+    //     setEntryText("");
+    //     onAdd(entryText);
+    // }
 
     //TODO uncomment this when working with backend.
 

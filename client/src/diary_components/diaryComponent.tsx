@@ -3,37 +3,10 @@ import {useState} from "react";
 import {Container, Row, Col, Button} from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./diary.css"
-import {Diary, Entry, addEntryRequest, deleteEntryRequest} from "../api.ts";
+import {Diary, addEntryRequest, deleteEntryRequest} from "../api.ts";
 import { useNavigate, useLocation } from "react-router-dom";
 import { DiaryInputComponent } from "./diaryInputComponent.tsx";
 import { EntryListComponent } from "./entryListComponent.tsx";
-
-//Code for testing starts here
-let entry1: Entry = {
-    id: 0,
-    date: 1,
-    text: "Inlägg1! Det här är ett inlägg"
-}
-let entry2: Entry = {
-    id: 1,
-    date: 2,
-    text: "Inlägg2! Det här är ett annat inlägg"
-}
-let entry3: Entry = {
-    id: 2,
-    date: 3,
-    text: "Inlägg3! Det här är ett tredje inlägg"
-}
-
-let testDiary: Diary = {
-    id: 0,
-    title: "Test dagbok",
-    owner: "Fredrik den II",
-    entries: [entry1, entry2, entry3],
-    nextEntryId: 0,
-};
-
-// code for testing stops here
 
 export function DiaryComponent() {
     
@@ -104,7 +77,7 @@ export function DiaryComponent() {
                             Back</Button>
                     </Col>
                 </Row>
-                <Row>
+                <Row >
                     <DiaryInputComponent onAdd={handleAddEntry}/>
                 </Row>
 
