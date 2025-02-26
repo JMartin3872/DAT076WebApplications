@@ -59,7 +59,6 @@ export async function changePassword(username:string, oldPassword:string, newPas
     }
 }
 
-// Adds an entry to a specified diary
 export async function addEntryRequest(username: string, diaryId: number, text: string)
     : Promise<Entry[] | undefined> {
         
@@ -101,7 +100,32 @@ export async function createDiary(username: string, title: string): Promise<Diar
     }
   }
 
-// Fetches all diaries for a specific user
+export async function deleteDiary(username: string, diaryId: number): Promise<Diary[] | undefined> {
+    try {
+      const response = await axios.delete<Diary[]>(`${BASE_URL}/diary/deletediary`, {
+        data: { username, diaryId },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error deleting diary:", error);
+      return undefined;
+    }
+  }
+  
+export async function renameDiary(username: string, diaryId: number, newTitle: string): Promise<Diary[] | undefined> {
+    try {
+      const response = await axios.patch<Diary[]>(`${BASE_URL}/diary/renamediary`, {
+        username,
+        diaryId,
+        newTitle,
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error renaming diary:", error);
+      return undefined;
+    }
+  }
+
 export async function getUserDiariesRequest(username: string): Promise<Diary[] | undefined> {
     try {
         const response = await axios.get<Diary[]>(`${BASE_URL}/diary/userdiaries`, {params : {username}});
