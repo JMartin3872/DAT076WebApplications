@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+
+axios.defaults.withCredentials = true;
 export interface Login{
     username : string;
     password : string;
@@ -38,7 +40,7 @@ export async function registerNewUser(username:string, password:string): Promise
 export async function signIn(username: string, password: string): Promise<Diary[] | undefined> {
     try {
         const response = await axios.post<Diary[]>(`${BASE_URL}/login`, { username, password });
-        return response.data; 
+        return response.data;
 
     } catch (e) {
         console.log(e);
@@ -61,7 +63,7 @@ export async function changePassword(username:string, oldPassword:string, newPas
 
 export async function addEntryRequest(username: string, diaryId: number, text: string)
     : Promise<Entry[] | undefined> {
-        
+
     try {
         const response = await axios.post<Entry[]>(`${BASE_URL}/diary/createentry`,
             {username, diaryId, text}
@@ -96,7 +98,7 @@ export async function createDiary(username: string, title: string): Promise<Diar
       return response.data;
     } catch (e: any) {
       console.error(e);
-      return "Request failed"; 
+      return "Request failed";
     }
   }
 
@@ -111,7 +113,7 @@ export async function deleteDiary(username: string, diaryId: number): Promise<Di
       return undefined;
     }
   }
-  
+
 export async function renameDiary(username: string, diaryId: number, newTitle: string): Promise<Diary[] | undefined> {
     try {
       const response = await axios.patch<Diary[]>(`${BASE_URL}/diary/renamediary`, {
@@ -132,6 +134,6 @@ export async function getUserDiariesRequest(username: string): Promise<Diary[] |
         return response.data;
     } catch (e: any) {
         console.error(e);
-        return undefined; 
+        return undefined;
     }
 }
