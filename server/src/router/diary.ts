@@ -1,23 +1,24 @@
 import express, { Request, Response } from "express";
+import { IDiaryService } from "../service/diaryServiceInterface";
 import { DiaryService } from "../service/diary";
 import { Entry } from "../model/diary";
 import { Diary } from "../model/diary";
 
 // TODO: What do we do here? Should a new diary be created for each diary service?
 // Should we have a new diaryservice for every diary or not?
-export const diaryService = new DiaryService();
+export const diaryService: IDiaryService = new DiaryService();
 export const diaryRouter = express.Router();
 
 // Handler of get requests
 // TODO: should the diary be passed here as an argument?
 // Returns the full diary content
-diaryRouter.get("/getalldiaries", async(req : Request, res : Response<Diary | string>) => {
-    try{
-        const diary : Diary = await diaryService.getDiaryContent();
+diaryRouter.get("/getalldiaries", async (req: Request, res: Response<Diary | string>) => {
+    try {
+        const diary: Diary = await diaryService.getDiaryContent();
         res.status(200).send(diary);
     }
 
-    catch(e : any){
+    catch (e: any) {
         res.status(500).send(e.message)
     }
 });
@@ -55,7 +56,7 @@ diaryRouter.delete("/deleteentry", async (
     } catch (e: any) {
         res.status(500).send(e.message);
     }
-    
+
 })
 
 // Create a new diary

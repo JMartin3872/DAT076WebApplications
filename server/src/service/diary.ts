@@ -1,9 +1,11 @@
-import {Diary} from "../model/diary";
-import {Entry} from "../model/diary";
+import { Diary } from "../model/diary";
+import { Entry } from "../model/diary";
+import { IDiaryService } from "./diaryServiceInterface";
+import { DiaryModel } from "../../db/diary.db";
 
 
 // Diary service class for manipulating diary and their entries
-export class DiaryService {
+export class DiaryService implements IDiaryService {
     private diary: Diary[] = [];
     private nextDiaryId: number = 0;
 
@@ -13,6 +15,15 @@ export class DiaryService {
             if (this.diary.some(d => d.owner === username && d.title === diaryTitle)) {
                 return "You already have a diary with this title.";
             }
+
+            // Here the db functionality is tested by creating a new diary and storing it in db
+            DiaryModel.create({
+                // diary id is omitted here as postgres autoincrements and sets id on each diary added, see diary.db.ts
+                title: diaryTitle,
+                owner: username,
+                nextEntryId: ++this.nextDiaryId
+            })
+
             let newDiary: Diary = {
                 id: this.nextDiaryId++,
                 title: diaryTitle,
@@ -23,12 +34,12 @@ export class DiaryService {
             this.diary.push(newDiary);
             return newDiary;
         }
-       
+
         catch (error) {
             console.error("There was an error creating the diary:", error);
             return "An error occurred while creating the diary.";
         }
-    }    
+    }
 
     // Delete a diary only if the requesting user is the owner
     async deleteDiary(username: string, diaryId: number): Promise<Diary[] | string> {
@@ -40,12 +51,12 @@ export class DiaryService {
             this.diary.splice(diaryIndex, 1);
             return this.getListOfDiaries(username);
         }
-       
+
         catch (error) {
             console.error("Error deleting diary:", error);
             return "An error occurred while deleting the diary.";
         }
-    }    
+    }
 
     // Add a new entry to a diary if it exists and the user is the owner
     async addEntry(username: string, diaryId: number, entryText: string)
@@ -79,31 +90,31 @@ export class DiaryService {
     // Delete an entry from a diary
     async deleteEntry(username: string, diaryId: number, entryId: number): Promise<Entry[] | string> {
         const diary = this.diary.find(d => d.id === diaryId && d.owner === username);
-        
-            if(!diary){
-                return "No such diary was found"
-            }
 
-            diary.entries = diary.entries.filter(entry => entry.id !== entryId);
-            return diary.entries;
-               
+        if (!diary) {
+            return "No such diary was found"
+        }
+
+        diary.entries = diary.entries.filter(entry => entry.id !== entryId);
+        return diary.entries;
+
     }
-   
+
     // Get all diaries of a specific user
     //TODO: I think here you ladies should control the session and see if its the correct user! :)
     async getListOfDiaries(username: string): Promise<Diary[]> {
         try {
             return this.diary.filter(d => d.owner === username);
         }
-       
+
         catch (error) {
             console.error("Error fetching diaries for user:", error);
             return [];
         }
-    }    
+    }
 
     // Returns a deep copy of the diary
-    async getDiaryContent() : Promise<Diary> {
+    async getDiaryContent(): Promise<Diary> {
         return JSON.parse(JSON.stringify(this.diary));
     }
 }
