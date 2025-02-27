@@ -91,26 +91,26 @@ diaryRouter.get("/userdiaries", async (
 diaryRouter.delete("/deletediary", async (
     req: Request<{}, {}, { username: string; diaryId: number }>,
     res: Response<Diary[] | string>
-  ) => {
+) => {
     try {
-      const { username, diaryId } = req.body;
-      const result = await diaryService.deleteDiary(username, diaryId);
-      res.status(typeof result === "string" ? 400 : 200).send(result);
+        const { username, diaryId } = req.body;
+        const result = await diaryService.deleteDiary(username, diaryId);
+        res.status(typeof result === "string" ? 400 : 200).send(result);
     } catch (e: any) {
-      res.status(500).send(e.message);
+        res.status(500).send(e.message);
     }
-  });
-  
-  // Rename a diary
-  diaryRouter.patch("/renamediary", async (
+});
+
+// Rename a diary
+diaryRouter.patch("/renamediary", async (
     req: Request<{}, {}, { username: string; diaryId: number; newTitle: string }>,
     res: Response<Diary[] | string>
-  ) => {
+) => {
     try {
-      const { username, diaryId, newTitle } = req.body;
-      const result = await diaryService.renameDiary(username, diaryId, newTitle);
-      res.status(typeof result === "string" ? 400 : 200).send(result);
+        const { username, diaryId, newTitle } = req.body;
+        const result = await diaryService.renameDiary(username, diaryId, newTitle);
+        res.status(typeof result === "string" ? 400 : 200).send(result);
     } catch (e: any) {
-      res.status(500).send(e.message);
+        res.status(500).send(e.message);
     }
-  });
+});

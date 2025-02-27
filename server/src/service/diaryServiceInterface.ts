@@ -11,4 +11,5 @@ export interface IDiaryService {
     deleteEntry(username: string, diaryId: number, entryId: number): Promise<Entry[] | string>
     getListOfDiaries(username: string): Promise<Diary[]>
     getDiaryContent(): Promise<Diary>
+    renameDiary(username: string, diaryId: number, newTitle: string): Promise<Diary[] | string>
 }
