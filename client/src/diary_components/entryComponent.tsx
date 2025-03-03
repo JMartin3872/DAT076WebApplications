@@ -17,33 +17,31 @@ export function EntryComponent({ myEntry, onDelete }: EntryComponentProps) {
 
     return (
         <>
-            <div>
-                <p>
-                    <Card border="dark" style={{ minWidth: '45rem' }} bg='light'>
-                        <Card.Header>
-                            <Row>
-                                <Col className="text-start datetext">
+            <div className="mt-3">
+                <Card border="dark" style={{ minWidth: '45rem' }} bg='light'>
+                    <Card.Header>
+                        <Row>
+                            <Col className="text-start datetext">
 
-                                    {new Date(entry.date).toLocaleString()}
+                                {new Date(entry.date).toLocaleString()}
 
-                                </Col>
+                            </Col>
 
-                                <Col className="text-end">
-                                    <Button className="diarybutton"
-                                        variant="outline-danger"
-                                        onClick={() => onDelete(entry.id)}>
-                                        Delete
-                                    </Button>
-                                </Col>
-                            </Row>
-                        </Card.Header>
+                            <Col className="text-end">
+                                <Button className="diarybutton"
+                                    variant="outline-danger"
+                                    onClick={() => onDelete(entry.id)}>
+                                    Delete
+                                </Button>
+                            </Col>
+                        </Row>
+                    </Card.Header>
 
 
-                        <Card.Body className="text-start">
-                            {entry.text}
-                        </Card.Body>
-                    </Card>
-                </p>
+                    <Card.Body className="text-start">
+                        {entry.text}
+                    </Card.Body>
+                </Card>
 
             </div>
         </>
