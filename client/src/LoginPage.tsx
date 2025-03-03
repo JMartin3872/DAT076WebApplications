@@ -48,7 +48,7 @@ const handleLogin = async () => {
                             <Form.Control
                                 className="mx-2"
                                 type="password"
-                                placeholder="write your password here"
+                                placeholder="Write your password here"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                             />
