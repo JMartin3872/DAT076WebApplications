@@ -27,8 +27,8 @@ export class LoginService{
     // A method to return list of diaries and check the hashed password
     async tryLogin(username : string,password : string) : Promise<Diary[] | undefined>{
         let user : Login | undefined = this.loginIds.find(
-            login => login.username === username && bcrypt.compare(password,login.password))
-       if (user === undefined){
+             login => login.username === username)
+       if (user === undefined || !await bcrypt.compare(password, user.password)){
            return undefined;
        }
        else {
@@ -36,16 +36,18 @@ export class LoginService{
        }
     }
 
+    //TODO: Fix encryption
     async changePassword(username : string,oldPassword : string,newPassword : string) : Promise<Login | undefined>{
         let user : Login | undefined = this.loginIds.find(
-            login => login.username === username && login.password === oldPassword)
-        if (user === undefined){
+            login => login.username === username)
+        if (user === undefined || !await bcrypt.compare(oldPassword, user.password)){
             return undefined;
         }
         else {
+            const salt = bcrypt.genSaltSync(10);
             let updatedUser : Login = {
                 username : username,
-                password : newPassword
+                password : bcrypt.hashSync(newPassword,salt)
             }
             this.loginIds = this.loginIds.filter(login => login.username != username);
             this.loginIds.push(updatedUser);
