@@ -21,7 +21,7 @@ export class DiaryService implements IDiaryService {
                 // diary id is omitted here as postgres autoincrements and sets id on each diary added, see diary.db.ts
                 title: diaryTitle,
                 owner: username,
-                nextEntryId: ++this.nextDiaryId
+                nextEntryId: 0
             })
 
             let newDiary: Diary = {
@@ -61,16 +61,16 @@ export class DiaryService implements IDiaryService {
     async renameDiary(username: string, diaryId: number, newTitle: string): Promise<Diary[] | string> {
         const targetDiary = this.diary.find(d => d.id === diaryId && d.owner === username);
         if (!targetDiary) {
-          return "Diary not found or unauthorized.";
+            return "Diary not found or unauthorized.";
         }
-      
+
         if (this.diary.some(d => d.owner === username && d.title === newTitle)) {
-           return "You already have a diary with this title.";
+            return "You already have a diary with this title.";
         }
-      
+
         targetDiary.title = newTitle;
         return this.getListOfDiaries(username);
-      }
+    }
 
     // Add a new entry to a diary if it exists and the user is the owner
     async addEntry(username: string, diaryId: number, entryText: string)

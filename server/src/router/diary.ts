@@ -9,6 +9,25 @@ import { Diary } from "../model/diary";
 export const diaryService: IDiaryService = new DiaryService();
 export const diaryRouter = express.Router();
 
+interface CreateEntryRequest extends Request {
+    body: {
+        username: string,
+        diaryId: number,
+        text: string
+    },
+    session: any
+}
+
+interface DeleteEntryRequest extends Request {
+    body: {
+        username: string,
+        diaryId: number,
+        entryId: number
+    },
+    session: any
+}
+
+
 // Handler of get requests
 // TODO: should the diary be passed here as an argument?
 // Returns the full diary content
@@ -26,11 +45,19 @@ diaryRouter.get("/getalldiaries", async (req: Request, res: Response<Diary | str
 // Handles a post request
 // Creates a new entry with the text in the body
 diaryRouter.post("/createentry", async (
-    req: Request<{}, {}, { username: string; diaryId: number; text: string }>,
+    req: CreateEntryRequest,
     res: Response<Entry[] | string>
 ) => {
+
+    // If request doesn't come from owner of diary, send 401 response.
+    if (req.session.username !== req.body.username) {
+        res.status(401).send("Unauthorized");
+        return;
+    }
+
     try {
         const { username, diaryId, text } = req.body;
+
         if (typeof text !== "string") {
             res.status(400).send("Invalid type of text");
             return;
@@ -46,11 +73,19 @@ diaryRouter.post("/createentry", async (
 // Handle a delete request
 // Deletes the entry from diary based on matching id
 diaryRouter.delete("/deleteentry", async (
-    req: Request<{}, {}, { username: string; diaryId: number; entryId: number }>,
+    req: DeleteEntryRequest,
     res: Response<Entry[] | string>
 ) => {
+
+    // If request doesn't come from owner of diary, send 401 response.
+    if (req.session.username !== req.body.username) {
+        res.status(401).send("Unauthorized");
+        return;
+    }
+
     try {
         const { username, diaryId, entryId } = req.body;
+
         const remainingEntries = await diaryService.deleteEntry(username, diaryId, entryId)
         res.status(typeof remainingEntries === "string" ? 400 : 200).send(remainingEntries);
     } catch (e: any) {
