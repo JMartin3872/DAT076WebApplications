@@ -46,10 +46,13 @@ export function DiaryComponent() {
     };
 
     const deleteEntry = async (entryId: number) : Promise<void> =>{
+        const confirmDelete = window.confirm("Are you sure you want to delete this entry?");
+        if (!confirmDelete) return;
+        
         const newEntryList = await deleteEntryRequest(diary.owner, diary.id, entryId);
         
         if(!newEntryList){
-            console.log("Error! Could not delete entry!");
+            window.alert("Entry couldn't be deleted!");
             return;
         }
         else{
@@ -63,6 +66,7 @@ export function DiaryComponent() {
             }
             console.log(newEntryList);
             setDiary(new_diary);
+            window.alert("Entry deleted!");
         }
     }
 

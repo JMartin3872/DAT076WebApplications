@@ -25,8 +25,9 @@ jest.mock("react-router-dom", () => ({
 
 describe('DiaryComponent', () => {
 
-  test('Checks if backbutton has been rendered', () => {
-    // Create a mock diary
+  // Test #1, checks if backbutton has been rendered and fires get request when pressed 
+  test('Checks if backbutton has been rendered and sends request when clicked', async () => {
+    
     const newDiary: Diary = {
       id: 0,
       title: "A diary",
@@ -35,35 +36,40 @@ describe('DiaryComponent', () => {
       entries: [],
     };
 
-    // Mock use location
     (useLocation as jest.Mock).mockReturnValue({
       state: {
         diary: newDiary
       },
     });
 
-    // Render component inside a MemoryRouter for navigate and location to work
     render(
       <MemoryRouter>
         <DiaryComponent />
       </MemoryRouter>
     );
 
-    // Check if the back button has been rendered correctly.
     const button = screen.getByRole('button', { name: "Back" });
+
+    await act(() => {
+      fireEvent.click(button);
+    });
+
     expect(button).toBeInTheDocument();
+    expect(mockedAxios.get).toHaveBeenCalled();
   });
 
-  test('requests server when delete button is clicked', async () => {
+  // Test #2 
+  test('requests server when delete button is clicked and sends request when clicked', async () => {
 
-    //Create a mock entry
+    // Make sure that dialogue pop up is confirmed as true when trying to delete an entry
+    jest.spyOn(window, "confirm").mockImplementation(() => true);
+
     const newEntry: Entry = {
       id: 0,
       date: Date.now(),
       text: "test"
     };
 
-    // Create a mock diary
     const newDiary: Diary = {
       id: 0,
       title: "A diary",
@@ -72,14 +78,12 @@ describe('DiaryComponent', () => {
       entries: [newEntry],
     };
 
-    // Mock use location
     (useLocation as jest.Mock).mockReturnValue({
       state: {
         diary: newDiary
       },
     });
 
-    // Render component inside a MemoryRouter for navigate and location to work
     render(
       <MemoryRouter>
         <DiaryComponent />
@@ -92,6 +96,35 @@ describe('DiaryComponent', () => {
       fireEvent.click(button);
     });
 
+    expect(button).toBeInTheDocument();
     expect(mockedAxios.delete).toHaveBeenCalled();
+  });
+
+  // Test #3 Checks that no delete button is rendered for a diary with no entries
+  test('No delete button should exists when there are no diaries', async () => {
+   
+    const newDiary: Diary = {
+      id: 0,
+      title: "A diary",
+      owner: "Current User",
+      nextEntryId: 0,
+      entries: []
+    };
+
+    (useLocation as jest.Mock).mockReturnValue({
+      state: {
+        diary: newDiary
+      },
+    });
+
+    render(
+      <MemoryRouter>
+        <DiaryComponent />
+      </MemoryRouter>
+    );
+
+    const button = screen.queryByRole('button', { name: "Delete" });
+    expect(button).toBeNull();
+    
   });
 });
