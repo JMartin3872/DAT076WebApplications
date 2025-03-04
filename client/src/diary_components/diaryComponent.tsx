@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Container, Row, Col, Button } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./diary.css"
-import { Diary, addEntryRequest, deleteEntryRequest, getUserDiariesRequest } from "../api.ts";
+import { Diary, addEntryRequest, editEntryRequest, deleteEntryRequest, getUserDiariesRequest } from "../api.ts";
 import { useNavigate, useLocation } from "react-router-dom";
 import { DiaryInputComponent } from "./diaryInputComponent.tsx";
 import { EntryListComponent } from "./entryListComponent.tsx";
@@ -20,12 +20,12 @@ export function DiaryComponent() {
     const [username] = useState<string>(location.state.username);
 
     // Function to handle adding a new entry to the diary.
-    const handleAddEntry = async (newEntryText: string) => {
+    const addEntry = async (newEntryText: string) => {
         try {
             const newEntryList = await addEntryRequest(diary.owner, diary.id, newEntryText);
 
             if (!newEntryList) {
-                console.log("Error! Could not post new entry!");
+                window.alert("Could not post new entry!");
                 return;
             }
 
@@ -36,13 +36,35 @@ export function DiaryComponent() {
                 nextEntryId: diary.nextEntryId++,
                 entries: newEntryList
             };
-
             setDiary(newDiary);
         }
         catch (error) {
-            console.log("Error! Something went wrong!");
+            console.error("Failed to add entry!" + error);
+            window.alert("Failed to add entry! Please try again.");
         }
 
+    };
+
+    const editEntry = async (entryId: number, editedText: string): Promise<void> => {
+        try {
+            const updatedEntryList = await editEntryRequest(diary.owner, diary.id, entryId, editedText);
+
+            if (!updatedEntryList) {
+                window.alert("Could not edit entry!");
+                return;
+            }
+
+            const newDiary: Diary = {
+                ...diary,
+                entries: updatedEntryList
+            };
+            setDiary(newDiary);
+            window.alert("Entry edited successfully!");
+        }
+        catch (error) {
+            console.error("Failed to edit entry!" + error);
+            window.alert("Failed to edit entry! Please try again.");
+        }
     };
 
     const deleteEntry = async (entryId: number): Promise<void> => {
@@ -97,11 +119,15 @@ export function DiaryComponent() {
                     </Col>
                 </Row>
                 <Row >
-                    <DiaryInputComponent onAdd={handleAddEntry} />
+                    <DiaryInputComponent onAdd={addEntry} />
                 </Row>
 
                 <Row>
-                    <EntryListComponent mydiary={diary} onEntryDelete={deleteEntry} />
+                    <EntryListComponent
+                        mydiary={diary}
+                        onEntryEdit={editEntry}
+                        onEntryDelete={deleteEntry}
+                    />
                 </Row>
             </Container>
         </>

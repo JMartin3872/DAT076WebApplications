@@ -9,11 +9,21 @@ import { Diary } from "../model/diary";
 export const diaryService: IDiaryService = new DiaryService();
 export const diaryRouter = express.Router();
 
-interface CreateEntryRequest extends Request {
+interface AddEntryRequest extends Request {
     body: {
         username: string,
         diaryId: number,
         text: string
+    },
+    session: any
+}
+
+interface EditEntryRequest extends Request {
+    body: {
+        username: string,
+        diaryId: number,
+        entryId: number,
+        editedText: string
     },
     session: any
 }
@@ -74,10 +84,10 @@ diaryRouter.get("/getalldiaries", async (req: Request, res: Response<Diary | str
     }
 });
 
-// Handles a post request
+// Handles a post request to addentry
 // Creates a new entry with the text in the body
-diaryRouter.post("/createentry", async (
-    req: CreateEntryRequest,
+diaryRouter.post("/addentry", async (
+    req: AddEntryRequest,
     res: Response<Entry[] | string>
 ) => {
 
@@ -100,9 +110,39 @@ diaryRouter.post("/createentry", async (
     } catch (e: any) {
         res.status(500).send(e.message);
     }
-})
+});
 
-// Handle a delete request
+// Handles a patch request to editentry
+// Edits the entry in diary based on matching id
+diaryRouter.patch("/editentry", async (
+    req: EditEntryRequest,
+    res: Response<Entry[] | string>
+) => {
+
+    // If request doesn't come from owner of diary, send 401 response.
+    if (req.session.username !== req.body.username) {
+        res.status(401).send("Unauthorized");
+        return;
+    }
+
+    try {
+        const { username, diaryId, entryId, editedText } = req.body;
+
+        if (typeof editedText !== "string") {
+            res.status(400).send("Invalid type of text");
+            return;
+        }
+
+        const updatedEntries = await diaryService.editEntry(username, diaryId, entryId, editedText);
+
+        res.status(typeof updatedEntries === "string" ? 400 : 200).send(updatedEntries);
+    } catch (e: any) {
+        res.status(500).send(e.message);
+    }
+});
+
+
+// Handle a delete request to deleteentry
 // Deletes the entry from diary based on matching id
 diaryRouter.delete("/deleteentry", async (
     req: DeleteEntryRequest,
@@ -123,8 +163,7 @@ diaryRouter.delete("/deleteentry", async (
     } catch (e: any) {
         res.status(500).send(e.message);
     }
-
-})
+});
 
 // Create a new diary
 diaryRouter.post("/creatediary", async (
@@ -166,8 +205,6 @@ diaryRouter.get("/userdiaries", async (
         res.status(500).send(e.message);
     }
 });
-
-
 
 // Delete an entire diary
 diaryRouter.delete("/deletediary", async (

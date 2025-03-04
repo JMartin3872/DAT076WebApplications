@@ -6,10 +6,11 @@ import { EntryComponent } from "./entryComponent.tsx";
 
 type EntryListComponentProps = {
     mydiary : Diary;
+    onEntryEdit: (id: number, editedText: string) => void;
     onEntryDelete: (id: number) => void;
 };
 
-export function EntryListComponent({mydiary, onEntryDelete} : EntryListComponentProps) {
+export function EntryListComponent({mydiary, onEntryEdit, onEntryDelete} : EntryListComponentProps) {
 
     const [diary, setDiary] = useState<Diary>(mydiary);
 
@@ -19,7 +20,12 @@ export function EntryListComponent({mydiary, onEntryDelete} : EntryListComponent
 
 
     const myEntryComponents = diary.entries.map(entry => 
-        <EntryComponent key={entry.id} myEntry={entry} onDelete={onEntryDelete}/>
+        <EntryComponent 
+            key={entry.id} 
+            myEntry={entry}
+            onEdit={onEntryEdit} 
+            onDelete={onEntryDelete}
+        />
     );
 
     if (!diary) return null;

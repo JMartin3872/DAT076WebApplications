@@ -2,6 +2,7 @@ import axios from 'axios';
 
 
 axios.defaults.withCredentials = true;
+
 export interface Login{
     username : string;
     password : string;
@@ -61,20 +62,37 @@ export async function changePassword(username:string, oldPassword:string, newPas
     }
 }
 
+// Sends a request to the server to add an entry to a diary
 export async function addEntryRequest(username: string, diaryId: number, text: string)
     : Promise<Entry[] | undefined> {
 
     try {
-        const response = await axios.post<Entry[]>(`${BASE_URL}/diary/createentry`,
+        const response = await axios.post<Entry[]>(`${BASE_URL}/diary/addentry`,
             {username, diaryId, text}
         );
         return response.data;
     }
     catch (e) {
-        console.log(e);
+        console.error("Failed to add entry: " + e);
         return undefined;
     }
 }
+
+// Sends a request to the server to edit an entry in a diary
+export async function editEntryRequest(username: string, diaryId: number, entryId: number, editedText: string)
+    : Promise<Entry[] | undefined> {
+
+    try {
+        const response = await axios.patch<Entry[]>(`${BASE_URL}/diary/editentry`,
+            {username, diaryId, entryId, editedText}
+        );
+        return response.data;
+    }
+    catch (error) {
+        console.error("Failed to edit entry: " + error);
+        return undefined;
+    }
+};
 
 export async function deleteEntryRequest(username:string, diaryId:number, entryId:number)
     : Promise<Entry[] | undefined> {

@@ -101,6 +101,45 @@ export class DiaryService implements IDiaryService {
         }
     }
 
+    // Edit an entry in a diary if it exists and the user is the owner
+    async editEntry(username: string, diaryId: number, entryId: number, editedText: string)
+        : Promise<Entry[] | string> {
+        try {
+            const diary = this.diary.find(d => d.id === diaryId);
+
+            if (!diary) {
+                return "No such diary was found, unable to edit entry";
+            }
+            else if (diary.owner !== username) {
+                return "You cannot edit an entry in a diary that you do not own";
+            }
+            else {
+                const entry = diary.entries.find(e => e.id === entryId);
+                // const entryIndex = diary.entries.findIndex(e => e.id === entryId);
+                // if (entryIndex === -1) {
+                //     return "No such entry was found";
+                // }
+                if (!entry) {
+                    return "No such entry was found";
+                }
+
+                // const updatedEntries = diary.entries.map((entry, index) =>
+                //     index === entryIndex ? { ...entry, text: editedText } : entry
+                // );
+
+                // diary.entries = updatedEntries;
+                
+                // return diary.entries;
+                entry.text = editedText;
+                return diary.entries;
+            }
+        }
+        catch (error) {
+            console.error("Error editing entry in diary: ", error);
+            return "An error occurred while editing the entry.";
+        }
+    }
+
     // Delete an entry from a diary
     async deleteEntry(username: string, diaryId: number, entryId: number): Promise<Entry[] | string> {
         const diary = this.diary.find(d => d.id === diaryId && d.owner === username);
