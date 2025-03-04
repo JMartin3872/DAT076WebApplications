@@ -7,6 +7,7 @@ if (typeof global.TextEncoder === "undefined") {
 
 import { render, screen, fireEvent, act } from '@testing-library/react';
 import { DiaryComponent } from './diaryComponent';
+import { DiaryInputComponent } from './diaryInputComponent';
 import { MemoryRouter } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { Diary, Entry } from '../api';
@@ -127,4 +128,69 @@ describe('DiaryComponent', () => {
     expect(button).toBeNull();
     
   });
+
+  // Test #4  Checks that the text area and post button are rendered correctly.
+  test('Opening a diary should render the text area and post button', async () => {
+
+    const newDiary: Diary = {
+      id: 0,
+      title: "A diary",
+      owner: "Current User",
+      nextEntryId: 0,
+      entries: []
+    };
+
+    (useLocation as jest.Mock).mockReturnValue({
+      state: {
+        diary: newDiary
+      },
+    });
+
+    render(
+      <MemoryRouter>
+        <DiaryComponent />
+      </MemoryRouter>
+    );
+
+    const textarea = screen.getByRole('textbox');
+    const button = screen.getByRole('button', { name: "Post!" });
+
+    expect(textarea).toBeInTheDocument();
+    expect(button).toBeInTheDocument();
+  });
+
+  // Test #5 Checks that the onAdd function is called when the "Post!" button is clicked and the textarea is cleared after.
+  test('onAdd function should be called when clicking the "Post" button and the text area should subsequently be cleared', async () => {
+    const mockOnAdd = jest.fn();
+    render(<DiaryInputComponent onAdd={mockOnAdd} />);
+
+    const textarea = screen.getByRole('textbox');
+    const button = screen.getByRole('button', { name: "Post!" });
+
+    fireEvent.change(textarea, { target: { value: "This is my test text!" } });
+    fireEvent.click(button);
+
+    expect(mockOnAdd).toHaveBeenCalledWith("This is my test text!");
+    expect(textarea).toHaveValue('');
+  });
+
+  // Test #6 Checks that the "Post!" button is disabled when the textarea is either empty or contains solely whitespace.
+  test('"Post!" button should be disabled when the textarea is empty', async () => {
+    render(<DiaryInputComponent onAdd={() => {}} />);
+
+    const button = screen.getByRole('button', { name: "Post!" });
+    const textarea = screen.getByRole('textbox');
+
+    // The "Post!" button should initially be disabled
+    expect(button).toBeDisabled();
+
+    // Button should be enabled when the textarea contains text
+    fireEvent.change(textarea, { target: { value: "This is my test text" } });
+    expect(button).toBeEnabled();
+
+    // Button should be disabled when the textarea contains solely whitespace
+    fireEvent.change(textarea, { target: { value: '   ' } });
+    expect(button).toBeDisabled();
+  });
+
 });
