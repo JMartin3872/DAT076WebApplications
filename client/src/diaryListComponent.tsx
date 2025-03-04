@@ -24,6 +24,7 @@ export function DiaryListComponent() {
 
   // Opens modal for creating a new diary
   const handleCreateDiary = () => {
+    console.log("Create Diary button pressed!");
     setShowModal(true);
     setEditMode(false);
     setDiaryTitle("");

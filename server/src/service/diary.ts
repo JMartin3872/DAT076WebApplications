@@ -114,15 +114,15 @@ export class DiaryService implements IDiaryService {
 
     }
 
-    // Get all diaries of a specific user
-    //TODO: I think here you ladies should control the session and see if its the correct user! :)
-    async getListOfDiaries(username: string): Promise<Diary[]> {
+    // Get all diaries of a specific user!
+    async getListOfDiaries(username: string, sessionUsername?: string): Promise<Diary[]> {
         try {
+            if (sessionUsername && username !== sessionUsername) {
+                throw new Error("session does not match the requested user!");
+            }
             return this.diary.filter(d => d.owner === username);
-        }
-
-        catch (error) {
-            console.error("Error fetching diaries for user:", error);
+        } catch (error) {
+            console.error("Error fetching diaries for this user:", error);
             return [];
         }
     }

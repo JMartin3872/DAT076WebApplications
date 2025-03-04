@@ -84,3 +84,20 @@ loginRouter.patch("/changepassword", async (
     }
 }
 )
+
+// Let user log out from app
+loginRouter.post("/logout", (
+    req: Request, 
+    res: Response) => {
+    if (req.session) {
+        req.session.destroy((err) => {
+            if (err) {
+                res.status(500).send("Error logging out");
+            } else {
+                res.status(200).send("Logged out successfully");
+            }
+        });
+    } else {
+        res.status(400).send("No active session");
+    }
+});
