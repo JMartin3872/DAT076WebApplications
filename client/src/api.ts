@@ -80,6 +80,7 @@ export async function deleteEntryRequest(username:string, diaryId:number, entryI
     : Promise<Entry[] | undefined> {
     try {
         const response = await axios.delete<Entry[]>(`${BASE_URL}/diary/deleteentry`, {data:{username : username, diaryId : diaryId, entryId : entryId}});
+        
         return response.data;
     }
     catch (e) {

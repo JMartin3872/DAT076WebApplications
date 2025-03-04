@@ -28,7 +28,10 @@ describe('DiaryComponent', () => {
 
   // Test #1, checks if backbutton has been rendered and fires get request when pressed 
   test('Checks if backbutton has been rendered and sends request when clicked', async () => {
-    
+
+    const dummyDiaries: Diary[] = [];
+    (axios.get as jest.Mock).mockResolvedValue({ data: dummyDiaries });
+
     const newDiary: Diary = {
       id: 0,
       title: "A diary",
@@ -39,7 +42,8 @@ describe('DiaryComponent', () => {
 
     (useLocation as jest.Mock).mockReturnValue({
       state: {
-        diary: newDiary
+        diary: newDiary,
+        username: newDiary.owner
       },
     });
 
@@ -64,6 +68,8 @@ describe('DiaryComponent', () => {
 
     // Make sure that dialogue pop up is confirmed as true when trying to delete an entry
     jest.spyOn(window, "confirm").mockImplementation(() => true);
+    jest.spyOn(window, "alert").mockImplementation(() => true);
+
 
     const newEntry: Entry = {
       id: 0,
@@ -79,9 +85,14 @@ describe('DiaryComponent', () => {
       entries: [newEntry],
     };
 
+    const dummyEntries: Entry[] = [newEntry];
+    (axios.delete as jest.Mock).mockResolvedValue({ data: dummyEntries });
+
+
     (useLocation as jest.Mock).mockReturnValue({
       state: {
-        diary: newDiary
+        diary: newDiary,
+        username: newDiary.owner
       },
     });
 
@@ -103,7 +114,7 @@ describe('DiaryComponent', () => {
 
   // Test #3 Checks that no delete button is rendered for a diary with no entries
   test('No delete button should exists when there are no diaries', async () => {
-   
+
     const newDiary: Diary = {
       id: 0,
       title: "A diary",
@@ -114,7 +125,8 @@ describe('DiaryComponent', () => {
 
     (useLocation as jest.Mock).mockReturnValue({
       state: {
-        diary: newDiary
+        diary: newDiary,
+        username: newDiary.owner
       },
     });
 
@@ -126,7 +138,7 @@ describe('DiaryComponent', () => {
 
     const button = screen.queryByRole('button', { name: "Delete" });
     expect(button).toBeNull();
-    
+
   });
 
   // Test #4  Checks that the text area and post button are rendered correctly.
@@ -176,7 +188,7 @@ describe('DiaryComponent', () => {
 
   // Test #6 Checks that the "Post!" button is disabled when the textarea is either empty or contains solely whitespace.
   test('"Post!" button should be disabled when the textarea is empty', async () => {
-    render(<DiaryInputComponent onAdd={() => {}} />);
+    render(<DiaryInputComponent onAdd={() => { }} />);
 
     const button = screen.getByRole('button', { name: "Post!" });
     const textarea = screen.getByRole('textbox');
