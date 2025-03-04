@@ -61,6 +61,9 @@ describe('DiaryComponent', () => {
   // Test #2 
   test('requests server when delete button is clicked and sends request when clicked', async () => {
 
+    // Make sure that dialogue pop up is confirmed as true when trying to delete an entry
+    jest.spyOn(window, "confirm").mockImplementation(() => true);
+
     const newEntry: Entry = {
       id: 0,
       date: Date.now(),
