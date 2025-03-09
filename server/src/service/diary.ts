@@ -12,29 +12,24 @@ export class DiaryService implements IDiaryService {
     // Create a new diary if the user doesn't already have one with the same title
     async createDiary(username: string, diaryTitle: string): Promise<Diary | string> {
         try {
-            if (this.diary.some(d => d.owner === username && d.title === diaryTitle)) {
+            // Check if the user already has a diary with this title
+            const existing = await DiaryModel.findOne({
+                where: { owner: username, title: diaryTitle }
+            });
+            if (existing) {
                 return "You already have a diary with this title.";
             }
 
-            // Here the db functionality is tested by creating a new diary and storing it in db
-            DiaryModel.create({
-                // diary id is omitted here as postgres autoincrements and sets id on each diary added, see diary.db.ts
+            // Create new diary in DB
+            const created = await DiaryModel.create({
                 title: diaryTitle,
                 owner: username,
                 nextEntryId: 0
-            })
+            });
 
-            let newDiary: Diary = {
-                id: this.nextDiaryId++,
-                title: diaryTitle,
-                owner: username,
-                entries: [],
-                nextEntryId: 0,
-            };
-            this.diary.push(newDiary);
-            return newDiary;
-        }
-
+            // Return the newly created diary
+            return created.toJSON() as Diary;
+        } 
         catch (error) {
             console.error("There was an error creating the diary:", error);
             return "An error occurred while creating the diary.";
@@ -44,14 +39,20 @@ export class DiaryService implements IDiaryService {
     // Delete a diary only if the requesting user is the owner
     async deleteDiary(username: string, diaryId: number): Promise<Diary[] | string> {
         try {
-            const diaryIndex = this.diary.findIndex(d => d.id === diaryId && d.owner === username);
-            if (diaryIndex === -1) {
+            // Find the diary in the DB
+            const toDelete = await DiaryModel.findOne({
+                where: { id: diaryId, owner: username }
+            });
+            if (!toDelete) {
                 return "Diary not found or unauthorized.";
             }
-            this.diary.splice(diaryIndex, 1);
-            return this.getListOfDiaries(username);
-        }
 
+            // Remove the diary from the DB
+            await toDelete.destroy();
+
+            // Return the updated diary list
+            return this.getListOfDiaries(username);
+        } 
         catch (error) {
             console.error("Error deleting diary:", error);
             return "An error occurred while deleting the diary.";
@@ -59,17 +60,34 @@ export class DiaryService implements IDiaryService {
     }
 
     async renameDiary(username: string, diaryId: number, newTitle: string): Promise<Diary[] | string> {
-        const targetDiary = this.diary.find(d => d.id === diaryId && d.owner === username);
-        if (!targetDiary) {
-            return "Diary not found or unauthorized.";
-        }
+        try {
+            // Make sure the diary belongs to this user
+            const targetDiary = await DiaryModel.findOne({
+                where: { id: diaryId, owner: username }
+            });
+            if (!targetDiary) {
+                return "Diary not found or unauthorized.";
+            }
 
-        if (this.diary.some(d => d.owner === username && d.title === newTitle)) {
-            return "You already have a diary with this title.";
-        }
+            // Check if user already has a diary with this new title
+            const existingTitle = await DiaryModel.findOne({
+                where: { owner: username, title: newTitle }
+            });
+            if (existingTitle) {
+                return "You already have a diary with this title.";
+            }
 
-        targetDiary.title = newTitle;
-        return this.getListOfDiaries(username);
+            // Perform the rename
+            targetDiary.title = newTitle;
+            await targetDiary.save();
+
+            // Return the updated list of diaries
+            return this.getListOfDiaries(username);
+        } 
+        catch (error) {
+            console.error("Error renaming diary:", error);
+            return "An error occurred while renaming the diary.";
+        }
     }
 
     // Add a new entry to a diary if it exists and the user is the owner
@@ -159,16 +177,25 @@ export class DiaryService implements IDiaryService {
             if (sessionUsername && username !== sessionUsername) {
                 throw new Error("session does not match the requested user!");
             }
-            return this.diary.filter(d => d.owner === username);
-        } catch (error) {
-            console.error("Error fetching diaries for this user:", error);
+
+            const diaries = await DiaryModel.findAll({
+                where: { 
+                    owner: username 
+                },
+            });
+
+            return diaries.map(d => d.toJSON() as Diary);
+        } 
+        catch (error) {
+            console.error("Error fetching diaries for user:", error);
             return [];
         }
     }
 
     // Returns a deep copy of the diary
     async getDiaryContent(): Promise<Diary> {
-        return JSON.parse(JSON.stringify(this.diary));
+        const allDiaries = await DiaryModel.findAll();
+        return allDiaries as unknown as Diary;
     }
 }
 
