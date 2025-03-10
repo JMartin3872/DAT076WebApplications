@@ -101,15 +101,11 @@ diaryRouter.post("/addentry", async (
         const { username, diaryId, text } = req.body;
 
         if (typeof text !== "string") {
-            console.log("Fel i case 1");
             res.status(400).send("Invalid type of text");
             return;
         }
 
-        console.log("Fel i case 2");
         const newEntry = await diaryService.addEntry(diaryId, text);
-
-        console.log(newEntry);
 
         res.status(typeof newEntry === "string" ? 400 : 201).send(newEntry);
 

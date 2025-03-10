@@ -104,7 +104,7 @@ export class DiaryService implements IDiaryService {
         }
     }
 
-    // Add a new entry to a diary if it exists and the user is the owner
+    // Add a new entry to a diary if it exists
     async addEntry(diaryId: number, entryText: string)
         : Promise<Entry[] | string> {
         try {
@@ -113,29 +113,23 @@ export class DiaryService implements IDiaryService {
                 where: { id: diaryId }
             });
 
-
             if (!targetDiary) {
-                return "Could not add entry as the specified diary does not exist or you do not own it";
+                return "Could not add entry. Unauthorized or non-existent diary.";
             }
 
-            else {
-                // Here the db functionality is tested by creating a new diary and storing it in db
-                const created = await EntryModel.create({
-                    // diary id is omitted here as postgres autoincrements and sets id on each diary added, see diary.db.ts
-                    diaryId: diaryId,
-                    text: entryText,
-                    time: Date.now()
+            // Here the db functionality is tested by creating a new diary and storing it in db
+            await EntryModel.create({
+                // diary id is omitted here as postgres autoincrements and sets id on each diary added, see diary.db.ts
+                diaryId: diaryId,
+                text: entryText,
+                time: Date.now()
+            });
 
-                })
+            const entries = await EntryModel.findAll({
+                where: { diaryId: diaryId }
+            });
 
-                const entries = await EntryModel.findAll({
-                    where: {
-                        diaryId: diaryId
-                    },
-                });
-
-                return entries.map(e => e.toJSON() as Entry);
-            }
+            return entries.map(e => e.toJSON() as Entry);
         }
 
         catch (error) {
