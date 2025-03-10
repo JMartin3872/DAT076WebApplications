@@ -1,6 +1,7 @@
 import { Sequelize} from 'sequelize';
 import dotenv from "dotenv";
-import { DiaryModel } from './diary.db';
+
+require("dotenv").config(); // Add this at the top of your db/conn.ts
 
 dotenv.config();
 

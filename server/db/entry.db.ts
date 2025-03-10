@@ -24,13 +24,11 @@ EntryModel.init(
             type: DataTypes.BIGINT,
             autoIncrement: true,
             primaryKey: true,
-            allowNull: false
         },
 
         diaryId: {
             type: DataTypes.BIGINT,
             autoIncrement: false,
-            primaryKey: true,
             references: {
                 model: DiaryModel,
                 key: 'id',

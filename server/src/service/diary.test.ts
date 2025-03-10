@@ -72,7 +72,7 @@ test('Adding an entry to a diary should return an entry list containing an entry
     let diaryId = (diary as Diary).id;
     const lengthBeforeAdd = (diary as Diary).entries.length;
 
-    const updatedEntryList = await diaryService.addEntry(user, diaryId, entryText);
+    const updatedEntryList = await diaryService.addEntry(diaryId, entryText);
 
     expect((updatedEntryList as Entry[]).some(entry => entry.text === entryText)).toBe(true);
     expect((updatedEntryList as Entry[]).length).toBe(lengthBeforeAdd + 1);
@@ -84,9 +84,9 @@ test('Should not be able to add an entry to a non-existing diary', async () => {
     const text = "This is the text for a non-existing diary";
     const nonExistingDiaryId = 1;
 
-    const missingDiaryEntry = await diaryService.addEntry(user, nonExistingDiaryId, text);
+    const missingDiaryEntry = await diaryService.addEntry(nonExistingDiaryId, text);
 
-    expect(missingDiaryEntry as string).toStrictEqual("Could not add entry as the specified diary does not exist");
+    expect(missingDiaryEntry as string).toStrictEqual("Could not add entry as the specified diary does not exist or you do not own it");
 });
 
 // TEST #3 FOR ADDING AN ENTRY TO A DIARY
@@ -95,7 +95,7 @@ test('User should not be able to add an entry to a diary owned by another user',
     const user2 = "User2";
 
     const diaryUser1 = await diaryService.createDiary(user1, "My diary");
-    const illegalEntry = await diaryService.addEntry(user2, (diaryUser1 as Diary).id, "Entry of hacked diary by User2");
+    const illegalEntry = await diaryService.addEntry((diaryUser1 as Diary).id, "Entry of hacked diary by User2");
 
     expect(illegalEntry as string).toStrictEqual("You cannot add an entry to a diary that you do not own");
 });
@@ -106,12 +106,26 @@ test('Adding and deleting an entry from an empty diary should return the empty l
     const title = "Title";
     const entry_text = "This is the entry's text";
 
-    diaryService.createDiary(user, title);
+    const createdDiary = await diaryService.createDiary(user, title);
+    const testDiary = createdDiary as Diary;
     
-    await diaryService.addEntry(user, 0, entry_text);
-    const entries = await diaryService.deleteEntry(user, 0, 0); 
+    const createdEntry = await diaryService.addEntry(testDiary.id, entry_text);
 
-    expect(entries.length).toStrictEqual(0);
+    console.log(createdEntry);
+
+    if (Array.isArray(createdEntry)) {
+        const testEntry = createdEntry[0];
+        const entries = await diaryService.deleteEntry(user, testDiary.id, testEntry.id);
+        expect(entries.length).toStrictEqual(0);  
+    }
+
+    else{
+        // Fail the test if `createdEntry` isn't an array
+        throw new Error("Expected createdEntry to be an array, but got: " + typeof createdEntry);
+    }
+
+    
+
 });
 
 // TEST #2 FOR DELETING AN ENTRY
