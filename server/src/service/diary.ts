@@ -8,7 +8,6 @@ import { EntryModel } from "../../db/entry.db";
 // Diary service class for manipulating diary and their entries
 export class DiaryService implements IDiaryService {
     private diary: Diary[] = [];
-    private nextDiaryId: number = 0;
 
     // Create a new diary if the user doesn't already have one with the same title
     async createDiary(username: string, diaryTitle: string): Promise<Diary | string> {
@@ -25,12 +24,15 @@ export class DiaryService implements IDiaryService {
             const created = await DiaryModel.create({
                 title: diaryTitle,
                 owner: username,
-                nextEntryId: 0
             });
 
+            // Make a new diary based on the result from db and add an empty list to it.
+            const newDiary = created.toJSON() as Diary;
+            newDiary.entries = [];
+
             // Return the newly created diary
-            return created.toJSON() as Diary;
-        } 
+            return newDiary;
+        }
         catch (error) {
             console.error("There was an error creating the diary:", error);
             return "An error occurred while creating the diary.";
@@ -53,7 +55,7 @@ export class DiaryService implements IDiaryService {
 
             // Return the updated diary list
             return this.getListOfDiaries(username);
-        } 
+        }
         catch (error) {
             console.error("Error deleting diary:", error);
             return "An error occurred while deleting the diary.";
@@ -84,7 +86,7 @@ export class DiaryService implements IDiaryService {
 
             // Return the updated list of diaries
             return this.getListOfDiaries(username);
-        } 
+        }
         catch (error) {
             console.error("Error renaming diary:", error);
             return "An error occurred while renaming the diary.";
@@ -95,32 +97,33 @@ export class DiaryService implements IDiaryService {
     async addEntry(username: string, diaryId: number, entryText: string)
         : Promise<Entry[] | string> {
         try {
-            const diary = this.diary.find(d => d.id === diaryId);
 
-            if (!diary) {
-                return "Could not add entry as the specified diary does not exist";
+            const target_diary = await DiaryModel.findOne({
+                where: { id: diaryId, owner: username }
+            });
+
+
+            if (!target_diary) {
+                return "Could not add entry as the specified diary does not exist or you do not own it";
             }
-            else if (diary.owner !== username) {
-                return "You cannot add an entry to a diary that you do not own";
-            }
+
             else {
-
                 // Here the db functionality is tested by creating a new diary and storing it in db
-                EntryModel.create({
+                const created = await EntryModel.create({
                     // diary id is omitted here as postgres autoincrements and sets id on each diary added, see diary.db.ts
-                    inDiary: 0,
-                    owner: username,
-                    text: "En text"
+                    diaryId: diaryId,
+                    text: entryText,
+                    time: Date.now()
 
                 })
 
-                const newEntry: Entry = {
-                    id: diary.nextEntryId++,
-                    date: Date.now(),
-                    text: entryText
-                };
-                diary.entries.push(newEntry);
-                return diary.entries;
+                const entries = await EntryModel.findAll({
+                    where: {
+                        diaryId: diaryId
+                    },
+                });
+
+                return entries.map(e => e.toJSON() as Entry);
             }
         }
 
@@ -190,13 +193,13 @@ export class DiaryService implements IDiaryService {
             }
 
             const diaries = await DiaryModel.findAll({
-                where: { 
-                    owner: username 
+                where: {
+                    owner: username
                 },
             });
 
             return diaries.map(d => d.toJSON() as Diary);
-        } 
+        }
         catch (error) {
             console.error("Error fetching diaries for user:", error);
             return [];

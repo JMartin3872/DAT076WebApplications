@@ -1,18 +1,18 @@
 import { Model, InferAttributes, InferCreationAttributes, CreationOptional, DataTypes } from 'sequelize';
 import { conn } from './conn';
+import { DiaryModel } from './diary.db';
 
 export class EntryModel extends Model<InferAttributes<EntryModel>, InferCreationAttributes<EntryModel>> {
     // The id of the diary in which entry belongs
-    declare inDiary: number;
+    declare diaryId: number;
 
     // Entry id, should they be unique by themselves or in combination with diary id?
     declare id: CreationOptional<number>;
 
-    // Owner of the diary in which entry belongs, unneccesary if all diary ids are unique even between owners?
-    declare owner: string;
-
     // The entry text
     declare text: string;
+
+    declare time: number;
 
 }
 
@@ -22,21 +22,31 @@ EntryModel.init(
     {
         id: {
             type: DataTypes.BIGINT,
-            autoIncrement: true, // Should or shouldn't be?
-            primaryKey: true
-        },
-        inDiary: {
-            type: DataTypes.BIGINT,
-            autoIncrement: false,
-            primaryKey: true // Should or shouldn't be part of primary key?
-        },
-        owner: {
-            type: DataTypes.STRING,
+            autoIncrement: true,
+            primaryKey: true,
             allowNull: false
         },
+
+        diaryId: {
+            type: DataTypes.BIGINT,
+            autoIncrement: false,
+            primaryKey: true,
+            references: {
+                model: DiaryModel,
+                key: 'id',
+            },
+            allowNull: false
+        },
+
         text: {
             type: DataTypes.STRING,
             autoIncrement: false,
+            allowNull: false
+        },
+
+        time: {
+            type: DataTypes.BIGINT,
+            allowNull: false
         }
 
         // TODO: Discuss how entries should be stored in correlation to their respective diaries

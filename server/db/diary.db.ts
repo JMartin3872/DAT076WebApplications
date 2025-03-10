@@ -5,7 +5,6 @@ export class DiaryModel extends Model<InferAttributes<DiaryModel>, InferCreation
     declare id: CreationOptional<number>;
     declare title: string;
     declare owner: string;
-    declare nextEntryId: number;
 
 }
 
@@ -25,10 +24,6 @@ DiaryModel.init(
         owner: {
             type: DataTypes.STRING,
             allowNull: false
-        },
-        nextEntryId: {
-            type: DataTypes.BIGINT,
-            autoIncrement: false,
         }
 
         // TODO: Think about how to store a diary's entries, separate table???
