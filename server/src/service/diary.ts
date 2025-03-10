@@ -50,6 +50,9 @@ export class DiaryService implements IDiaryService {
                 return "Diary not found or unauthorized.";
             }
 
+            // Delet all entries belonging to diary
+            await this.deleteAllDiaryEntries(diaryId);
+
             // Remove the diary from the DB
             await toDelete.destroy();
 
@@ -60,6 +63,14 @@ export class DiaryService implements IDiaryService {
             console.error("Error deleting diary:", error);
             return "An error occurred while deleting the diary.";
         }
+    }
+
+    async deleteAllDiaryEntries(diaryId : number) : Promise<void>{
+        EntryModel.destroy({
+            where: {
+                diaryId: diaryId
+            }
+        })
     }
 
     async renameDiary(username: string, diaryId: number, newTitle: string): Promise<Diary[] | string> {
@@ -179,14 +190,28 @@ export class DiaryService implements IDiaryService {
 
     // Delete an entry from a diary
     async deleteEntry(username: string, diaryId: number, entryId: number): Promise<Entry[] | string> {
-        const diary = this.diary.find(d => d.id === diaryId && d.owner === username);
+        const targetDiary = await DiaryModel.findOne({
+            where: { id: diaryId }
+        });
 
-        if (!diary) {
+        if (!targetDiary) {
             return "No such diary was found"
         }
 
-        diary.entries = diary.entries.filter(entry => entry.id !== entryId);
-        return diary.entries;
+        await EntryModel.destroy({
+            where: {
+                diaryId: diaryId,
+                id : entryId
+            }
+        })
+
+        const entries = await EntryModel.findAll({
+            where: {
+                diaryId: diaryId
+            },
+        });
+
+        return entries;
 
     }
 
