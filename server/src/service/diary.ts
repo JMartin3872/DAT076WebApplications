@@ -94,16 +94,16 @@ export class DiaryService implements IDiaryService {
     }
 
     // Add a new entry to a diary if it exists and the user is the owner
-    async addEntry(username: string, diaryId: number, entryText: string)
+    async addEntry(diaryId: number, entryText: string)
         : Promise<Entry[] | string> {
         try {
 
-            const target_diary = await DiaryModel.findOne({
-                where: { id: diaryId, owner: username }
+            const targetDiary = await DiaryModel.findOne({
+                where: { id: diaryId }
             });
 
 
-            if (!target_diary) {
+            if (!targetDiary) {
                 return "Could not add entry as the specified diary does not exist or you do not own it";
             }
 
@@ -134,36 +134,41 @@ export class DiaryService implements IDiaryService {
     }
 
     // Edit an entry in a diary if it exists and the user is the owner
-    async editEntry(username: string, diaryId: number, entryId: number, editedText: string)
+    async editEntry(diaryId: number, entryId: number, editedText: string)
         : Promise<Entry[] | string> {
         try {
-            const diary = this.diary.find(d => d.id === diaryId);
 
-            if (!diary) {
-                return "No such diary was found, unable to edit entry";
+            const targetDiary = await DiaryModel.findOne({
+                where: { id: diaryId }
+            });
+
+
+            if (!targetDiary) {
+                return "Could not edit entry as the specified diary does not exist or you do not own it";
             }
-            else if (diary.owner !== username) {
-                return "You cannot edit an entry in a diary that you do not own";
-            }
+           
             else {
-                const entry = diary.entries.find(e => e.id === entryId);
-                // const entryIndex = diary.entries.findIndex(e => e.id === entryId);
-                // if (entryIndex === -1) {
-                //     return "No such entry was found";
-                // }
-                if (!entry) {
+                const targetEntry = await EntryModel.findOne({
+                    where: { id: entryId, diaryId: diaryId }
+                });
+             
+                if (!targetEntry) {
                     return "No such entry was found";
                 }
 
-                // const updatedEntries = diary.entries.map((entry, index) =>
-                //     index === entryIndex ? { ...entry, text: editedText } : entry
-                // );
+                await targetEntry.update(
+                    { text: editedText },
+                    {
+                        where : { id: entryId, diaryId: diaryId }
+                });
 
-                // diary.entries = updatedEntries;
+                const entries = await EntryModel.findAll({
+                    where: {
+                        diaryId: diaryId
+                    },
+                });
 
-                // return diary.entries;
-                entry.text = editedText;
-                return diary.entries;
+                return entries.map(e => e.toJSON() as Entry);
             }
         }
         catch (error) {
@@ -188,17 +193,30 @@ export class DiaryService implements IDiaryService {
     // Get all diaries of a specific user!
     async getListOfDiaries(username: string, sessionUsername?: string): Promise<Diary[]> {
         try {
-            if (sessionUsername && username !== sessionUsername) {
-                throw new Error("session does not match the requested user!");
-            }
 
-            const diaries = await DiaryModel.findAll({
+            const target_diaries = await DiaryModel.findAll({
                 where: {
                     owner: username
                 },
             });
 
-            return diaries.map(d => d.toJSON() as Diary);
+            // Turn diares into JSON
+            const diaries = target_diaries.map(d => d.toJSON() as Diary);
+
+            // Fetch all entries for all diaries
+            diaries.map(async d => {
+                const entries = await EntryModel.findAll({
+                    where: {
+                        diaryId: d.id
+                    }
+                });
+                entries.map(e => e.toJSON() as Entry)
+                d.entries = entries;
+                
+            });
+            console.log(diaries);
+            return diaries;
+
         }
         catch (error) {
             console.error("Error fetching diaries for user:", error);

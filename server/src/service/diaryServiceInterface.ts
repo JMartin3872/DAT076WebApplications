@@ -7,8 +7,8 @@ import { Entry } from "../model/diary"
 export interface IDiaryService {
     createDiary(username: string, diaryTitle: string): Promise<Diary | string>
     deleteDiary(username: string, diaryId: number): Promise<Diary[] | string>
-    addEntry(username: string, diaryId: number, entryText: string): Promise<Entry[] | string>
-    editEntry(username: string, diaryId: number, entryId: number, editedText: string): Promise<Entry[] | string>
+    addEntry(diaryId: number, entryText: string): Promise<Entry[] | string>
+    editEntry(diaryId: number, entryId: number, editedText: string): Promise<Entry[] | string>
     deleteEntry(username: string, diaryId: number, entryId: number): Promise<Entry[] | string>
     getListOfDiaries(username: string): Promise<Diary[]>
     getDiaryContent(): Promise<Diary>

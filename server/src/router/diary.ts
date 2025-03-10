@@ -107,7 +107,7 @@ diaryRouter.post("/addentry", async (
         }
 
         console.log("Fel i case 2");
-        const newEntry = await diaryService.addEntry(username, diaryId, text);
+        const newEntry = await diaryService.addEntry(diaryId, text);
 
         console.log(newEntry);
 
@@ -139,7 +139,7 @@ diaryRouter.patch("/editentry", async (
             return;
         }
 
-        const updatedEntries = await diaryService.editEntry(username, diaryId, entryId, editedText);
+        const updatedEntries = await diaryService.editEntry(diaryId, entryId, editedText);
 
         res.status(typeof updatedEntries === "string" ? 400 : 200).send(updatedEntries);
     } catch (e: any) {
