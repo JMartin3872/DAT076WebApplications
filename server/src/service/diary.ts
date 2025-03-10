@@ -2,6 +2,7 @@ import { Diary } from "../model/diary";
 import { Entry } from "../model/diary";
 import { IDiaryService } from "./diaryServiceInterface";
 import { DiaryModel } from "../../db/diary.db";
+import { EntryModel } from "../../db/entry.db";
 
 
 // Diary service class for manipulating diary and their entries
@@ -85,6 +86,16 @@ export class DiaryService implements IDiaryService {
                 return "You cannot add an entry to a diary that you do not own";
             }
             else {
+
+                // Here the db functionality is tested by creating a new diary and storing it in db
+                EntryModel.create({
+                    // diary id is omitted here as postgres autoincrements and sets id on each diary added, see diary.db.ts
+                    inDiary: 0,
+                    owner: username,
+                    text: "En text"
+
+                })
+
                 const newEntry: Entry = {
                     id: diary.nextEntryId++,
                     date: Date.now(),
@@ -128,7 +139,7 @@ export class DiaryService implements IDiaryService {
                 // );
 
                 // diary.entries = updatedEntries;
-                
+
                 // return diary.entries;
                 entry.text = editedText;
                 return diary.entries;
