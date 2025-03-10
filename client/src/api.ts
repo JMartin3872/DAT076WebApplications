@@ -13,7 +13,6 @@ export interface Diary {
     id: number;
     title: string;
     owner: string;
-    nextEntryId: number;
     entries: Entry[];
 }
 
@@ -70,6 +69,7 @@ export async function addEntryRequest(username: string, diaryId: number, text: s
         const response = await axios.post<Entry[]>(`${BASE_URL}/diary/addentry`,
             {username, diaryId, text}
         );
+        
         return response.data;
     }
     catch (e) {
@@ -150,6 +150,7 @@ export async function renameDiary(username: string, diaryId: number, newTitle: s
 export async function getUserDiariesRequest(username: string): Promise<Diary[] | undefined> {
     try {
         const response = await axios.get<Diary[]>(`${BASE_URL}/diary/userdiaries`, {params : {username}});
+        console.log(response.data);
         return response.data;
     } catch (e: any) {
         console.error(e);

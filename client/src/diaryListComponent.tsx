@@ -8,13 +8,15 @@ export function DiaryListComponent() {
     
   const navigate = useNavigate();
   const location = useLocation();
-
-  const [diaryList, setDiaryList] = useState<Diary[]>(location.state.dList || []);
+  
+  const [diaryList, setDiaryList] = useState<Diary[]>(location.state.dList);
   const [username] = useState<string>(location.state?.username || "");
   const [showModal, setShowModal] = useState(false);
   const [diaryTitle, setDiaryTitle] = useState("");
   const [selectedDiary, setSelectedDiary] = useState<Diary | null>(null);
   const [editMode, setEditMode] = useState(false);
+
+  console.log(diaryList);
 
   // Log out button!
   const logOutButton = () => {

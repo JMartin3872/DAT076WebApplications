@@ -33,7 +33,6 @@ export function DiaryComponent() {
                 id: diary.id,
                 owner: diary.owner,
                 title: diary.title,
-                nextEntryId: diary.nextEntryId++,
                 entries: newEntryList
             };
             setDiary(newDiary);
@@ -83,7 +82,6 @@ export function DiaryComponent() {
                 id: diary.id,
                 owner: diary.owner,
                 title: diary.title,
-                nextEntryId: diary.nextEntryId++,
                 entries: newEntryList
             }
 

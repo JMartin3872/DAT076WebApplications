@@ -200,28 +200,42 @@ export class DiaryService implements IDiaryService {
                 },
             });
 
+
             // Turn diares into JSON
             const diaries = target_diaries.map(d => d.toJSON() as Diary);
 
-            // Fetch all entries for all diaries
-            diaries.map(async d => {
-                const entries = await EntryModel.findAll({
-                    where: {
-                        diaryId: d.id
-                    }
-                });
-                entries.map(e => e.toJSON() as Entry)
-                d.entries = entries;
-                
-            });
-            console.log(diaries);
-            return diaries;
+            // Get promises for updating diaries with their corresponding entries
+            const promises = diaries.map(d => this.getEntries(d));
+
+            // Wait for promises to resolve
+            const diariesWithEntries = await Promise.all(promises);
+            
+            // Return list of diaries with entries
+            return diariesWithEntries;
 
         }
         catch (error) {
             console.error("Error fetching diaries for user:", error);
             return [];
         }
+    }
+
+    async getEntries(diary : Diary): Promise<Diary> {
+        const updated_diary = diary;
+        const target_entries = await EntryModel.findAll({
+            where: {
+                diaryId: diary.id
+            }
+        });
+
+        if(target_entries){
+            const entries = target_entries.map(e => e.toJSON() as Entry);
+            updated_diary.entries = entries
+            return updated_diary;
+        }
+
+        updated_diary.entries = [];
+        return updated_diary;
     }
 
     // Returns a deep copy of the diary

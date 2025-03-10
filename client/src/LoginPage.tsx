@@ -20,7 +20,7 @@ const handleLogin = async () => {
 
     if (dList !== undefined) {
         setDiaryList(dList);
-        navigate("/List-of-Diaries", { state: { diaryList, username: username} }); // Sending the diaryList state as to Tyra/Melissas page
+        navigate("/List-of-Diaries", { state: { dList:dList, username: username} }); // Sending the diaryList state as to Tyra/Melissas page
     } else {
         console.log("Something went wrong in handleLogin(), returning undefined")
     }
