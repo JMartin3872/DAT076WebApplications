@@ -80,14 +80,15 @@ export function DiaryListComponent() {
 
   return (
     <>
-      <div className="text-center">
+    <div className = "text-center">
         <h1>List of your Diaries</h1>
       </div>
 
+    <div className = "create-button">
       <Button variant="success" type="button" onClick={handleCreateDiary}>
-        Create Diary
-      </Button>
-
+          Create Diary
+        </Button>
+    </div>
       <ul className="diary-list">
         {diaryList.map((diary) => (
           <li key={diary.id}>
@@ -99,27 +100,24 @@ export function DiaryListComponent() {
               {diary.title}
             </NavLink>
 
-            <Button
-              variant="warning" // yellow button
-              className="mx-2"
-              onClick={() => handleRenameDiary(diary)}
-            >
-              Rename
-            </Button>
-            <Button
-              variant="danger" // red button
-              onClick={() => handleDeleteDiary(diary.id)}
-            >
-              Delete
-            </Button>
+            <div className = "delete-rename-buttons">
+              <Button variant = "warning" onClick={() => handleRenameDiary(diary)}>
+                Rename
+              </Button>
+              <Button variant="danger" onClick={() => handleDeleteDiary(diary.id)}>
+                Delete
+              </Button>
+            </div>
           </li>
         ))}
       </ul>
 
-      <Button variant="danger" type="button" onClick={logOutButton}>
-        Log out
-      </Button>
-
+      <div className="logout-button">
+        <Button variant="primary" type="button" onClick={logOutButton}>
+          Log out
+        </Button>
+      </div>
+      
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>{editMode ? "Rename Diary" : "Create New Diary"}</Modal.Title>

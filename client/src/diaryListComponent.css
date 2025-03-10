@@ -1,28 +1,52 @@
 body {
-    background-color: rgb(212, 246, 255);
+    background-color: rgb(148, 210, 227);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
 }
 
 .text-center {
     color: rgb(0, 0, 0);
 }
+
 .diary-list {
     list-style: none;
-    padding: 0;
+    background-color: rgb(236, 236, 236);
+    padding: 20px;
+    margin-top: 20px;
+    border-radius: 10px;
+    font-size: 32px;
+    border: 1px solid rgb(0, 0, 0);
 }
 
 .diary-list li {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    justify-content: space-between; 
-    margin-bottom: 10px;
-    width: 100%;
+    padding: 10px;
+    background-color: white;
+    margin-bottom: 16px;
+    border: 1px solid rgb(0, 0, 0);
+    border-radius: 5px;
+    max-width: 600px;
 }
 
-.diary-button {
-    flex-grow: 1; 
-    text-align: left; 
+.delete-rename-buttons {
+    display: flex;
+    gap: 10px;
 }
 
-.dots-button {
-    margin-left: 10px;
+.create-button {
+    display: flex;    
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.logout-button {
+    display: flex;    
+    justify-content: center;
+    margin-top: 20px;
+    font-size: 20px;
 }
