@@ -18,8 +18,8 @@ export function EntryListComponent({mydiary, onEntryEdit, onEntryDelete} : Entry
         setDiary(mydiary); // Update child state when parentValue changes
     }, [mydiary]);
 
-
-    const myEntryComponents = diary.entries.map(entry => 
+    // Sort entries, newest first, and then create entry components from them.
+    const myEntryComponents = [...diary.entries].sort((e1, e2) => e2.id - e1.id).map(entry => 
         <EntryComponent 
             key={entry.id} 
             myEntry={entry}
