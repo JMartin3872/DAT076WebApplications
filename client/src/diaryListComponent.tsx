@@ -16,8 +16,6 @@ export function DiaryListComponent() {
   const [selectedDiary, setSelectedDiary] = useState<Diary | null>(null);
   const [editMode, setEditMode] = useState(false);
 
-  console.log(diaryList);
-
   // Log out button!
   const logOutButton = () => {
     setDiaryList([]);

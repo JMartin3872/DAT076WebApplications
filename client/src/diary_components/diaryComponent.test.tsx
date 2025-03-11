@@ -36,8 +36,7 @@ describe('DiaryComponent', () => {
       id: 0,
       title: "A diary",
       owner: "Current User",
-      nextEntryId: 0,
-      entries: [],
+      entries: []
     };
 
     (useLocation as jest.Mock).mockReturnValue({
@@ -81,8 +80,7 @@ describe('DiaryComponent', () => {
       id: 0,
       title: "A diary",
       owner: "Current User",
-      nextEntryId: 0,
-      entries: [newEntry],
+      entries: [newEntry]
     };
 
     const dummyEntries: Entry[] = [newEntry];
@@ -119,7 +117,6 @@ describe('DiaryComponent', () => {
       id: 0,
       title: "A diary",
       owner: "Current User",
-      nextEntryId: 0,
       entries: []
     };
 
@@ -148,7 +145,6 @@ describe('DiaryComponent', () => {
       id: 0,
       title: "A diary",
       owner: "Current User",
-      nextEntryId: 0,
       entries: []
     };
 
