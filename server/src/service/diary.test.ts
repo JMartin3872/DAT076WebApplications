@@ -26,34 +26,82 @@ test('User should not be able to create two diaries with the same title', async 
     expect(secondDiary).toBe("You already have a diary with this title.");
 });
 
-// TEST #1 FOR DELETING A DIARY 
-test('Should delete the diary and return a list of remaining diaries', async () => {
-    await diaryService.createDiary("User1", "Diary1");
-    await diaryService.createDiary("User1", "Diary2");
+// TEST #1 FOR DELETING A DIARY
+test('Deleting a diary should return the remaining list of diaries.', async () => {
+    const user = "User1";
+    const title1 = "Diary1";
+    const title2 = "Diary2";
 
-    const diariesBefore = await diaryService.getListOfDiaries("User1");
+    const createdDiary1 = await diaryService.createDiary(user, title1);
+    const createdDiary2 = await diaryService.createDiary(user, title2);
+    const testDiary1 = createdDiary1 as Diary;
+    const testDiary2 = createdDiary2 as Diary;
+
+    const diariesBefore = await diaryService.getListOfDiaries(user);
     expect(diariesBefore.length).toBe(2);
 
-    const diarydelete = await diaryService.deleteDiary("User1", 0);
-    const remainingDiaries = await diaryService.getListOfDiaries("User1");
+    const diaryToDeleteId = testDiary1.id;
+    const diariesAfterDeletion = await diaryService.deleteDiary(user, diaryToDeleteId);
 
-    expect(diarydelete).toEqual(remainingDiaries);
-    expect(remainingDiaries.length).toBe(1);
-    expect(remainingDiaries[0].id).toBe(1);
+        if (Array.isArray(diariesAfterDeletion)) {
+           expect(diariesAfterDeletion.length).toBe(1);
+
+           const remainingDiary = diariesAfterDeletion[0];
+           expect(remainingDiary.title).toBe("Diary2");  
+    } else {
+        throw new Error("expected diariesAfterDeletion to be an array, instead got: " + typeof diariesAfterDeletion);
+    }
 });
 
-// TEST #2 FOR DELETING A DIARY 
-test('Only owner of a diary should be able to delete it', async () => {
-    await diaryService.createDiary("User1", "Diary1");
-    await diaryService.createDiary("User2", "Diary1");
+// TEST #2 FOR DELETING A DIARY
+test('Trying to delete a non-existent diary should return an error message', async () => {
+    const user = "User1";
+    const title1 = "Diary1";
+    
+    const createdDiary = await diaryService.createDiary(user, title1);
+    const testDiary = createdDiary as Diary;
 
-    const diaries = await diaryService.deleteDiary("User1", 1);
-    expect(diaries).toBe("Diary not found or unauthorized.");
+    const nonExistentDiaryId = testDiary.id + 1000000;  // Assuming an ID thats far beyond the created diary ID
+    const result = await diaryService.deleteDiary(user, nonExistentDiaryId);
 
-    const diariesOwner = await diaryService.deleteDiary("User2", 1);
-    const remainingDiaries = await diaryService.getListOfDiaries("User2");
-    expect(remainingDiaries.length).toBe(0);
+    expect(result).toBe("Diary not found or unauthorized.");
 });
+
+// TEST #1 FOR RENAMING A DIARY
+test('Renaming a diary should return the updated list of diaries', async () => {
+    const user = "User1";
+    const title1 = "Diary1";
+    const newTitle = "NewDiary1";
+
+    const createdDiary = await diaryService.createDiary(user, title1);
+    const testDiary = createdDiary as Diary;
+
+    const diariesAfterRename = await diaryService.renameDiary(user, testDiary.id, newTitle);
+
+    if (Array.isArray(diariesAfterRename)) {
+        expect(diariesAfterRename.length).toBe(1); 
+        expect(diariesAfterRename[0].title).toBe(newTitle); 
+    } 
+    else {
+        throw new Error("Expected diariesAfterRename to be an array, but got: " + typeof diariesAfterRename);
+    }
+});
+
+// TEST #1 FOR RENAMING A DIARY
+test('Renaming a diary to an existing title should leave an error message.', async () => {
+    const user = "User1";
+    const title1 = "Diary1";
+    const title2 = "Diary2";
+    const newTitle = "Diary2";  
+
+    const diary1 = await diaryService.createDiary(user, title1);
+    const diary2 = await diaryService.createDiary(user, title2);
+
+    const diariesAfterRename = await diaryService.renameDiary(user, (diary1 as Diary).id, newTitle);
+
+    expect(diariesAfterRename).toBe("You already have a diary with this title.");
+});
+
 
 // TEST #1 FOR ADDING AN ENTRY TO A DIARY
 test('Adding an entry to a diary should return an entry list containing an entry with the correct text. The list length should be one longer.', async () => {

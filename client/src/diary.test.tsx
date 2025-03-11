@@ -27,25 +27,27 @@ describe('DiaryListComponent', () => {
   // Test 1: Logging Create Diary Button Click
   test('logs a message when the Create Diary button is clicked', () => {
     const consoleSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
+    
     // Create a mock diary list
     const diarylist: Diary[] = [];
-
-    // Mock useLocation
+  
+    // Mock useLocation to return state with valid dList and username
     (useLocation as jest.Mock).mockReturnValue({
       state: {
-        dlist: diarylist
+        dList: diarylist,  // mock dList as an empty array or some mock diaries
+        username: 'testUser'  // mock username
       },
     });
-
+  
     render(
       <MemoryRouter>
         <DiaryListComponent />
       </MemoryRouter>
     );
-
+  
     const createDiaryButton = screen.getByText('Create Diary');
     fireEvent.click(createDiaryButton);
-
+  
     consoleSpy.mockRestore();
   });
 
@@ -54,7 +56,7 @@ describe('DiaryListComponent', () => {
     const mockDiaryId = 1;
     const diaryTitle = "Diary to be deleted";
     const username = "user1"; // Include username
-    const initialDiaries: Diary[] = [{ id: mockDiaryId, title: diaryTitle, owner: username, entries: [], nextEntryId: 0 }];
+    const initialDiaries: Diary[] = [{ id: mockDiaryId, title: diaryTitle, owner: username, entries: []}];
     const updatedDiaries: Diary[] = []; // the list will be empty after deletion!
   
     (axios.delete as jest.Mock).mockResolvedValue({ data: updatedDiaries });
@@ -97,16 +99,14 @@ describe('DiaryListComponent', () => {
       id: mockDiaryId, 
       title: oldTitle, 
       owner: username, 
-      entries: [], 
-      nextEntryId: 0 
-    }];
+      entries: []
+        }];
     
     const updatedDiaries: Diary[] = [{ 
       id: mockDiaryId, 
       title: updatedTitle, 
       owner: username, 
-      entries: [], 
-      nextEntryId: 0 
+      entries: []
     }];
   
     (axios.patch as jest.Mock).mockResolvedValue({ data: updatedDiaries });
