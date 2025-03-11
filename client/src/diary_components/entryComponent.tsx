@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, Row, Button, Col, Modal, Form } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Entry } from "../api.ts";
@@ -12,18 +12,21 @@ type EntryComponentProps = {
 
 export function EntryComponent({ myEntry, onEdit, onDelete }: EntryComponentProps) {
 
-    const [entry] = useState<Entry>(myEntry)
     const [showEdit, setShowEdit] = useState<boolean>(false);
-    const [editedText, setEditedText] = useState<string>(entry.text);
+    const [editedText, setEditedText] = useState<string>(myEntry.text);
 
     if (!myEntry) return null;
+
+    useEffect(() => {
+        setEditedText(myEntry.text);
+    }, [myEntry.text]);
 
     const handleEditClick = () => {
         setShowEdit(true);
     }
 
     const handleSaveEdit = () => {
-        onEdit(entry.id, editedText);
+        onEdit(myEntry.id, editedText);
         setShowEdit(false);
     }
 
@@ -35,7 +38,7 @@ export function EntryComponent({ myEntry, onEdit, onDelete }: EntryComponentProp
                         <Row>
                             <Col className="text-start datetext">
 
-                                {new Date(Number(entry.time)).toLocaleString('sv-SE',{
+                                {new Date(Number(myEntry.time)).toLocaleString('sv-SE',{
                                     year: 'numeric',
                                     month: 'numeric',
                                     day: 'numeric',
@@ -57,7 +60,7 @@ export function EntryComponent({ myEntry, onEdit, onDelete }: EntryComponentProp
                             <Col className="text-end">
                                 <Button className="diarybutton"
                                     variant="outline-danger"
-                                    onClick={() => onDelete(entry.id)}>
+                                    onClick={() => onDelete(myEntry.id)}>
                                     Delete
                                 </Button>
                             </Col>
@@ -66,7 +69,7 @@ export function EntryComponent({ myEntry, onEdit, onDelete }: EntryComponentProp
 
 
                     <Card.Body className="text-start">
-                        {entry.text}
+                        {myEntry.text}
                     </Card.Body>
                 </Card>
 
