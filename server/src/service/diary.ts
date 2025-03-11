@@ -114,7 +114,7 @@ export class DiaryService implements IDiaryService {
             });
 
             if (!targetDiary) {
-                return "Could not add entry. Unauthorized or non-existent diary.";
+                return "Could not add entry. No such diary was found.";
             }
 
             // Here the db functionality is tested by creating a new diary and storing it in db
@@ -149,7 +149,7 @@ export class DiaryService implements IDiaryService {
 
 
             if (!targetDiary) {
-                return "Could not edit entry as the specified diary does not exist or you do not own it";
+                return "Could not edit entry. No such diary was found.";
             }
            
             else {
@@ -189,7 +189,7 @@ export class DiaryService implements IDiaryService {
         });
 
         if (!targetDiary) {
-            return "No such diary was found"
+            return "No such diary was found."
         }
 
         await EntryModel.destroy({
