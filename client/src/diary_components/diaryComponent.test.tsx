@@ -72,7 +72,7 @@ describe('DiaryComponent', () => {
 
     const newEntry: Entry = {
       id: 0,
-      date: Date.now(),
+      time: Date.now(),
       text: "test"
     };
 

@@ -18,9 +18,12 @@ export interface Diary {
 
 // Interface representing one entry in a diary
 export interface Entry {
+    // Entry id, should they be unique by themselves or in combination with diary id?
     id: number;
-    date: number;
+    // The entry text
     text: string;
+    // The time the entry was created represented as a number from Date.now()
+    time: number;
 }
 
 const BASE_URL = "http://localhost:8080"

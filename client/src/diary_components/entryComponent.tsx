@@ -35,7 +35,14 @@ export function EntryComponent({ myEntry, onEdit, onDelete }: EntryComponentProp
                         <Row>
                             <Col className="text-start datetext">
 
-                                {new Date(entry.date).toLocaleString()}
+                                {new Date(Number(entry.time)).toLocaleString('sv-SE',{
+                                    year: 'numeric',
+                                    month: 'numeric',
+                                    day: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                    hour12: false
+                                })}
 
                             </Col>
 
