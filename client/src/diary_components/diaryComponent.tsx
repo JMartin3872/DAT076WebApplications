@@ -99,6 +99,14 @@ export function DiaryComponent() {
         }
     }
 
+    // Function to handle the enter key press to rename the diary.
+    const pressEnterRename = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        if (e.key === "Enter" && !e.shiftKey && newTitle.trim()) {
+            e.preventDefault();
+            renameCurrentDiary();
+        }
+    }
+
     // Function to rename the current diary. Makes a call to the api to rename the diary.
     const renameCurrentDiary = async (): Promise<void> => {
         try {
@@ -181,6 +189,7 @@ export function DiaryComponent() {
                                 rows={4}
                                 value={newTitle}
                                 onChange={(e) => setNewTitle(e.target.value)}
+                                onKeyDown={pressEnterRename}
                             />
                         </Form.Group>
                     </Form>

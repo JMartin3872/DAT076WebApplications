@@ -25,6 +25,14 @@ export function EntryComponent({ myEntry, onEdit, onDelete }: EntryComponentProp
         setShowEdit(true);
     }
 
+    // Handle the enter key press to save the edited entry.
+    const pressEnterEdit = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        if (e.key === "Enter" && !e.shiftKey && editedText.trim()) {
+            e.preventDefault();
+            handleSaveEdit();
+        }
+    }
+
     const handleSaveEdit = () => {
         onEdit(myEntry.id, editedText);
         setShowEdit(false);
@@ -87,6 +95,7 @@ export function EntryComponent({ myEntry, onEdit, onDelete }: EntryComponentProp
                                 rows={4}
                                 value={editedText}
                                 onChange={(e) => setEditedText(e.target.value)}
+                                onKeyDown={pressEnterEdit}
                             />
                         </Form.Group>
                     </Form>

@@ -13,6 +13,7 @@ type DiaryInputProps = {
 export function DiaryInputComponent({ onAdd }: DiaryInputProps) {
     const [entryText, setEntryText] = useState<string>("");
 
+    // Function to handle adding a new entry to the diary.
     const doOnClick = () => {
         try {
             onAdd(entryText);
@@ -23,6 +24,14 @@ export function DiaryInputComponent({ onAdd }: DiaryInputProps) {
         }
     }
 
+    // Handle the enter key press to add a new entry.
+    const pressEnterPost = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+        if (e.key === "Enter" && !e.shiftKey && entryText.trim()) {
+            e.preventDefault();
+            doOnClick();
+        }
+    }
+
     return (
         <div className="mb-4">
             <h2 className="text-center mb-3">What's on your mind?</h2>
@@ -30,6 +39,7 @@ export function DiaryInputComponent({ onAdd }: DiaryInputProps) {
                 className="form-control mb-3"
                 value={entryText}
                 onChange={(e) => setEntryText(e.target.value)}
+                onKeyUp={pressEnterPost}
                 rows={4}
             />
             <Button
