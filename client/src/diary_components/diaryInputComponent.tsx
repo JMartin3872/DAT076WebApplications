@@ -33,7 +33,7 @@ export function DiaryInputComponent({ onAdd }: DiaryInputProps) {
                 rows={4}
             />
             <Button
-                variant="primary"
+                variant="success"
                 onClick={doOnClick}
                 disabled={!entryText.trim()}
             >

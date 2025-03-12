@@ -44,12 +44,12 @@ export function DiaryListComponent() {
 
     if (editMode && selectedDiary) {
       // RENAME DIARY
-      const updatedDiaries = await renameDiary(username, selectedDiary.id, diaryTitle);
+      const updatedDiaries = await renameDiary(username, selectedDiary.id, diaryTitle, false);
       if (!updatedDiaries) {
         console.error("Failed to rename diary from server!");
         return;
       }
-      setDiaryList(updatedDiaries);
+      setDiaryList(updatedDiaries as Diary[]);
     } else {
       // CREATE DIARY
       const response = await createDiary(username, diaryTitle);

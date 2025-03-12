@@ -5,7 +5,6 @@ export interface Diary {
     title: string;
     owner: string;
     entries: Entry[];
-
 }
 
 // Interface representing one entry in a diary

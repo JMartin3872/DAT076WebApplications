@@ -36,7 +36,6 @@ export function EntryListComponent({mydiary, onEntryEdit, onEntryDelete} : Entry
             <div>
                 <Row className="text-center">
                     <h2>Entries</h2>
-                    
                 </Row>  
                 <Row>
                     <ul>{myEntryComponents}</ul>

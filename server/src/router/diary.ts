@@ -57,7 +57,8 @@ interface RenameDiaryRequest extends Request {
     body: {
         username: string,
         diaryId: number,
-        newTitle: string
+        newTitle: string,
+        onlyTitle: boolean
     },
     session: any
 }
@@ -241,9 +242,11 @@ diaryRouter.patch("/renamediary", async (
     }
 
     try {
-        const { username, diaryId, newTitle } = req.body;
-        const result = await diaryService.renameDiary(username, diaryId, newTitle);
-        res.status(typeof result === "string" ? 400 : 200).send(result);
+        const { username, diaryId, newTitle, onlyTitle } = req.body;
+        const result = await diaryService.renameDiary(username, diaryId, newTitle, onlyTitle);
+        res.status(typeof result === "string" &&
+            (result.includes("not found") ||
+            result.includes("You already have")) ? 400 : 200).send(result);
     } catch (e: any) {
         res.status(500).send(e.message);
     }

@@ -136,12 +136,13 @@ export async function deleteDiary(username: string, diaryId: number): Promise<Di
     }
   }
 
-export async function renameDiary(username: string, diaryId: number, newTitle: string): Promise<Diary[] | undefined> {
+export async function renameDiary(username: string, diaryId: number, newTitle: string, onlyTitle: boolean): Promise<Diary[] | string | undefined> {
     try {
       const response = await axios.patch<Diary[]>(`${BASE_URL}/diary/renamediary`, {
         username,
         diaryId,
         newTitle,
+        onlyTitle,
       });
       return response.data;
     } catch (error) {

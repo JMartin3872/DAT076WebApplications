@@ -1,23 +1,32 @@
 
-import { useState } from "react";
-import { Container, Row, Col, Button } from "react-bootstrap";
+import { useState, useEffect } from "react";
+import { Container, Row, Col, Button, Modal, Form } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./diary.css"
-import { Diary, addEntryRequest, editEntryRequest, deleteEntryRequest, getUserDiariesRequest } from "../api.ts";
+import { Diary, addEntryRequest, editEntryRequest, deleteEntryRequest, getUserDiariesRequest, renameDiary } from "../api.ts";
 import { useNavigate, useLocation } from "react-router-dom";
 import { DiaryInputComponent } from "./diaryInputComponent.tsx";
 import { EntryListComponent } from "./entryListComponent.tsx";
 
 // Parent component to DiaryInputComponent and EntryListComponent.
 // This component displays the diary title, a text area to add new entries, and a list of existing entries.
-// The user can add new entries to the diary and delete existing entries.
-// The user can also navigate back to the list of diaries.
+// The user can add new entries to the diary, as well as edit and delete existing entries.
+// The user can rename the diary here as well.
+// The user can navigate back to the list of diaries.
+
 export function DiaryComponent() {
 
     const navigate = useNavigate();
     const location = useLocation();
     const [diary, setDiary] = useState<Diary>(location.state.diary);
     const [username] = useState<string>(location.state.username);
+    const [showRename, setShowRename] = useState<boolean>(false);
+    const [newTitle, setNewTitle] = useState<string>(diary.title);
+
+    // Updates the diary title when changed.
+    useEffect(() => {
+            setNewTitle(diary.title);
+        }, [diary.title]);
 
     // Function to handle adding a new entry to the diary.
     const addEntry = async (newEntryText: string) => {
@@ -90,6 +99,28 @@ export function DiaryComponent() {
         }
     }
 
+    // Function to rename the current diary. Makes a call to the api to rename the diary.
+    const renameCurrentDiary = async (): Promise<void> => {
+        try {
+            // Call to api to rename the diary.
+            const updatedTitle = await renameDiary(diary.owner, diary.id, newTitle, true);
+
+            if (!updatedTitle) {
+                window.alert("Could not change title!");
+                return;
+            }
+
+            setDiary({ ...diary, title: updatedTitle as string });
+        }
+        catch (error) {
+            console.error("Failed to change diary title!" + error);
+            window.alert("Failed to change diary title, please try again.");
+        }
+        finally {
+            setShowRename(false);
+        }
+    };
+
     // Function to navigate back to the list of diaries.
     const backToDiaries = async (): Promise<void> => {
         const dList = await getUserDiariesRequest(username);
@@ -106,15 +137,23 @@ export function DiaryComponent() {
         <>
             <Container fluid className="text-center">
                 <Row>
+                    <Row>
+                        <Col className="text-start">
+                            <h1>{"Title: " + diary.title}</h1>
+                        </Col>
+                        <Col className="text-end">
+                            <Button className="diarybutton" variant="primary" type="button" onClick={() => { backToDiaries() }}>
+                                Back
+                            </Button>
+                        </Col>
+                    </Row>
                     <Col className="text-start">
-                        <h1>{"Title: " + diary.title}</h1>
-                    </Col>
-
-                    <Col className="text-end">
-                        <Button className="diarybutton" variant="primary" type="button" onClick={() => { backToDiaries() }}>
-                            Back
+                        <Button className="diarybutton" variant="info" type="button" onClick={() => setShowRename(true)}>
+                            Rename diary
                         </Button>
                     </Col>
+                    <Row>
+                    </Row>
                 </Row>
                 <Row >
                     <DiaryInputComponent onAdd={addEntry} />
@@ -128,6 +167,32 @@ export function DiaryComponent() {
                     />
                 </Row>
             </Container>
+
+            <Modal show={showRename} onHide={() => setShowRename(false)}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Rename diary</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    <Form>
+                        <Form.Group controlId="newTitle">
+                            <Form.Control
+                                as="textarea"
+                                rows={4}
+                                value={newTitle}
+                                onChange={(e) => setNewTitle(e.target.value)}
+                            />
+                        </Form.Group>
+                    </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => setShowRename(false)}>
+                        Cancel
+                    </Button>
+                    <Button variant="primary" onClick={renameCurrentDiary}>
+                        Save changes
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </>
     );
 }
