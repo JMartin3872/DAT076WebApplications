@@ -76,7 +76,7 @@ test('Renaming a diary should return the updated list of diaries', async () => {
     const createdDiary = await diaryService.createDiary(user, title1);
     const testDiary = createdDiary as Diary;
 
-    const diariesAfterRename = await diaryService.renameDiary(user, testDiary.id, newTitle);
+    const diariesAfterRename = await diaryService.renameDiary(user, testDiary.id, newTitle, false);
 
     if (Array.isArray(diariesAfterRename)) {
         expect(diariesAfterRename.length).toBe(1); 
@@ -97,7 +97,7 @@ test('Renaming a diary to an existing title should leave an error message.', asy
     const diary1 = await diaryService.createDiary(user, title1);
     const diary2 = await diaryService.createDiary(user, title2);
 
-    const diariesAfterRename = await diaryService.renameDiary(user, (diary1 as Diary).id, newTitle);
+    const diariesAfterRename = await diaryService.renameDiary(user, (diary1 as Diary).id, newTitle, false);
 
     expect(diariesAfterRename).toBe("You already have a diary with this title.");
 });

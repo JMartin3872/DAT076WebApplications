@@ -135,7 +135,7 @@ describe('DiaryListComponent', () => {
     await waitFor(() => {
       expect(axios.patch).toHaveBeenCalledWith(
         "http://localhost:8080/diary/renamediary",
-        { diaryId: mockDiaryId, newTitle: updatedTitle, username } // Include username
+        { diaryId: mockDiaryId, newTitle: updatedTitle, onlyTitle: false, username} // Include username
       );
       expect(screen.getByText(updatedTitle)).toBeInTheDocument();
     });
