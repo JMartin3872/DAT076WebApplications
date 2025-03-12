@@ -129,7 +129,8 @@ export function DiaryComponent() {
             console.log("Something bad happened");
         }
         else {
-            navigate("/List-of-diaries", { state: { dList, username: username } });
+            const sortedDiaries = dList.sort((d1, d2) => d1.id - d2.id);
+            navigate("/List-of-diaries", { state: { dList: sortedDiaries, username: username } });
         }
     }
 
