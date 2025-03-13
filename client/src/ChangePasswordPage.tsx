@@ -46,11 +46,11 @@ export function ChangePasswordPage() {
                         onChange={(e) => setNewPassword(e.target.value)}
                     />
                 </Form.Group>
-                <Button variant="primary" type="button" onClick={handleChangePassword}>
+                <Button className="mt-4" variant="primary" type="button" onClick={handleChangePassword}>
                     Change password!
                 </Button>
             </Form>
-            <NavLink to="/" end>Back to login screen</NavLink>
+            <NavLink  to="/" end>Back to login screen</NavLink>
         </>
     )
 }

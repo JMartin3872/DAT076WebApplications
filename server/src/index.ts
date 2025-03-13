@@ -20,4 +20,4 @@ app.listen(PORT, () => {
 });
 
 // Setup connection with db
-initDB();
+ initDB();
