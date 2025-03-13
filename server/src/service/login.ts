@@ -4,6 +4,8 @@ import {diaryService} from "../router/diary";
 import bcrypt from "bcrypt";
 import {LoginModel} from "../../db/login.db";
 
+
+
 export class LoginService{
 
     private loginIds : Login[] = []
@@ -24,7 +26,7 @@ export class LoginService{
             password: newUser.password
 
         })
-        this.loginIds.push(newUser);
+       // this.loginIds.push(newUser);
         return newUser;
     }
 
@@ -63,7 +65,21 @@ export class LoginService{
 
     }
 
+    async deleteUser(username : string,password : string) : Promise<string| undefined> {
+        let user: Login | null = await LoginModel.findOne({where: {username}})
+        if (!user) {
+            return undefined;
+        }
+        if (await bcrypt.compare(password, user.password)) {
+            await diaryService.deleteAllUserDiariesAndEntries(username)
+            await LoginModel.destroy({where: {username}})
+            return "ok"
+        }
+        else {
+            return undefined;
+        }
 
+    }
 
 
 

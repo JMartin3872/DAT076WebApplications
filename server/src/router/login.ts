@@ -101,3 +101,21 @@ loginRouter.post("/logout", (
         res.status(400).send("No active session");
     }
 });
+
+loginRouter.post("/deleteuser", async (
+    req: UserRequest, res: Response
+) => {
+    try {
+        if (req.session.username === req.body.username) {
+            delete req.session.username   //If the user is already logged in, log out and log in as this user
+        }
+        const result: string | undefined = await loginService.deleteUser(req.body.username, req.body.password)
+        if (!result) {
+            res.status(401).send("Wrong credentials");
+        } else {
+            res.status(200).send("User deleted!");
+        }
+    } catch (e: any) {
+        res.status(500).send(e.message);
+    }
+});

@@ -64,6 +64,19 @@ export async function changePassword(username:string, oldPassword:string, newPas
     }
 }
 
+export async function deleteUser(username:string, password:string): Promise<string | undefined> {
+    try {
+        const response = await axios.post<string>(`${BASE_URL}/login/deleteuser`,
+            {username, password})
+        return response.data;
+    }
+    catch (e) {
+        console.log(e);
+        return undefined;
+    }
+}
+
+
 // Sends a request to the server to add an entry to a diary
 export async function addEntryRequest(username: string, diaryId: number, text: string)
     : Promise<Entry[] | undefined> {

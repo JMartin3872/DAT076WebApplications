@@ -7,6 +7,7 @@ import { EntryModel } from "../../db/entry.db";
 
 // Diary service class for manipulating diary and their entries
 export class DiaryService implements IDiaryService {
+    private diary: Diary[] = [];
 
     // Create a new diary if the user doesn't already have one with the same title
     async createDiary(username: string, diaryTitle: string): Promise<Diary | string> {
@@ -49,7 +50,7 @@ export class DiaryService implements IDiaryService {
                 return "Diary not found or unauthorized.";
             }
 
-            // Delet all entries belonging to diary
+            // Delete all entries belonging to diary
             await this.deleteAllDiaryEntries(diaryId);
 
             // Remove the diary from the DB
@@ -72,7 +73,28 @@ export class DiaryService implements IDiaryService {
         })
     }
 
-    async renameDiary(username: string, diaryId: number, newTitle: string, onlyTitle: boolean): Promise<Diary[] | string> {
+    async deleteAllUserDiariesAndEntries(username : string): Promise<void>{
+        const target_diaries = await DiaryModel.findAll({
+            where: {
+                owner: username
+            },
+        });
+
+        const result = target_diaries.map(async d => {
+            await this.deleteAllDiaryEntries(d.id);
+        })
+
+        //await Promise.all(result);
+
+        DiaryModel.destroy({
+            where:{
+                owner:username
+            }
+        })
+
+    }
+
+    async renameDiary(username: string, diaryId: number, newTitle: string): Promise<Diary[] | string> {
         try {
             // Make sure the diary belongs to this user
             const targetDiary = await DiaryModel.findOne({
@@ -93,10 +115,6 @@ export class DiaryService implements IDiaryService {
             // Perform the rename
             targetDiary.title = newTitle;
             await targetDiary.save();
-
-            if(onlyTitle) {
-                return targetDiary.title;
-            }
 
             // Return the updated list of diaries
             return this.getListOfDiaries(username);
@@ -154,12 +172,12 @@ export class DiaryService implements IDiaryService {
             if (!targetDiary) {
                 return "Could not edit entry. No such diary was found.";
             }
-           
+
             else {
                 const targetEntry = await EntryModel.findOne({
                     where: { id: entryId, diaryId: diaryId }
                 });
-             
+
                 if (!targetEntry) {
                     return "No such entry was found";
                 }
@@ -168,7 +186,7 @@ export class DiaryService implements IDiaryService {
                     { text: editedText },
                     {
                         where : { id: entryId, diaryId: diaryId }
-                });
+                    });
 
                 const entries = await EntryModel.findAll({
                     where: {
@@ -213,7 +231,7 @@ export class DiaryService implements IDiaryService {
     }
 
     // Get all diaries of a specific user!
-    async getListOfDiaries(username: string, sessionUsername?: string): Promise<Diary[]> {
+    async getListOfDiaries(username: string): Promise<Diary[]> {
         try {
 
             const target_diaries = await DiaryModel.findAll({
@@ -231,7 +249,7 @@ export class DiaryService implements IDiaryService {
 
             // Wait for promises to resolve
             const diariesWithEntries = await Promise.all(promises);
-            
+
             // Return list of diaries with entries
             return diariesWithEntries;
 
