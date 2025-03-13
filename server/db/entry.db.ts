@@ -12,6 +12,10 @@ export class EntryModel extends Model<InferAttributes<EntryModel>, InferCreation
     // The entry text
     declare text: string;
 
+    //Flag signifying if entry is pinned or not
+    declare pinned: boolean
+
+    // Timestamp for when entry was created
     declare time: number;
 
 }
@@ -42,9 +46,16 @@ EntryModel.init(
             allowNull: false
         },
 
+        pinned:{
+            type: DataTypes.BOOLEAN,
+            allowNull: false,
+            defaultValue: false
+        },
+
         time: {
             type: DataTypes.BIGINT,
             allowNull: false
+            
         }
 
         // TODO: Discuss how entries should be stored in correlation to their respective diaries

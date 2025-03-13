@@ -5,3 +5,19 @@
 .datetext{
     font-weight:bold;
 }
+
+.tight-col {
+    margin-right: 4px;
+    margin-left: 4px;
+  }
+
+  .min-width-container {
+    min-width: 80vw;
+  }
+
+  .custom-accordion-body {
+    background-color: rgb(212, 231, 240);
+    border: 1px solid gray;
+    border-radius: 0 0 8px 8px;
+    color: #333;
+  }

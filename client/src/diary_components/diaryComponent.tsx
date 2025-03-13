@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Container, Row, Col, Button, Modal, Form } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./diary.css"
-import { Diary, addEntryRequest, editEntryRequest, deleteEntryRequest, getUserDiariesRequest, renameDiary } from "../api.ts";
+import { Diary, Entry, addEntryRequest, editEntryRequest, deleteEntryRequest, getUserDiariesRequest, renameDiary } from "../api.ts";
 import { useNavigate, useLocation } from "react-router-dom";
 import { DiaryInputComponent } from "./diaryInputComponent.tsx";
 import { EntryListComponent } from "./entryListComponent.tsx";
@@ -53,9 +53,9 @@ export function DiaryComponent() {
 
     };
 
-    const editEntry = async (entryId: number, editedText: string): Promise<void> => {
+    const editEntry = async (entryId: number, editedText: string, pinned: boolean): Promise<void> => {
         try {
-            const updatedEntryList = await editEntryRequest(diary.owner, diary.id, entryId, editedText);
+            const updatedEntryList = await editEntryRequest(diary.owner, diary.id, entryId, editedText, pinned);
 
             if (!updatedEntryList) {
                 window.alert("Could not edit entry!");
@@ -96,6 +96,33 @@ export function DiaryComponent() {
 
             setDiary(new_diary);
             window.alert("Entry deleted!");
+        }
+    }
+
+    const togglePinEntry = async(entry : Entry): Promise<void> => {
+        const updatedEntryList = await editEntryRequest(diary.owner, diary.id, entry.id, entry.text, !entry.pinned);
+
+        if (!updatedEntryList) {
+            if(entry.pinned){
+                window.alert("Could not pin entry,");
+            }
+
+            else{
+                window.alert("Could not unpin entry,");
+            }
+            return;
+        }
+
+        else {
+
+            const new_diary: Diary = {
+                id: diary.id,
+                owner: diary.owner,
+                title: diary.title,
+                entries: updatedEntryList
+            }
+
+            setDiary(new_diary);
         }
     }
 
@@ -144,7 +171,7 @@ export function DiaryComponent() {
 
     return (
         <>
-            <Container fluid className="text-center">
+            <Container fluid className="text-center min-width-container">
                 <Row>
                     <Row>
                         <Col className="text-start">
@@ -173,6 +200,7 @@ export function DiaryComponent() {
                         mydiary={diary}
                         onEntryEdit={editEntry}
                         onEntryDelete={deleteEntry}
+                        onTogglePin={togglePinEntry}
                     />
                 </Row>
             </Container>

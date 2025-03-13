@@ -22,6 +22,8 @@ export interface Entry {
     id: number;
     // The entry text
     text: string;
+    // Indicates if an entry is pinned or not
+    pinned: boolean;
     // The time the entry was created represented as a number from Date.now()
     time: number;
 }
@@ -82,12 +84,12 @@ export async function addEntryRequest(username: string, diaryId: number, text: s
 }
 
 // Sends a request to the server to edit an entry in a diary
-export async function editEntryRequest(username: string, diaryId: number, entryId: number, editedText: string)
+export async function editEntryRequest(username: string, diaryId: number, entryId: number, editedText: string, pinned: boolean)
     : Promise<Entry[] | undefined> {
 
     try {
         const response = await axios.patch<Entry[]>(`${BASE_URL}/diary/editentry`,
-            {username, diaryId, entryId, editedText}
+            {username, diaryId, entryId, editedText, pinned}
         );
         return response.data;
     }

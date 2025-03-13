@@ -15,6 +15,8 @@ export interface Entry {
     id: number;
     // The entry text
     text: string;
+    // Indicates if an entry is pinned or not
+    pinned: boolean;
     // The time the entry was created represented as a number from Date.now()
     time: number;
 }

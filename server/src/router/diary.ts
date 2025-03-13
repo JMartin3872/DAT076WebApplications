@@ -23,7 +23,8 @@ interface EditEntryRequest extends Request {
         username: string,
         diaryId: number,
         entryId: number,
-        editedText: string
+        editedText: string,
+        pinned: boolean
     },
     session: any
 }
@@ -121,7 +122,6 @@ diaryRouter.patch("/editentry", async (
     req: EditEntryRequest,
     res: Response<Entry[] | string>
 ) => {
-
     // If request doesn't come from owner of diary, send 401 response.
     if (req.session.username !== req.body.username) {
         res.status(401).send("Unauthorized");
@@ -129,14 +129,14 @@ diaryRouter.patch("/editentry", async (
     }
 
     try {
-        const { username, diaryId, entryId, editedText } = req.body;
+        const { username, diaryId, entryId, editedText, pinned } = req.body;
 
         if (typeof editedText !== "string") {
             res.status(400).send("Invalid type of text");
             return;
         }
 
-        const updatedEntries = await diaryService.editEntry(diaryId, entryId, editedText);
+        const updatedEntries = await diaryService.editEntry(diaryId, entryId, editedText, pinned);
 
         res.status(typeof updatedEntries === "string" ? 400 : 200).send(updatedEntries);
     } catch (e: any) {

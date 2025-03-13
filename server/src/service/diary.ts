@@ -125,6 +125,7 @@ export class DiaryService implements IDiaryService {
                 // diary id is omitted here as postgres autoincrements and sets id on each diary added, see diary.db.ts
                 diaryId: diaryId,
                 text: entryText,
+                pinned: false,
                 time: Date.now()
             });
 
@@ -142,7 +143,7 @@ export class DiaryService implements IDiaryService {
     }
 
     // Edit an entry in a diary if it exists and the user is the owner
-    async editEntry(diaryId: number, entryId: number, editedText: string)
+    async editEntry(diaryId: number, entryId: number, editedText: string, pinned: boolean)
         : Promise<Entry[] | string> {
         try {
 
@@ -165,7 +166,7 @@ export class DiaryService implements IDiaryService {
                 }
 
                 await targetEntry.update(
-                    { text: editedText },
+                    { text: editedText, pinned: pinned },
                     {
                         where : { id: entryId, diaryId: diaryId }
                 });
