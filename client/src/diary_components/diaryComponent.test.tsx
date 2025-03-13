@@ -73,7 +73,8 @@ describe('DiaryComponent', () => {
     const newEntry: Entry = {
       id: 0,
       time: Date.now(),
-      text: "test"
+      text: "test",
+      pinned: false
     };
 
     const newDiary: Diary = {
