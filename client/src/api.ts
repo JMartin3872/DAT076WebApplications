@@ -80,7 +80,7 @@ export async function deleteUser(username:string, password:string): Promise<stri
 
 
 // Sends a request to the server to add an entry to a diary
-export async function addEntryRequest(username: string, diaryId: number, text: string)
+export async function addEntry(username: string, diaryId: number, text: string)
     : Promise<Entry[] | undefined> {
 
     try {
@@ -97,7 +97,7 @@ export async function addEntryRequest(username: string, diaryId: number, text: s
 }
 
 // Sends a request to the server to edit an entry in a diary
-export async function editEntryRequest(username: string, diaryId: number, entryId: number, editedText: string, pinned: boolean)
+export async function editEntry(username: string, diaryId: number, entryId: number, editedText: string, pinned: boolean)
     : Promise<Entry[] | undefined> {
 
     try {
@@ -112,7 +112,7 @@ export async function editEntryRequest(username: string, diaryId: number, entryI
     }
 };
 
-export async function deleteEntryRequest(username:string, diaryId:number, entryId:number)
+export async function deleteEntry(username:string, diaryId:number, entryId:number)
     : Promise<Entry[] | undefined> {
     try {
         const response = await axios.delete<Entry[]>(`${BASE_URL}/diary/deleteentry`, {data:{username : username, diaryId : diaryId, entryId : entryId}});

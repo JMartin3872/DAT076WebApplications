@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Container, Row, Col, Button, Modal, Form } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./diary.css"
-import { Diary, Entry, addEntryRequest, editEntryRequest, deleteEntryRequest, getUserDiariesRequest, renameDiary } from "../api.ts";
+import { Diary, Entry, addEntry, editEntry, deleteEntry, getUserDiariesRequest, renameDiary } from "../api.ts";
 import { useNavigate, useLocation } from "react-router-dom";
 import { DiaryInputComponent } from "./diaryInputComponent.tsx";
 import { EntryListComponent } from "./entryListComponent.tsx";
@@ -29,9 +29,9 @@ export function DiaryComponent() {
         }, [diary.title]);
 
     // Function to handle adding a new entry to the diary.
-    const addEntry = async (newEntryText: string) => {
+    const addEntryEvent = async (newEntryText: string) => {
         try {
-            const newEntryList = await addEntryRequest(diary.owner, diary.id, newEntryText);
+            const newEntryList = await addEntry(diary.owner, diary.id, newEntryText);
 
             if (!newEntryList) {
                 window.alert("Could not post new entry!");
@@ -53,9 +53,9 @@ export function DiaryComponent() {
 
     };
 
-    const editEntry = async (entryId: number, editedText: string, pinned: boolean): Promise<void> => {
+    const editEntryEvent = async (entryId: number, editedText: string, pinned: boolean): Promise<void> => {
         try {
-            const updatedEntryList = await editEntryRequest(diary.owner, diary.id, entryId, editedText, pinned);
+            const updatedEntryList = await editEntry(diary.owner, diary.id, entryId, editedText, pinned);
 
             if (!updatedEntryList) {
                 window.alert("Could not edit entry!");
@@ -75,11 +75,11 @@ export function DiaryComponent() {
         }
     };
 
-    const deleteEntry = async (entryId: number): Promise<void> => {
+    const deleteEntryEvent = async (entryId: number): Promise<void> => {
         const confirmDelete = window.confirm("Are you sure you want to delete this entry?");
         if (!confirmDelete) return;
 
-        const newEntryList = await deleteEntryRequest(diary.owner, diary.id, entryId);
+        const newEntryList = await deleteEntry(diary.owner, diary.id, entryId);
 
         if (!newEntryList) {
             window.alert("Entry couldn't be deleted!");
@@ -100,7 +100,7 @@ export function DiaryComponent() {
     }
 
     const togglePinEntry = async(entry : Entry): Promise<void> => {
-        const updatedEntryList = await editEntryRequest(diary.owner, diary.id, entry.id, entry.text, !entry.pinned);
+        const updatedEntryList = await editEntry(diary.owner, diary.id, entry.id, entry.text, !entry.pinned);
 
         if (!updatedEntryList) {
             if(entry.pinned){
@@ -192,14 +192,14 @@ export function DiaryComponent() {
                     </Row>
                 </Row>
                 <Row >
-                    <DiaryInputComponent onAdd={addEntry} />
+                    <DiaryInputComponent onAdd={addEntryEvent} />
                 </Row>
 
                 <Row>
                     <EntryListComponent
                         mydiary={diary}
-                        onEntryEdit={editEntry}
-                        onEntryDelete={deleteEntry}
+                        onEntryEdit={editEntryEvent}
+                        onEntryDelete={deleteEntryEvent}
                         onTogglePin={togglePinEntry}
                     />
                 </Row>
