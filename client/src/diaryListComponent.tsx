@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button, Modal, Form } from "react-bootstrap";
+import { Button, Modal, Form, Dropdown } from "react-bootstrap";
 import { useNavigate, NavLink, useLocation } from "react-router-dom";
 import { Diary, createDiary, deleteDiary, renameDiary } from "./api";
 import "./diaryListComponent.css";
@@ -15,6 +15,14 @@ export function DiaryListComponent() {
   const [diaryTitle, setDiaryTitle] = useState("");
   const [selectedDiary, setSelectedDiary] = useState<Diary | null>(null);
   const [editMode, setEditMode] = useState(false);
+  const [sortByNewest, setSortByNewest] = useState<boolean>(true);
+
+  const sortedDiaries = [...diaryList].sort((d1, d2) =>
+    sortByNewest ? d2.id - d1.id : d1.id - d2.id
+  );
+
+  const sortByNew = () => setSortByNewest(true);
+  const sortByOld = () => setSortByNewest(false);
 
   // Log out button!
   const logOutButton = () => {
@@ -80,28 +88,33 @@ export function DiaryListComponent() {
 
   return (
     <>
-    <div className = "text-center">
+      <div className="text-center">
         <h1>List of your Diaries</h1>
       </div>
 
-    <div className = "create-button">
-      <Button variant="success" type="button" onClick={handleCreateDiary}>
-          Create Diary
-        </Button>
-    </div>
+      <div className = "create-and-sort">
+        <div className="create-button">
+          <Button variant="success" type="button" onClick={handleCreateDiary}>
+            Create Diary
+          </Button>
+
+          <Dropdown.Toggle className="sort-dropdown">Sort by:</Dropdown.Toggle>
+            <Dropdown.Menu>
+              <Dropdown.Item onClick={sortByNew}>Newest</Dropdown.Item>
+              <Dropdown.Item onClick={sortByOld}>Oldest</Dropdown.Item>
+          </Dropdown.Menu>
+        </div>
+      </div>
+
       <ul className="diary-list">
-        {diaryList.map((diary) => (
+        {sortedDiaries.map((diary) => (
           <li key={diary.id}>
-            <NavLink
-              to="/diary/"
-              state={{ diary: diary, username: username }}
-              className="diary-link"
-            >
+            <NavLink to="/diary/" state={{ diary, username }} className="diary-link">
               {diary.title}
             </NavLink>
 
-            <div className = "delete-rename-buttons">
-              <Button variant = "warning" onClick={() => handleRenameDiary(diary)}>
+            <div className="delete-rename-buttons">
+              <Button variant="warning" onClick={() => handleRenameDiary(diary)}>
                 Rename
               </Button>
               <Button variant="danger" onClick={() => handleDeleteDiary(diary.id)}>
@@ -117,7 +130,7 @@ export function DiaryListComponent() {
           Log out
         </Button>
       </div>
-      
+
       <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
           <Modal.Title>{editMode ? "Rename Diary" : "Create New Diary"}</Modal.Title>
