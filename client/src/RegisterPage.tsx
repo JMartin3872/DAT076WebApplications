@@ -3,7 +3,7 @@ import {Button, Col, Container, Form, FormLabel, Row} from "react-bootstrap";
 import {registerNewUser} from "./api.ts";
 import {NavLink, useNavigate} from "react-router-dom";
 
-
+//The states of RegisterPage
 export function RegisterPage() {
     const [username, setUsername]  = useState<string>("");
     const [password, setPassword]  = useState<string>("");
@@ -11,7 +11,7 @@ export function RegisterPage() {
 
     const handleRegistration = async () => {
         await registerNewUser(username,password);
-        navigate("/");
+        navigate("/");      //When done registering the user, go back to login page.
     }
     return (
 

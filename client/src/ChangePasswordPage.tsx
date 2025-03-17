@@ -4,15 +4,17 @@ import {changePassword} from "./api.ts";
 import {NavLink, useNavigate} from "react-router-dom";
 
 
+//The states of changePasswordPage.
 export function ChangePasswordPage() {
     const [username, setUsername]  = useState<string>("");
     const [oldPassword, setOldPassword]  = useState<string>("");
     const [newPassword, setNewPassword]  = useState<string>("");
     const navigate = useNavigate();
 
+    //This function is called when the button "change password" is pressed
     const handleChangePassword = async () => {
         await changePassword(username,oldPassword,newPassword);
-        navigate("/");
+        navigate("/");      //After changing the password, goes back to the login page
     }
     return (
         <>

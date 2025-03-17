@@ -2,7 +2,6 @@ import {deleteUser, signIn} from "./api.ts";
 import {useState} from "react";
 import {Button, Col, Container, Form, FormLabel, Row} from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
-// import {Diary} from "./api.ts"; // Martin har avkommenterat detta då importen inte används om state diarylist inte anväds vilket testerna klagar på
 import { useNavigate } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 
@@ -10,20 +9,22 @@ import { NavLink } from "react-router-dom";
 
 export function LoginPage() {
 
+    //The states of LoginPage
     const [username, setUsername]  = useState<string>("");
     const [password, setPassword]  = useState<string>("");
-    //const [diaryList,setDiaryList] = useState<Diary[]>([]); // Martin har avkommenterat detta då variabeln diaryList inte användes och testerna klagade på det!
     const navigate = useNavigate();
 
+    //This function is called when the button "login" is pressed
     const handleLogin = async () => {
         const dList = await signIn(username,password);
 
         if (dList !== undefined) {
-            navigate("/List-of-Diaries", { state: { dList:dList, username: username} }); // Sending the diaryList state as to Tyra/Melissas page
+            navigate("/List-of-Diaries", { state: { dList:dList, username: username} }); // Sending the diaryList to corresponding page which is showing the diaries.
         } else {
             console.log("Something went wrong in handleLogin(), returning undefined")
         }
     }
+    //This function is called when the button "delete user" is pressed
     const handleDelete = async () => {
         const dList = await deleteUser(username,password);
 

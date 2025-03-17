@@ -3,10 +3,6 @@ import axios from 'axios';
 
 axios.defaults.withCredentials = true;
 
-export interface Login{
-    username : string;
-    password : string;
-}
 // Interface representing a diary
 export interface Diary {
     // Variables for diary title and a list of entries
@@ -30,6 +26,7 @@ export interface Entry {
 
 const BASE_URL = "http://localhost:8080"
 
+//Register a new user, does an axios.post call, sending the username and password to the backend url.
 export async function registerNewUser(username:string, password:string): Promise<string | undefined> {
    try {
        const response = await axios.post<string>(`${BASE_URL}/login/register`,
@@ -42,6 +39,7 @@ export async function registerNewUser(username:string, password:string): Promise
    }
 }
 
+//Try signing a user, by doing an axios.post call sending the username and password to backend url.
 export async function signIn(username: string, password: string): Promise<Diary[] | undefined> {
     try {
         const response = await axios.post<Diary[]>(`${BASE_URL}/login`, { username, password });
@@ -52,7 +50,7 @@ export async function signIn(username: string, password: string): Promise<Diary[
         return undefined;
     }
 }
-
+//Try changing the password of a user, by doing an axios.patch call sending the username and oldPassword and newPassword to backend url.
 export async function changePassword(username:string, oldPassword:string, newPassword:string)
     : Promise<string | undefined> {
     try {
@@ -65,7 +63,7 @@ export async function changePassword(username:string, oldPassword:string, newPas
         return undefined;
     }
 }
-
+//Try deleting the user's account, by doing an axios.post call sending the username and Password    to backend url.
 export async function deleteUser(username:string, password:string): Promise<string | undefined> {
     try {
         const response = await axios.post<string>(`${BASE_URL}/login/deleteuser`,
