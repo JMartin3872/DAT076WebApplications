@@ -4,8 +4,6 @@ import { DiaryService } from "../service/diary";
 import { Entry } from "../model/diary";
 import { Diary } from "../model/diary";
 
-// TODO: What do we do here? Should a new diary be created for each diary service?
-// Should we have a new diaryservice for every diary or not?
 export const diaryService: IDiaryService = new DiaryService();
 export const diaryRouter = express.Router();
 
@@ -73,7 +71,6 @@ interface getUserDiariesRequest extends Request {
 
 
 // Handler of get requests
-// TODO: should the diary be passed here as an argument?
 // Returns the full diary content
 diaryRouter.get("/getalldiaries", async (req: Request, res: Response<Diary | string>) => {
     try {
@@ -209,7 +206,7 @@ diaryRouter.get("/userdiaries", async (
     }
 });
 
-// Delete an entire diary
+// Delete an existing diary
 diaryRouter.delete("/deletediary", async (
     req: DeleteDiaryRequest,
     res: Response<Diary[] | string>
@@ -230,7 +227,7 @@ diaryRouter.delete("/deletediary", async (
     }
 });
 
-// Rename a diary
+// Rename an existing diary
 diaryRouter.patch("/renamediary", async (
     req: RenameDiaryRequest,
     res: Response<Diary[] | string>
@@ -243,7 +240,7 @@ diaryRouter.patch("/renamediary", async (
 
     try {
         const { username, diaryId, newTitle, onlyTitle } = req.body;
-        const result = await diaryService.renameDiary(username, diaryId, newTitle, onlyTitle);
+        const result = await diaryService.renameDiary(username, diaryId, newTitle);
         res.status(typeof result === "string" &&
             (result.includes("not found") ||
             result.includes("You already have")) ? 400 : 200).send(result);

@@ -1,3 +1,6 @@
+/*This is the CSS document for the diaryListComponent.tsx file.*/
+
+/*Since the body element is used, it sets all the elements of the entire app to be placed in the middle. Also changes the background color to light blue for all of the pages.*/
 body {
     background-color: rgb(148, 210, 227);
     display: flex;
@@ -6,10 +9,12 @@ body {
     margin: 0;
 }
 
+/*The title*/
 .text-center {
     color: rgb(0, 0, 0);
 }
 
+/*The list with diaries*/
 .diary-list {
     list-style: none;
     background-color: rgb(236, 236, 236);
@@ -20,6 +25,7 @@ body {
     border: 1px solid rgb(0, 0, 0);
 }
 
+/*The elements of the diary list*/ 
 .diary-list li {
     display: flex;
     justify-content: space-between;
@@ -33,11 +39,13 @@ body {
     gap: 10px;
 }
 
+/*Rename and delete buttons located next to each diary object in the list*/
 .delete-rename-buttons {
     display: flex;
     gap: 10px;
 }
 
+/*The create diary button*/
 .create-button {
     display: flex;    
     justify-content: center;
@@ -45,6 +53,7 @@ body {
     gap: 15px
 }
 
+/*The logout button*/
 .logout-button {
     display: flex;    
     justify-content: center;
@@ -52,8 +61,9 @@ body {
     font-size: 20px;
 }
 
-.sort-dropdown {
-    background-color: rgb(255, 255, 255) !important;
+/*The sorting dropdown menu*/
+.dropdown-toggle {
+    background-color: white !important;
     color: black !important;
     border: 1px solid #ccc !important;
     font-weight: bold;

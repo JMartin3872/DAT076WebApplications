@@ -1,9 +1,12 @@
 // Interface representing a diary
 export interface Diary {
-    // Variables for diary title and a list of entries
+    // The id of the diary
     id: number;
+    // The title of the diary
     title: string;
+    // The user who created the diary
     owner: string;
+    // The list of entries in a diary
     entries: Entry[];
 }
 

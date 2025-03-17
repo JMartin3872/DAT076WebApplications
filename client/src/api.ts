@@ -6,9 +6,13 @@ axios.defaults.withCredentials = true;
 // Interface representing a diary
 export interface Diary {
     // Variables for diary title and a list of entries
+    // the global id number for a diary
     id: number;
+    // the title of the diary
     title: string;
+    // the user who created the diary is the owner of it
     owner: string;
+    // the list of entries located in a specific diary
     entries: Entry[];
 }
 
@@ -26,7 +30,7 @@ export interface Entry {
 
 const BASE_URL = "http://localhost:8080"
 
-//Register a new user, does an axios.post call, sending the username and password to the backend url.
+// Register a new user, does an axios.post call, sending the username and password to the backend url.
 export async function registerNewUser(username:string, password:string): Promise<string | undefined> {
    try {
        const response = await axios.post<string>(`${BASE_URL}/login/register`,
@@ -39,7 +43,7 @@ export async function registerNewUser(username:string, password:string): Promise
    }
 }
 
-//Try signing a user, by doing an axios.post call sending the username and password to backend url.
+// Try signing a user, by doing an axios.post call sending the username and password to backend url.
 export async function signIn(username: string, password: string): Promise<Diary[] | undefined> {
     try {
         const response = await axios.post<Diary[]>(`${BASE_URL}/login`, { username, password });
@@ -50,7 +54,8 @@ export async function signIn(username: string, password: string): Promise<Diary[
         return undefined;
     }
 }
-//Try changing the password of a user, by doing an axios.patch call sending the username and oldPassword and newPassword to backend url.
+
+// Try changing the password of a user, by doing an axios.patch call sending the username and oldPassword and newPassword to backend url.
 export async function changePassword(username:string, oldPassword:string, newPassword:string)
     : Promise<string | undefined> {
     try {
@@ -63,7 +68,8 @@ export async function changePassword(username:string, oldPassword:string, newPas
         return undefined;
     }
 }
-//Try deleting the user's account, by doing an axios.post call sending the username and Password    to backend url.
+
+// Try deleting the user's account, by doing an axios.post call sending the username and Password    to backend url.
 export async function deleteUser(username:string, password:string): Promise<string | undefined> {
     try {
         const response = await axios.post<string>(`${BASE_URL}/login/deleteuser`,
@@ -75,7 +81,6 @@ export async function deleteUser(username:string, password:string): Promise<stri
         return undefined;
     }
 }
-
 
 // Sends a request to the server to add an entry to a diary
 export async function addEntry(username: string, diaryId: number, text: string)
@@ -110,6 +115,7 @@ export async function editEntry(username: string, diaryId: number, entryId: numb
     }
 };
 
+// Sends a request to the server to delete an entry from a diary
 export async function deleteEntry(username:string, diaryId:number, entryId:number)
     : Promise<Entry[] | undefined> {
     try {
@@ -123,7 +129,7 @@ export async function deleteEntry(username:string, diaryId:number, entryId:numbe
     }
 }
 
-
+// Sends a request for a user to create a new diary
 export async function createDiary(username: string, title: string): Promise<Diary | string> {
     try {
       const response = await axios.post<Diary | string>(`${BASE_URL}/diary/creatediary`, {
@@ -135,8 +141,9 @@ export async function createDiary(username: string, title: string): Promise<Diar
       console.error(e);
       return "Request failed";
     }
-  }
+}
 
+// Sends a request for a user to delete an existing diary.
 export async function deleteDiary(username: string, diaryId: number): Promise<Diary[] | undefined> {
     try {
       const response = await axios.delete<Diary[]>(`${BASE_URL}/diary/deletediary`, {
@@ -147,8 +154,9 @@ export async function deleteDiary(username: string, diaryId: number): Promise<Di
       console.error("Error deleting diary:", error);
       return undefined;
     }
-  }
+}
 
+// Sends a request for a user to rename an existing diary.
 export async function renameDiary(username: string, diaryId: number, newTitle: string, onlyTitle: boolean): Promise<Diary[] | string | undefined> {
     try {
       const response = await axios.patch<Diary[]>(`${BASE_URL}/diary/renamediary`, {
@@ -162,8 +170,9 @@ export async function renameDiary(username: string, diaryId: number, newTitle: s
       console.error("Error renaming diary:", error);
       return undefined;
     }
-  }
+}
 
+// Sends a request to retrieve all diaries belonging to a specific user.
 export async function getUserDiariesRequest(username: string): Promise<Diary[] | undefined> {
     try {
         const response = await axios.get<Diary[]>(`${BASE_URL}/diary/userdiaries`, {params : {username}});

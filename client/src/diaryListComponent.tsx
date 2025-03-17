@@ -24,7 +24,7 @@ export function DiaryListComponent() {
   const sortByNew = () => setSortByNewest(true);
   const sortByOld = () => setSortByNewest(false);
 
-  // Log out button!
+  // The logout button!
   const logOutButton = () => {
     setDiaryList([]);
     navigate("/");
@@ -48,7 +48,7 @@ export function DiaryListComponent() {
   }
 
   const handleSaveDiary = async () => {
-    if (!diaryTitle.trim()) return; // no empty titles!
+    if (!diaryTitle.trim()) return; // no empty titles allowed!
 
     if (editMode && selectedDiary) {
       // RENAME DIARY
@@ -98,11 +98,13 @@ export function DiaryListComponent() {
             Create Diary
           </Button>
 
-          <Dropdown.Toggle className="sort-dropdown">Sort by:</Dropdown.Toggle>
+          <Dropdown className="sort-dropdown">
+            <Dropdown.Toggle className="dropdown-toggle">Sort by:</Dropdown.Toggle>
             <Dropdown.Menu>
               <Dropdown.Item onClick={sortByNew}>Newest</Dropdown.Item>
               <Dropdown.Item onClick={sortByOld}>Oldest</Dropdown.Item>
-          </Dropdown.Menu>
+            </Dropdown.Menu>
+          </Dropdown>
         </div>
       </div>
 
