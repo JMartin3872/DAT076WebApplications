@@ -26,6 +26,9 @@ export function LoginPage() {
     }
     //This function is called when the button "delete user" is pressed
     const handleDelete = async () => {
+        const confirmDelete = window.confirm("Are you sure you want to delete this user?\nAll user diaries will also be deleted.");
+        if (!confirmDelete) return;
+
         const dList = await deleteUser(username,password);
 
         if (dList !== undefined) {
