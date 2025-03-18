@@ -11,13 +11,16 @@ type EntryListComponentProps = {
     onTogglePin: (entry:Entry) => void;
 };
 
+// Component for displaying a list of diary entries.
+// Child component of DiaryComponent.
 export function EntryListComponent({mydiary, onEntryEdit, onEntryDelete, onTogglePin} : EntryListComponentProps) {
 
     const [diary, setDiary] = useState<Diary>(mydiary);
     const [sortByNewest, setSortByNewest] = useState<boolean>(true);
 
+    // Update child state when parentValue changes.
     useEffect(() => {
-        setDiary(mydiary); // Update child state when parentValue changes
+        setDiary(mydiary);
     }, [mydiary]);
 
     // Sort entries, newest first, and then create entry components from them.
@@ -30,6 +33,7 @@ export function EntryListComponent({mydiary, onEntryEdit, onEntryDelete, onToggl
         sortedEntries = sortedEntries.sort((e1, e2) => e1.id - e2.id);
     }
 
+    // Create pinned entry components from the sorted entries.
     const pinnedEntryComponents = sortedEntries.filter(entry => entry.pinned === true).map(entry => 
         <EntryComponent 
             key={entry.id} 
@@ -40,6 +44,7 @@ export function EntryListComponent({mydiary, onEntryEdit, onEntryDelete, onToggl
         />
     );
 
+    // Create entry components from the sorted entries.
     const allEntryComponents = sortedEntries.map(entry => 
         <EntryComponent 
             key={entry.id} 
@@ -50,10 +55,12 @@ export function EntryListComponent({mydiary, onEntryEdit, onEntryDelete, onToggl
         />
     );
 
+    // Sort entries by newest.
     const sortByNew = () => {
         setSortByNewest(true)
     }
 
+    // Sort entries by oldest.
     const sortByOld = () => {
         setSortByNewest(false)
     }
