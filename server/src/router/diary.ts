@@ -62,13 +62,6 @@ interface RenameDiaryRequest extends Request {
     session: any
 }
 
-interface getUserDiariesRequest extends Request {
-    query: {
-        username: string
-    },
-    session: any
-}
-
 
 // Handler of get requests
 // Returns the full diary content

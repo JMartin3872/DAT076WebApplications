@@ -66,9 +66,6 @@ export function EntryListComponent({mydiary, onEntryEdit, onEntryDelete, onToggl
         <>
             <div>
                 <Row className="text-center">
-                    <Col className="text-start">
-                        <h4>Entries:</h4>
-                    </Col>
                     <Col className="text-end">
                         <Dropdown> 
                             <Dropdown.Toggle variant="succcess">

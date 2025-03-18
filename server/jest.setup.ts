@@ -4,10 +4,12 @@ beforeAll(async () => {
   await initDB();
 })
 
+// Clear test data from database after each test.
 afterEach(async () => {
-  await conn.sync({ force: true }); // Clears test data
+  await conn.sync({ force: true }); 
 });
 
+// Close connection after all tests are done.
 afterAll(async () => {
-  await conn.close(); // Cleanup
+  await conn.close();
 });

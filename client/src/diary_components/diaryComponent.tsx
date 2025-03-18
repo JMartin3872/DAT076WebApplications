@@ -175,7 +175,7 @@ export function DiaryComponent() {
                 <Row>
                     <Row>
                         <Col className="text-start">
-                            <h1>{"Title: " + diary.title}</h1>
+                            <h1>{diary.title}</h1>
                         </Col>
                         <Col className="text-end">
                             <Button className="diarybutton" variant="primary" type="button" onClick={() => { backToDiaries() }}>
@@ -184,7 +184,7 @@ export function DiaryComponent() {
                         </Col>
                     </Row>
                     <Col className="text-start">
-                        <Button className="diarybutton" variant="info" type="button" onClick={() => setShowRename(true)}>
+                        <Button className="diarybutton" size="sm" variant="info" type="button" onClick={() => setShowRename(true)}>
                             Rename diary
                         </Button>
                     </Col>
