@@ -6,7 +6,7 @@ export class LoginModel extends Model<InferAttributes<LoginModel>, InferCreation
     declare password: string;
 }
 
-
+// Define the Login model structure.
 LoginModel.init(
     {
         username: {

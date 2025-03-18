@@ -9,7 +9,7 @@ import { DiaryInputComponent } from "./diaryInputComponent.tsx";
 import { EntryListComponent } from "./entryListComponent.tsx";
 
 // Parent component to DiaryInputComponent and EntryListComponent.
-// This component displays the diary title, a text area to add new entries, and a list of existing entries.
+// This component displays the diary title, a back button and a rename button, a text area to add new entries and a list of existing entries.
 // The user can add new entries to the diary, as well as edit and delete existing entries.
 // The user can rename the diary here as well.
 // The user can navigate back to the list of diaries.
@@ -53,6 +53,7 @@ export function DiaryComponent() {
 
     };
 
+    // Function to handle editing an existing entry in the diary.
     const editEntryEvent = async (entryId: number, editedText: string, pinned: boolean): Promise<void> => {
         try {
             const updatedEntryList = await editEntry(diary.owner, diary.id, entryId, editedText, pinned);
@@ -75,6 +76,7 @@ export function DiaryComponent() {
         }
     };
 
+    // Function to handle deleting an existing entry in the diary.
     const deleteEntryEvent = async (entryId: number): Promise<void> => {
         const confirmDelete = window.confirm("Are you sure you want to delete this entry?");
         if (!confirmDelete) return;
@@ -99,6 +101,7 @@ export function DiaryComponent() {
         }
     }
 
+    // Function to handle pinning or unpinning an entry in the diary.
     const togglePinEntry = async(entry : Entry): Promise<void> => {
         const updatedEntryList = await editEntry(diary.owner, diary.id, entry.id, entry.text, !entry.pinned);
 
@@ -134,7 +137,7 @@ export function DiaryComponent() {
         }
     }
 
-    // Function to rename the current diary. Makes a call to the api to rename the diary.
+    // Function to rename the current diary.
     const renameCurrentDiary = async (): Promise<void> => {
         try {
             // Call to api to rename the diary.

@@ -26,7 +26,7 @@ jest.mock("react-router-dom", () => ({
 
 describe('DiaryComponent', () => {
 
-  // Test #1, checks if backbutton has been rendered and fires get request when pressed 
+  // Test #1. Checks if backbutton has been rendered and fires get request when pressed 
   test('Checks if backbutton has been rendered and sends request when clicked', async () => {
 
     const dummyDiaries: Diary[] = [];
@@ -62,7 +62,7 @@ describe('DiaryComponent', () => {
     expect(mockedAxios.get).toHaveBeenCalled();
   });
 
-  // Test #2 
+  // Test #2. Checks if delete button has been rendered and fires delete request when pressed
   test('requests server when delete button is clicked and sends request when clicked', async () => {
 
     // Make sure that dialogue pop up is confirmed as true when trying to delete an entry
@@ -111,7 +111,7 @@ describe('DiaryComponent', () => {
     expect(mockedAxios.delete).toHaveBeenCalled();
   });
 
-  // Test #3 Checks that no delete button is rendered for a diary with no entries
+  // Test #3. Checks that no delete button is rendered for a diary with no entries
   test('No delete button should exists when there are no diaries', async () => {
 
     const newDiary: Diary = {
@@ -139,7 +139,7 @@ describe('DiaryComponent', () => {
 
   });
 
-  // Test #4  Checks that the text area and post button are rendered correctly.
+  // Test #4. Checks that the text area and post button are rendered correctly.
   test('Opening a diary should render the text area and post button', async () => {
 
     const newDiary: Diary = {
@@ -168,7 +168,7 @@ describe('DiaryComponent', () => {
     expect(button).toBeInTheDocument();
   });
 
-  // Test #5 Checks that the onAdd function is called when the "Post!" button is clicked and the textarea is cleared after.
+  // Test #5. Checks that the onAdd function is called when the "Post!" button is clicked and the textarea is cleared after.
   test('onAdd function should be called when clicking the "Post" button and the text area should subsequently be cleared', async () => {
     const mockOnAdd = jest.fn();
     render(<DiaryInputComponent onAdd={mockOnAdd} />);
@@ -183,7 +183,7 @@ describe('DiaryComponent', () => {
     expect(textarea).toHaveValue('');
   });
 
-  // Test #6 Checks that the "Post!" button is disabled when the textarea is either empty or contains solely whitespace.
+  // Test #6. Checks that the "Post!" button is disabled when the textarea is either empty or contains solely whitespace.
   test('"Post!" button should be disabled when the textarea is empty', async () => {
     render(<DiaryInputComponent onAdd={() => { }} />);
 

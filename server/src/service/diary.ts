@@ -64,6 +64,7 @@ export class DiaryService implements IDiaryService {
         }
     }
 
+    // Delete all entries related to a deleted diary.
     async deleteAllDiaryEntries(diaryId : number) : Promise<void>{
         EntryModel.destroy({
             where: {
@@ -72,6 +73,7 @@ export class DiaryService implements IDiaryService {
         })
     }
 
+    // Delete all diaries and their entries related to a user.
     async deleteAllUserDiariesAndEntries(username : string): Promise<void>{
         const target_diaries = await DiaryModel.findAll({
             where: {
@@ -91,6 +93,7 @@ export class DiaryService implements IDiaryService {
 
     }
 
+    // Rename a diary if the user is the owner and the new title is unique.
     async renameDiary(username: string, diaryId: number, newTitle: string, onlyTitle: boolean): Promise<Diary[] | string> {
         try {
             // Make sure the diary belongs to the requesting user
@@ -120,6 +123,7 @@ export class DiaryService implements IDiaryService {
             targetDiary.title = newTitle;
             await targetDiary.save();
 
+            // Return only the new title if onlyTitle is true
             if(onlyTitle) {
                 return targetDiary.title;
             }
@@ -270,6 +274,7 @@ export class DiaryService implements IDiaryService {
         }
     }
 
+    // Get all entries of a specific diary
     async getEntries(diary : Diary): Promise<Diary> {
         const updated_diary = diary;
         const target_entries = await EntryModel.findAll({

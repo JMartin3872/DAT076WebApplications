@@ -35,6 +35,7 @@ else {
     }
 }
 
+// Function to initialize the database.
 export async function initDB() {
     try {
         await conn.authenticate();

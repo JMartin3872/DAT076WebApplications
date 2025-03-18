@@ -16,7 +16,7 @@ export interface Diary {
     entries: Entry[];
 }
 
-// Interface representing one entry in a diary
+// Interface representing an entry in a diary
 export interface Entry {
     // Entry id, should they be unique by themselves or in combination with diary id?
     id: number;
@@ -69,7 +69,7 @@ export async function changePassword(username:string, oldPassword:string, newPas
     }
 }
 
-// Try deleting the user's account, by doing an axios.post call sending the username and Password    to backend url.
+// Try deleting the user's account, by doing an axios.post call sending the username and Password to backend url.
 export async function deleteUser(username:string, password:string): Promise<string | undefined> {
     try {
         const response = await axios.post<string>(`${BASE_URL}/login/deleteuser`,
@@ -143,7 +143,7 @@ export async function createDiary(username: string, title: string): Promise<Diar
     }
 }
 
-// Sends a request for a user to delete an existing diary.
+// Sends a request to delete an existing diary of a user.
 export async function deleteDiary(username: string, diaryId: number): Promise<Diary[] | undefined> {
     try {
       const response = await axios.delete<Diary[]>(`${BASE_URL}/diary/deletediary`, {
@@ -156,7 +156,7 @@ export async function deleteDiary(username: string, diaryId: number): Promise<Di
     }
 }
 
-// Sends a request for a user to rename an existing diary.
+// Sends a request to rename an existing diary of a user.
 export async function renameDiary(username: string, diaryId: number, newTitle: string, onlyTitle: boolean): Promise<Diary[] | string | undefined> {
     try {
       const response = await axios.patch<Diary[]>(`${BASE_URL}/diary/renamediary`, {

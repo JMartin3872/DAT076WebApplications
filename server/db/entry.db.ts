@@ -20,8 +20,7 @@ export class EntryModel extends Model<InferAttributes<EntryModel>, InferCreation
 
 }
 
-// A first version of entries to be stored in db
-// Currently no entries, should be stored in separate table?
+// Define the Entry model structure.
 EntryModel.init(
     {
         id: {
@@ -57,9 +56,6 @@ EntryModel.init(
             allowNull: false
             
         }
-
-        // TODO: Discuss how entries should be stored in correlation to their respective diaries
-
     },
     {
         sequelize: conn,
