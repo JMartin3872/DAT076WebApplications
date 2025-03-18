@@ -42,6 +42,7 @@ export function EntryComponent({ myEntry, onEdit, onDelete, onTogglePin }: Entry
         setShowEdit(false);
     }
 
+    // If the entry is pinned, return a pinned version of the entry
     if(myEntry.pinned){
         return (
             <>
@@ -129,6 +130,7 @@ export function EntryComponent({ myEntry, onEdit, onDelete, onTogglePin }: Entry
         );
     }
 
+    // If the entry isn't pinned, return and unpinned version of it.
     return (
         <>
             <div className="mt-3">

@@ -64,7 +64,7 @@ export class DiaryService implements IDiaryService {
         }
     }
 
-    // Delete all entries related to a deleted diary.
+    // Delete all entries belonging to a diary.
     async deleteAllDiaryEntries(diaryId : number) : Promise<void>{
         EntryModel.destroy({
             where: {
