@@ -26,18 +26,21 @@ export function LoginPage() {
     }
     //This function is called when the button "delete user" is pressed
     const handleDelete = async () => {
-        const confirmDelete = window.confirm("Are you sure you want to delete this user?\nAll user diaries will also be deleted.");
-        if (!confirmDelete) return;
+        const confirmDelete = window.confirm(
+            "Are you sure you want to delete this user?\nAll user diaries will also be deleted.");
 
-        const dList = await deleteUser(username,password);
+        if (!confirmDelete){return;}
+        else {
+            const dList = await deleteUser(username, password);
 
-        if (dList !== undefined) {
-            console.log("deleted!")
-        } else {
-            console.log("Something went wrong in handleLogin(), returning undefined")
+            if (dList !== undefined) {
+                console.log("deleted!")
+            } else {
+                console.log("Something went wrong in handleLogin(), returning undefined")
+            }
+            setUsername("")
+            setPassword("")
         }
-        setUsername("")
-        setPassword("")
     }
 
     return (
