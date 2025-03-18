@@ -26,6 +26,7 @@ export function LoginPage() {
     }
     //This function is called when the button "delete user" is pressed
     const handleDelete = async () => {
+        //Make sure that the user understands the risks of deleting their account
         const confirmDelete = window.confirm(
             "Are you sure you want to delete this user?\nAll user diaries will also be deleted.");
 
