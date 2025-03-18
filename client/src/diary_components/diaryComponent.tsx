@@ -215,6 +215,7 @@ export function DiaryComponent() {
                 <Modal.Body>
                     <Form>
                         <Form.Group controlId="newTitle">
+                            <Form.Label>New Title</Form.Label>
                             <Form.Control
                                 as="textarea"
                                 rows={4}
