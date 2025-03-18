@@ -7,7 +7,6 @@ import { EntryModel } from "../../db/entry.db";
 
 // Diary service class for manipulating diary and their entries
 export class DiaryService implements IDiaryService {
-    private diary: Diary[] = [];
 
     // Create a new diary if the user doesn't already have one with the same title
     async createDiary(username: string, diaryTitle: string): Promise<Diary | string> {
@@ -94,11 +93,14 @@ export class DiaryService implements IDiaryService {
 
     }
 
-    async renameDiary(username: string, diaryId: number, newTitle: string): Promise<Diary[] | string> {
+    async renameDiary(username: string, diaryId: number, newTitle: string, onlyTitle: boolean): Promise<Diary[] | string> {
         try {
-            // Make sure the diary belongs to this user
+            // Make sure the diary belongs to the requesting user
             const targetDiary = await DiaryModel.findOne({
-                where: { id: diaryId, owner: username }
+                where: { 
+                    id: diaryId, 
+                    owner: username 
+                }
             });
             if (!targetDiary) {
                 return "Diary not found or unauthorized.";
@@ -106,8 +108,12 @@ export class DiaryService implements IDiaryService {
 
             // Check if user already has a diary with this new title
             const existingTitle = await DiaryModel.findOne({
-                where: { owner: username, title: newTitle }
+                where: { 
+                    owner: username, 
+                    title: newTitle 
+                }
             });
+            
             if (existingTitle) {
                 return "You already have a diary with this title.";
             }
@@ -116,8 +122,13 @@ export class DiaryService implements IDiaryService {
             targetDiary.title = newTitle;
             await targetDiary.save();
 
-            // Return the updated list of diaries
-            return this.getListOfDiaries(username);
+            if(onlyTitle) {
+                return targetDiary.title;
+            }
+            else {
+                // Return the updated list of diaries
+                return this.getListOfDiaries(username);
+            }
         }
         catch (error) {
             console.error("Error renaming diary:", error);

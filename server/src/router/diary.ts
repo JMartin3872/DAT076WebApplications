@@ -240,7 +240,7 @@ diaryRouter.patch("/renamediary", async (
 
     try {
         const { username, diaryId, newTitle, onlyTitle } = req.body;
-        const result = await diaryService.renameDiary(username, diaryId, newTitle);
+        const result = await diaryService.renameDiary(username, diaryId, newTitle, onlyTitle);
         res.status(typeof result === "string" &&
             (result.includes("not found") ||
             result.includes("You already have")) ? 400 : 200).send(result);

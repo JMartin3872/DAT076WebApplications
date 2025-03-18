@@ -163,7 +163,7 @@ export async function renameDiary(username: string, diaryId: number, newTitle: s
         username,
         diaryId,
         newTitle,
-        onlyTitle,
+        onlyTitle
       });
       return response.data;
     } catch (error) {
