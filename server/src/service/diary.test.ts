@@ -110,14 +110,14 @@ test('Adding an entry to a diary should return an entry list containing an entry
     let title = "Title";
     let entryText = "This is the entry's text";
 
-    const diary = await diaryService.createDiary(user, title);
-    let diaryId = (diary as Diary).id;
-    const lengthBeforeAdd = (diary as Diary).entries.length;
+    const diary = await diaryService.createDiary(user, title) as Diary;
+    let diaryId = diary.id;
+    const lengthBeforeAdd = diary.entries.length;
 
-    const updatedEntryList = await diaryService.addEntry(diaryId, entryText);
+    const updatedEntryList = await diaryService.addEntry(diaryId, entryText) as Entry[];
 
-    expect((updatedEntryList as Entry[]).some(entry => entry.text === entryText)).toBe(true);
-    expect((updatedEntryList as Entry[]).length).toBe(lengthBeforeAdd + 1);
+    expect(updatedEntryList.some(entry => entry.text === entryText)).toBe(true);
+    expect(updatedEntryList.length).toBe(lengthBeforeAdd + 1);
 });
 
 // TEST #2 FOR ADDING AN ENTRY TO A DIARY
@@ -128,6 +128,43 @@ test('Should not be able to add an entry to a non-existing diary', async () => {
     const noEntryList = await diaryService.addEntry(noDiaryId, text);
 
     expect(noEntryList as string).toStrictEqual("Could not add entry. No such diary was found.");
+});
+
+// TEST #1 FOR EDITING AN ENTRY
+test('Editing an entry should return an entry list containing an entry with the correct text. The list length should remain unchanged.', async () => {
+    
+    let user = "User";
+    let title = "Title";
+    let entryText = "This is the old text";
+
+    const diary = await (diaryService.createDiary(user, title)) as Diary;
+    let diaryId = diary.id;
+
+    const entryList = await diaryService.addEntry(diaryId, entryText) as Entry[];
+
+    const entryId = entryList[0].id;
+    const lengthBeforeEdit = entryList.length;
+
+    expect(entryList[0].text).toStrictEqual(entryText);
+
+    let editedEntryList = await diaryService.editEntry(diaryId, entryId, "This is the updated text", false) as Entry[];
+
+        expect(editedEntryList[0].text).toStrictEqual("This is the updated text");
+        expect(editedEntryList.length).toBe(lengthBeforeEdit);
+});
+
+// TEST #2 FOR EDITING AN ENTRY
+test('Editing a non-existent entry should return an error message.', async () => {
+    let user = "User";
+    let title = "Title";
+    let entryText = "This is the text";
+
+    const diary = await diaryService.createDiary(user, title) as Diary;
+    let diaryId = diary.id;
+
+    const result = await diaryService.editEntry(diaryId, 0, entryText, false);
+
+    expect(result).toStrictEqual("No such entry was found");
 });
 
 // TEST #1 FOR DELETING AN ENTRY
