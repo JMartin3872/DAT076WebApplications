@@ -5,7 +5,7 @@ if (typeof global.TextEncoder === "undefined") {
   global.TextDecoder = TextDecoder;
 }
 
-import { render, screen, fireEvent, act } from '@testing-library/react';
+import { render, screen, fireEvent, act, waitFor } from '@testing-library/react';
 import { DiaryComponent } from './diaryComponent';
 import { DiaryInputComponent } from './diaryInputComponent';
 import { MemoryRouter } from "react-router-dom";
@@ -225,6 +225,58 @@ describe('DiaryComponent', () => {
 
     const button = screen.getByRole('button', { name: "Rename diary" });
     expect(button).toBeInTheDocument();
+  });
+
+  // Test #8. Checks that the "Rename diary" functionality uses the correct endpoint and updates the diary title.
+  test('Clicking the "Rename diary" button and saving the changes should update the diary title', async () => {
+    const newDiary: Diary = {
+      id: 0,
+      title: "Title",
+      owner: "User",
+      entries: []
+    };
+
+    (useLocation as jest.Mock).mockReturnValue({
+      state: {
+        diary: newDiary
+      },
+    });
+
+    mockedAxios.patch.mockResolvedValue({ data: "New title" });
+
+    render(
+      <MemoryRouter>
+        <DiaryComponent />
+      </MemoryRouter>
+    );
+
+    const renameButton = screen.getByRole('button', { name: "Rename diary" });
+    fireEvent.click(renameButton);
+
+    const newTitle = "New title";
+    const titleInput = screen.getByRole('textbox', { name: /New Title/i });
+
+    fireEvent.change(titleInput, { target: { value: newTitle } });
+
+    const saveButton = screen.getByRole('button', { name: "Save changes" });
+
+    await act(() => {
+      fireEvent.click(saveButton);
+    });
+
+    expect(mockedAxios.patch).toHaveBeenCalledWith(
+      "http://localhost:8080/diary/renamediary",
+      {
+        username: "User",
+        diaryId: 0,
+        newTitle: newTitle,
+        onlyTitle: true
+      }
+    );
+    await waitFor(() => {
+    const newDiaryTitle = screen.getByRole('heading', { level: 1 });
+    expect(newDiaryTitle).toHaveTextContent(newTitle);
+    });
   });
 
 });
