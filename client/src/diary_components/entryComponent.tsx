@@ -11,7 +11,8 @@ type EntryComponentProps = {
     onTogglePin: (entry:Entry) => void;
 };
 
-
+// Component for displaying a single diary entry.
+// Child component of EntryListComponent.
 export function EntryComponent({ myEntry, onEdit, onDelete, onTogglePin }: EntryComponentProps) {
 
     const [showEdit, setShowEdit] = useState<boolean>(false);
@@ -35,6 +36,7 @@ export function EntryComponent({ myEntry, onEdit, onDelete, onTogglePin }: Entry
         }
     }
 
+    // Save the edited entry.
     const handleSaveEdit = () => {
         onEdit(myEntry.id, editedText, myEntry.pinned);
         setShowEdit(false);

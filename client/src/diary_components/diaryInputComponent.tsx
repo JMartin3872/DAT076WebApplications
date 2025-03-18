@@ -7,7 +7,7 @@ type DiaryInputProps = {
     onAdd: (newEntryText: string) => void;
 };
 
-// Child component to DiaryComponent.
+// Child component of DiaryComponent.
 // This component is a text area and a button that allows the user to add a new entry to the diary.
 // The onAdd function is called when the button is clicked, which passes the new entry text to the parent component.
 export function DiaryInputComponent({ onAdd }: DiaryInputProps) {

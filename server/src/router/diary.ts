@@ -91,7 +91,7 @@ diaryRouter.post("/addentry", async (
 
     try {
         const { username, diaryId, text } = req.body;
-
+        // If text is not a string, send 400 response.
         if (typeof text !== "string") {
             res.status(400).send("Invalid type of text");
             return;
@@ -99,6 +99,7 @@ diaryRouter.post("/addentry", async (
 
         const newEntry = await diaryService.addEntry(diaryId, text);
 
+        // If newEntry is a string, send 400 response. Otherwise, send 201 response.
         res.status(typeof newEntry === "string" ? 400 : 201).send(newEntry);
 
     } catch (e: any) {
@@ -121,6 +122,7 @@ diaryRouter.patch("/editentry", async (
     try {
         const { username, diaryId, entryId, editedText, pinned } = req.body;
 
+        // If text is not a string, send 400 response.
         if (typeof editedText !== "string") {
             res.status(400).send("Invalid type of text");
             return;
@@ -128,7 +130,9 @@ diaryRouter.patch("/editentry", async (
 
         const updatedEntries = await diaryService.editEntry(diaryId, entryId, editedText, pinned);
 
+        // If updatedEntries is a string, send 400 response. Otherwise, send 200 response.
         res.status(typeof updatedEntries === "string" ? 400 : 200).send(updatedEntries);
+
     } catch (e: any) {
         res.status(500).send(e.message);
     }
@@ -152,7 +156,10 @@ diaryRouter.delete("/deleteentry", async (
         const { username, diaryId, entryId } = req.body;
 
         const remainingEntries = await diaryService.deleteEntry(username, diaryId, entryId)
+
+        // If remainingEntries is a string, send 400 response. Otherwise, send 200 response.
         res.status(typeof remainingEntries === "string" ? 400 : 200).send(remainingEntries);
+        
     } catch (e: any) {
         res.status(500).send(e.message);
     }
