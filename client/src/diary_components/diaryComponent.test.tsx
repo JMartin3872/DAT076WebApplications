@@ -168,7 +168,7 @@ describe('DiaryComponent', () => {
     expect(button).toBeInTheDocument();
   });
 
-  // Test #5. Checks that the onAdd function is called when the "Post!" button is clicked and the textarea is cleared after.
+  // Test #5. Checks that the onAdd function is called when the "Post!" button is clicked and the text area is cleared after.
   test('onAdd function should be called when clicking the "Post" button and the text area should subsequently be cleared', async () => {
     const mockOnAdd = jest.fn();
     render(<DiaryInputComponent onAdd={mockOnAdd} />);
@@ -200,6 +200,31 @@ describe('DiaryComponent', () => {
     // Button should be disabled when the textarea contains solely whitespace
     fireEvent.change(textarea, { target: { value: '   ' } });
     expect(button).toBeDisabled();
+  });
+
+  // Test #7. Checks that the "Rename diary" button is rendered when entering a diary.
+  test('The "Rename diary" button should be rendered', async () => {
+    const newDiary: Diary = {
+      id: 0,
+      title: "A diary",
+      owner: "Current User",
+      entries: []
+    };
+
+    (useLocation as jest.Mock).mockReturnValue({
+      state: {
+        diary: newDiary
+      },
+    });
+
+    render(
+      <MemoryRouter>
+        <DiaryComponent />
+      </MemoryRouter>
+    );
+
+    const button = screen.getByRole('button', { name: "Rename diary" });
+    expect(button).toBeInTheDocument();
   });
 
 });
