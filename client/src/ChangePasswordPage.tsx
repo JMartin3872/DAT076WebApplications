@@ -16,9 +16,11 @@ export function ChangePasswordPage() {
         await changePassword(username,oldPassword,newPassword);
         navigate("/");      //After changing the password, goes back to the login page
     }
+
+    // Visual elements of the change password page!
     return (
         <>
-            <h2>Change your account password!</h2>
+            <h2 tabIndex={0}>Change your account password!</h2>
             <Form>
                 <Form.Group controlId="username">
                     <FormLabel>Username:</FormLabel>

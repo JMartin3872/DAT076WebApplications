@@ -24,47 +24,57 @@ export function DiaryListComponent() {
   const sortByNew = () => setSortByNewest(true);
   const sortByOld = () => setSortByNewest(false);
 
-  // The logout button!
+  // Function to log out. Clears the list of diaries and navigates back to login page
   const logOutButton = () => {
     setDiaryList([]);
     navigate("/");
   };
 
-  // Opens modal for creating a new diary
+  // Function to handle the creation of a new diary. Pops up modal for user to name the new diary.
   const handleCreateDiary = () => {
-    console.log("Create Diary button pressed!");
     setShowModal(true);
     setEditMode(false);
     setDiaryTitle("");
     setSelectedDiary(null);
   };
 
-  // Opens modal for rename diary
-  function handleRenameDiary(diary: Diary) {
+  // Function to handle renaming a diary.
+  const handleRenameDiary = (diary: Diary) => {
     setSelectedDiary(diary);
-    setDiaryTitle(diary.title); // current title
+    setDiaryTitle(diary.title);
     setEditMode(true);
     setShowModal(true);
-  }
+  };
 
+  /* 
+  Function for either creating a new diary or renaming based on the state of editMode. 
+  If editMode = true & a diary has been selected from the list, user wants to rename an existing diary.
+  If not in editMode, user wants to create a new diary.
+  */
   const handleSaveDiary = async () => {
-    if (!diaryTitle.trim()) return; // no empty titles allowed!
+    if (!diaryTitle.trim()) return;
 
-    if (editMode && selectedDiary) {
-      // RENAME DIARY
+    if (editMode && selectedDiary) { 
+      
       const updatedDiaries = await renameDiary(username, selectedDiary.id, diaryTitle, false);
+      
       if (!updatedDiaries) {
         console.error("Failed to rename diary from server!");
         return;
       }
-      setDiaryList(updatedDiaries as Diary[]);
-    } else {
-      // CREATE DIARY
+
+      setDiaryList(updatedDiaries as Diary[]); // updated list with the new diary name
+    } 
+    
+    else {
       const response = await createDiary(username, diaryTitle);
+      
       if (typeof response !== "string") {
         setDiaryList([...diaryList, response]);
-      } else {
-        console.error(response); 
+      } 
+      
+      else {
+        console.error(response);
       }
     }
 
@@ -74,8 +84,9 @@ export function DiaryListComponent() {
     setEditMode(false);
   };
 
+  // Function to handle the deletion of a diary. A confirm window will appear on the top of the page where the user must confirm the deletion.
   const handleDeleteDiary = async (diaryId: number) => {
-    const confirmDelete = window.confirm("Are you sure you want to delete this diary?");
+    const confirmDelete = window.confirm("Are you sure you want to delete this diary? The diary will be permanently deleted!");
     if (!confirmDelete) return;
 
     const updatedDiaries = await deleteDiary(username, diaryId);
@@ -86,23 +97,36 @@ export function DiaryListComponent() {
     setDiaryList(updatedDiaries);
   };
 
+  // The visual elements of the diary list such as buttons, the list itself & dropdown menu for sorting!
   return (
     <>
       <div className="text-center">
-        <h1>List of your Diaries</h1>
+        <h1 tabIndex={0}>List of your Diaries</h1>
       </div>
 
-      <div className = "create-and-sort">
+      <div className="create-and-sort">
         <div className="create-button">
-          <Button variant="success" type="button" onClick={handleCreateDiary}>
+          <Button 
+            variant="success" 
+            type="button" 
+            onClick={handleCreateDiary} 
+            aria-label="Create a new diary"
+            onKeyDown={(e) => e.key === "Enter" && handleCreateDiary()}
+          >
             Create Diary
           </Button>
 
           <Dropdown className="sort-dropdown">
-            <Dropdown.Toggle className="dropdown-toggle">Sort by:</Dropdown.Toggle>
+            <Dropdown.Toggle className="dropdown-toggle" aria-label="Sort diaries">
+              Sort by:
+            </Dropdown.Toggle>
             <Dropdown.Menu>
-              <Dropdown.Item onClick={sortByNew}>Newest</Dropdown.Item>
-              <Dropdown.Item onClick={sortByOld}>Oldest</Dropdown.Item>
+              <Dropdown.Item onClick={sortByNew} aria-label="Sort by newest">
+                Newest
+              </Dropdown.Item>
+              <Dropdown.Item onClick={sortByOld} aria-label="Sort by oldest">
+                Oldest
+              </Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
         </div>
@@ -111,15 +135,31 @@ export function DiaryListComponent() {
       <ul className="diary-list">
         {sortedDiaries.map((diary) => (
           <li key={diary.id}>
-            <NavLink to="/diary/" state={{ diary, username }} className="diary-link">
+            <NavLink 
+              to="/diary/" 
+              state={{ diary, username }} 
+              className="diary-link" 
+              tabIndex={0}
+              aria-label={`Diary titled ${diary.title}`}
+            >
               {diary.title}
             </NavLink>
 
             <div className="delete-rename-buttons">
-              <Button variant="warning" onClick={() => handleRenameDiary(diary)}>
+              <Button 
+                variant="warning" 
+                onClick={() => handleRenameDiary(diary)}
+                aria-label={`Rename ${diary.title}`}
+                onKeyDown={(e) => e.key === "Enter" && handleRenameDiary(diary)}
+              >
                 Rename
               </Button>
-              <Button variant="danger" onClick={() => handleDeleteDiary(diary.id)}>
+              <Button 
+                variant="danger" 
+                onClick={() => handleDeleteDiary(diary.id)}
+                aria-label={`Delete ${diary.title}`}
+                onKeyDown={(e) => e.key === "Enter" && handleDeleteDiary(diary.id)}
+              >
                 Delete
               </Button>
             </div>
@@ -128,14 +168,20 @@ export function DiaryListComponent() {
       </ul>
 
       <div className="logout-button">
-        <Button variant="primary" type="button" onClick={logOutButton}>
+        <Button 
+          variant="primary" 
+          type="button" 
+          onClick={logOutButton}
+          aria-label="Log out"
+          onKeyDown={(e) => e.key === "Enter" && logOutButton()}
+        >
           Log out
         </Button>
       </div>
 
-      <Modal show={showModal} onHide={() => setShowModal(false)}>
+      <Modal show={showModal} onHide={() => setShowModal(false)} aria-labelledby="modal-title">
         <Modal.Header closeButton>
-          <Modal.Title>{editMode ? "Rename Diary" : "Create New Diary"}</Modal.Title>
+          <Modal.Title id="modal-title">{editMode ? "Rename Diary" : "Create New Diary"}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form.Group controlId="diaryTitle">
@@ -145,14 +191,17 @@ export function DiaryListComponent() {
               placeholder="Enter diary title"
               value={diaryTitle}
               onChange={(e) => setDiaryTitle(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSaveDiary()}
+              aria-required="true"
+              autoFocus
             />
           </Form.Group>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowModal(false)}>
+          <Button variant="secondary" onClick={() => setShowModal(false)} aria-label="Cancel">
             Cancel
           </Button>
-          <Button variant="primary" onClick={handleSaveDiary}>
+          <Button variant="primary" onClick={handleSaveDiary} aria-label={editMode ? "Rename diary" : "Create diary"}>
             {editMode ? "Rename" : "Create"}
           </Button>
         </Modal.Footer>

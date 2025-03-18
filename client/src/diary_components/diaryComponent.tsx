@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Container, Row, Col, Button, Modal, Form } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./diary.css"
@@ -22,6 +22,10 @@ export function DiaryComponent() {
     const [username] = useState<string>(location.state.username);
     const [showRename, setShowRename] = useState<boolean>(false);
     const [newTitle, setNewTitle] = useState<string>(diary.title);
+    const [statusMessage] = useState<string>("");
+
+    // Ref for renaming input focus
+    const renameInputRef = useRef<HTMLTextAreaElement | null>(null);
 
     // Updates the diary title when changed.
     useEffect(() => {
@@ -178,23 +182,37 @@ export function DiaryComponent() {
                 <Row className="mt-4">
                     <Row>
                         <Col className="text-start">
-                            <h1>{diary.title}</h1>
+                            <h1 tabIndex={0} aria-live="polite">{diary.title}</h1>
                         </Col>
                         <Col className="text-end">
-                            <Button className="backbutton btn-sm" variant="primary" type="button" onClick={() => { backToDiaries() }}>
+                            <Button 
+                                className="backbutton btn-sm" 
+                                variant="primary" 
+                                type="button" 
+                                onClick={backToDiaries}
+                                onKeyDown={(e) => e.key === "Enter" && backToDiaries()}
+                                aria-label="Go back to diary list"
+                            >
                                 Back
                             </Button>
                         </Col>
                     </Row>
                     <Col className="text-start">
-                        <Button className="renamebutton" size="sm" variant="info" type="button" onClick={() => setShowRename(true)}>
+                        <Button 
+                            className="renamebutton" 
+                            size="sm" 
+                            variant="info" 
+                            type="button" 
+                            onClick={() => setShowRename(true)}
+                            onKeyDown={(e) => e.key === "Enter" && setShowRename(true)}
+                            aria-label="Rename diary"
+                        >
                             Rename diary
                         </Button>
                     </Col>
-                    <Row>
-                    </Row>
                 </Row>
-                <Row >
+
+                <Row>
                     <DiaryInputComponent onAdd={addEntryEvent} />
                 </Row>
 
@@ -206,11 +224,17 @@ export function DiaryComponent() {
                         onTogglePin={togglePinEntry}
                     />
                 </Row>
+
+                {/* Screen reader */}
+                <div aria-live="polite" className="sr-only">
+                    {statusMessage && <p>{statusMessage}</p>}
+                </div>
+
             </Container>
 
-            <Modal show={showRename} onHide={() => setShowRename(false)}>
+            <Modal show={showRename} onHide={() => setShowRename(false)} aria-labelledby="rename-title">
                 <Modal.Header closeButton>
-                    <Modal.Title>Rename diary</Modal.Title>
+                    <Modal.Title id="rename-title">Rename diary</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Form>
@@ -222,6 +246,8 @@ export function DiaryComponent() {
                                 value={newTitle}
                                 onChange={(e) => setNewTitle(e.target.value)}
                                 onKeyDown={pressEnterRename}
+                                aria-required="true"
+                                ref={renameInputRef}
                             />
                         </Form.Group>
                     </Form>

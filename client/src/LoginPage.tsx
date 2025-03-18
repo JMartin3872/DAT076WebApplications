@@ -44,10 +44,11 @@ export function LoginPage() {
         }
     }
 
+    // Visual elements of the login page!
     return (
         <><Container fluid>
             <Row>
-                <h2 className="d-flex justify-content-center align-items-center ">Welcome to this lovely diary book</h2>
+                <h2 className="d-flex justify-content-center align-items-center " tabIndex={0}>Welcome to this lovely diary book</h2>
                 <Form className="d-flex justify-content-center align-items-center mt-5">
                     <Form.Group controlId="username">
                         <FormLabel>Username:</FormLabel>

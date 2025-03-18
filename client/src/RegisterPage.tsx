@@ -11,13 +11,15 @@ export function RegisterPage() {
 
     const handleRegistration = async () => {
         await registerNewUser(username,password);
-        navigate("/");      //When done registering the user, go back to login page.
+        navigate("/"); //When done registering the user, go back to login page.
     }
+
+    // Visual elements of the Register page!
     return (
 
         <><Container fluid>
             <Row>
-                <h2 className="d-flex justify-content-center align-items-center ">Registration page!</h2>
+                <h2 className="d-flex justify-content-center align-items-center" tabIndex={0}>Registration page!</h2>
                 <Form className="d-flex justify-content-center align-items-center mt-5">
                     <Form.Group controlId="username">
                         <FormLabel>Username:</FormLabel>
@@ -43,13 +45,13 @@ export function RegisterPage() {
             <Container>
                 <Row>
                     <Col className= "text-center">
-                        <Button className="mx-3 mt-4" variant="primary" type="button" onClick={handleRegistration}>
+                        <Button className="mx-3 mt-4" variant="primary" type="button" onClick={handleRegistration} aria-label = "Register user">
                             Register!
                         </Button>
                     </Col>
                 </Row>
             </Container>
-            <NavLink className="d-flex justify-content-center align-items-center mt-4" to="/" end>Back to login
+            <NavLink className="d-flex justify-content-center align-items-center mt-4" to="/" end aria-label = "Back to login page">Back to login
                 screen</NavLink>
         </>
 

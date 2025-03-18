@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Button } from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -12,6 +12,8 @@ type DiaryInputProps = {
 // The onAdd function is called when the button is clicked, which passes the new entry text to the parent component.
 export function DiaryInputComponent({ onAdd }: DiaryInputProps) {
     const [entryText, setEntryText] = useState<string>("");
+    const statusMessageRef = useRef<HTMLParagraphElement | null>(null);
+    const inputRef = useRef<HTMLTextAreaElement | null>(null);
 
     // Function to handle adding a new entry to the diary.
     const doOnClick = () => {
@@ -34,21 +36,33 @@ export function DiaryInputComponent({ onAdd }: DiaryInputProps) {
 
     return (
         <div className="mb-4">
-            <h2 className="text-center mb-3">What's on your mind?</h2>
+            <h2 className="text-center mb-3" tabIndex={0}>What's on your mind?</h2>
             <textarea
+                ref={inputRef}
                 className="form-control mb-3"
                 value={entryText}
                 onChange={(e) => setEntryText(e.target.value)}
-                onKeyUp={pressEnterPost}
+                onKeyDown={pressEnterPost}
                 rows={4}
+                aria-label="Write your diary entry here"
+                aria-required="true"
             />
             <Button
                 variant="success"
                 onClick={doOnClick}
                 disabled={!entryText.trim()}
+                aria-label="Post your diary entry"
             >
                 Post!
             </Button>
+            {/* Screen reader-friendly success message */}
+            <p
+                ref={statusMessageRef}
+                aria-live="polite"
+                className="visually-hidden"
+            >
+                {entryText ? "Entry added successfully!" : ""}
+            </p>
         </div>
     );
 }
