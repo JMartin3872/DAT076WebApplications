@@ -161,3 +161,48 @@ test('Deleting an entry from an non-existing diary should return an error messag
     const remainingentries = await diaryService.deleteEntry(user, 0, 0);
     expect(remainingentries as string).toStrictEqual("No such diary was found.");
 });
+
+// TEST #1 FOR PINNING AN ENTRY
+test('Editing an entry to be pinned should set the entry to be pinned, unpinning it again should set it to be unpinned', async () => {
+
+    let user = "User";
+    let title = "Title";
+    let entryText = "This is the entry's text";
+
+    const diary = await diaryService.createDiary(user, title);
+    let diaryId = (diary as Diary).id;
+
+    const newEntryList = await diaryService.addEntry(diaryId, entryText);
+    const newEntry = (newEntryList as Entry[]).pop();
+
+    if(newEntry){
+        let updatedEntryList = await diaryService.editEntry(diaryId, newEntry.id, newEntry.text, true);
+        const pinnedEntry = (updatedEntryList as Entry[]).pop();
+
+        updatedEntryList = await diaryService.editEntry(diaryId, newEntry.id, newEntry.text, false);
+        const unpinnedEntry = (updatedEntryList as Entry[]).pop();
+        
+        expect((pinnedEntry as Entry).pinned).toStrictEqual(true);
+        expect((unpinnedEntry as Entry).pinned).toStrictEqual(false);
+        
+    }
+
+    else {
+        // Fail the test if `newEntry` isn't an entry
+        throw new Error("Expected createdEntry to be an entry, but got: " + typeof newEntry);
+    }  
+});
+
+// TEST #2 FOR PINNING AN ENTRY
+test('Editing a non-existent entry to be pinned should return an error message.', async () => {
+
+    let user = "User";
+    let title = "Title";
+
+    const diary = await diaryService.createDiary(user, title);
+    let diaryId = (diary as Diary).id;
+
+    const result = await diaryService.editEntry(diaryId,0,"A text", true);
+
+    expect(result).toStrictEqual("No such entry was found");
+});
