@@ -127,7 +127,7 @@ test('Should not be able to add an entry to a non-existing diary', async () => {
 
     const noEntryList = await diaryService.addEntry(noDiaryId, text);
 
-    expect(noEntryList as string).toStrictEqual("Could not add entry. Unauthorized or non-existent diary.");
+    expect(noEntryList as string).toStrictEqual("Could not add entry. No such diary was found.");
 });
 
 // TEST #1 FOR DELETING AN ENTRY
@@ -159,5 +159,5 @@ test('Adding and deleting an entry from an empty diary should return the empty l
 test('Deleting an entry from an non-existing diary should return an error message.', async () => {
     const user = "User";
     const remainingentries = await diaryService.deleteEntry(user, 0, 0);
-    expect(remainingentries as string).toStrictEqual("No such diary was found");
+    expect(remainingentries as string).toStrictEqual("No such diary was found.");
 });
