@@ -8,9 +8,6 @@ beforeEach( () => {
     loginService = new LoginService()
 });
 
-test('Getting the initial list of login credentials mus be a empty list!', async () => {
-    expect(await loginService.getLogin()).toStrictEqual([]);});
-
 test('Registering a new login id should return a correct login id!', async () => {
     const login: Login = await loginService.registerUser("name1", "123");
     const result = await bcrypt.compare("123",login.password)

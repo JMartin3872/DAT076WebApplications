@@ -83,8 +83,6 @@ export class DiaryService implements IDiaryService {
             await this.deleteAllDiaryEntries(d.id);
         })
 
-        //await Promise.all(result);
-
         DiaryModel.destroy({
             where:{
                 owner:username
