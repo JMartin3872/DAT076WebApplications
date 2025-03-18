@@ -65,10 +65,10 @@ export function EntryListComponent({mydiary, onEntryEdit, onEntryDelete, onToggl
     return(
         <>
             <div>
-                <Row className="text-center">
+                <Row className="text-center mb-2">
                     <Col className="text-end">
                         <Dropdown> 
-                            <Dropdown.Toggle variant="succcess">
+                            <Dropdown.Toggle variant="succcess" className="btn-sm">
                                 Sort by:
                             </Dropdown.Toggle >
 

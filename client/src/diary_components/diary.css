@@ -1,5 +1,11 @@
-.diarybutton{
+.backbutton{
     max-width: 8rem;
+    min-width: 4rem;
+}
+
+.renamebutton{
+  max-width: 8rem;
+  min-width: 7rem;
 }
 
 .datetext{

@@ -172,19 +172,19 @@ export function DiaryComponent() {
     return (
         <>
             <Container fluid className="text-center min-width-container">
-                <Row>
+                <Row className="mt-4">
                     <Row>
                         <Col className="text-start">
                             <h1>{diary.title}</h1>
                         </Col>
                         <Col className="text-end">
-                            <Button className="diarybutton" variant="primary" type="button" onClick={() => { backToDiaries() }}>
+                            <Button className="backbutton btn-sm" variant="primary" type="button" onClick={() => { backToDiaries() }}>
                                 Back
                             </Button>
                         </Col>
                     </Row>
                     <Col className="text-start">
-                        <Button className="diarybutton" size="sm" variant="info" type="button" onClick={() => setShowRename(true)}>
+                        <Button className="renamebutton" size="sm" variant="info" type="button" onClick={() => setShowRename(true)}>
                             Rename diary
                         </Button>
                     </Col>
