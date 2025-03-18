@@ -63,19 +63,6 @@ interface RenameDiaryRequest extends Request {
 }
 
 
-// Handler of get requests
-// Returns the full diary content
-diaryRouter.get("/getalldiaries", async (req: Request, res: Response<Diary | string>) => {
-    try {
-        const diary: Diary = await diaryService.getDiaryContent();
-        res.status(200).send(diary);
-    }
-
-    catch (e: any) {
-        res.status(500).send(e.message)
-    }
-});
-
 // Handles a post request to addentry
 // Creates a new entry with the text in the body
 diaryRouter.post("/addentry", async (

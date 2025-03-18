@@ -292,11 +292,5 @@ export class DiaryService implements IDiaryService {
         updated_diary.entries = [];
         return updated_diary;
     }
-
-    // Returns a deep copy of the diary
-    async getDiaryContent(): Promise<Diary> {
-        const allDiaries = await DiaryModel.findAll();
-        return allDiaries as unknown as Diary;
-    }
 }
 
