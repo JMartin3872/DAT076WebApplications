@@ -46,7 +46,7 @@ describe('login component', () => {
         render(<MemoryRouter>
             <RegisterPage/>
         </MemoryRouter>)
-        const button = screen.getByRole('button', {name: "Register!"});
+        const button = screen.getByRole('button', {name: "Register user"});
 
         await act(() => {
             fireEvent.click(button);

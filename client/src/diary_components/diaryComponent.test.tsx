@@ -52,7 +52,7 @@ describe('DiaryComponent', () => {
       </MemoryRouter>
     );
 
-    const button = screen.getByRole('button', { name: "Back" });
+    const button = screen.getByRole('button', { name: "Go back to diary list" });
 
     await act(() => {
       fireEvent.click(button);
@@ -162,7 +162,7 @@ describe('DiaryComponent', () => {
     );
 
     const textarea = screen.getByRole('textbox');
-    const button = screen.getByRole('button', { name: "Post!" });
+    const button = screen.getByRole('button', { name: "Post your diary entry" });
 
     expect(textarea).toBeInTheDocument();
     expect(button).toBeInTheDocument();
@@ -174,7 +174,7 @@ describe('DiaryComponent', () => {
     render(<DiaryInputComponent onAdd={mockOnAdd} />);
 
     const textarea = screen.getByRole('textbox');
-    const button = screen.getByRole('button', { name: "Post!" });
+    const button = screen.getByRole('button', { name: "Post your diary entry" });
 
     fireEvent.change(textarea, { target: { value: "This is my test text!" } });
     fireEvent.click(button);
@@ -187,7 +187,7 @@ describe('DiaryComponent', () => {
   test('"Post!" button should be disabled when the textarea is empty', async () => {
     render(<DiaryInputComponent onAdd={() => { }} />);
 
-    const button = screen.getByRole('button', { name: "Post!" });
+    const button = screen.getByRole('button', { name: "Post your diary entry" });
     const textarea = screen.getByRole('textbox');
 
     // The "Post!" button should initially be disabled
